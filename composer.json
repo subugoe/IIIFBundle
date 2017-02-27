@@ -1,0 +1,11 @@
+{
+    "name": "subugoe/iiif-bundle",
+    "description": "IIIF Bundle for symfony",
+    "license": "AGPL-3.0",
+    "authors": [
+        {
+            "name": "Ingo Pfennigstorf",
+            "email": "i.pfennigstorf@gmail.com"
+        }
+    ]
+}
