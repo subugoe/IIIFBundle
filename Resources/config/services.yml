@@ -1,0 +1,4 @@
+services:
+#    subugoe_iiif.example:
+#        class: Subugoe\IIIFBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

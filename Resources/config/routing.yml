@@ -1,0 +1,3 @@
+subugoe_iiif_homepage:
+    path:     /
+    defaults: { _controller: SubugoeIIIFBundle:Default:index }
