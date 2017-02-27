@@ -1,0 +1,88 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Subugoe\IIIFBundle\Model\Presentation;
+
+/**
+ * @see http://iiif.io/api/presentation/2.1/#image-resources
+ */
+class ResourceData
+{
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $type = 'dctypes:Image';
+
+    /**
+     * @var string
+     */
+    private $format;
+
+    /**
+     * @var Service
+     */
+    private $service;
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     *
+     * @return ResourceData
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormat(): string
+    {
+        return $this->format;
+    }
+
+    /**
+     * @param string $format
+     *
+     * @return ResourceData
+     */
+    public function setFormat(string $format): ResourceData
+    {
+        $this->format = $format;
+
+        return $this;
+    }
+
+    /**
+     * @return Service
+     */
+    public function getService(): Service
+    {
+        return $this->service;
+    }
+
+    /**
+     * @param Service $service
+     *
+     * @return ResourceData
+     */
+    public function setService(Service $service): ResourceData
+    {
+        $this->service = $service;
+
+        return $this;
+    }
+}
