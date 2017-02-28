@@ -13,6 +13,7 @@
     },
     "require": {
         "jms/serializer-bundle": "^1.2",
-        "liip/imagine-bundle": "^1.7"
+        "liip/imagine-bundle": "^1.7",
+        "ralouphie/mimey": "^1.0"
     }
 }
