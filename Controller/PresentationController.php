@@ -21,10 +21,9 @@ class PresentationController extends Controller
      */
     public function manifestAction(string $id)
     {
-        $documentService = $this->get('document_service');
-        $document = $documentService->getDocumentDataById($id, $this->getParameter('details_fields'))->getFields();
+        $documentService = $this->get('subugoe_iiif.presentation_service');
 
-        return $this->view($documentService->getManifest($document), Response::HTTP_OK);
+        return $this->view($documentService->getManifest($id), Response::HTTP_OK);
     }
 
     /**
