@@ -8,10 +8,9 @@ use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultController extends Controller
+class PresentationController extends Controller
 {
     /**
-     * @Get("/api/{id}/manifest")
      * @ApiDoc(
      *  resource=true,
      *  description="IIIF presentation API manifest resource",
@@ -29,8 +28,6 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Get("/api/{id}/canvas/{canvas}", name="_canvas")
-     *
      * @see http://iiif.io/api/presentation/2.1/#canvas
      * @ApiDoc(
      *  resource=true,
@@ -47,8 +44,6 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Get("/api/{id}/annotation/{name}", name="_imagepresentation")
-     *
      * @see http://iiif.io/api/presentation/2.1/#image-resources
      * @ApiDoc(
      *  resource=true,
@@ -65,8 +60,6 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Get("/api/{id}/sequence/{name}", name="_sequence", defaults={"name"="normal"})
-     *
      * @see http://iiif.io/api/presentation/2.1/#sequence
      * @ApiDoc(
      *  resource=true,

@@ -1,4 +1,4 @@
 services:
-#    subugoe_iiif.example:
-#        class: Subugoe\IIIFBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+  subugoe_iiif.image_service:
+    class: Subugoe\IIIFBundle\Service\ImageService
+    arguments: ["@liip_imagine", "@router"]

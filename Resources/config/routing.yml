@@ -1,3 +1,34 @@
-subugoe_iiif_homepage:
-    path:     /iiif/
-    defaults: { _controller: SubugoeIIIFBundle:Default }
+subugoe_iiif_image:
+    path:      "image/{identifier}/{region}/{size}/{rotation}/{quality}.{format}"
+    methods:   "GET"
+    defaults:  { _controller: SubugoeIIIFBundle:Image:index }
+
+subugoe_iiif_manifest:
+    path:     "presentation/{id}/manifest"
+    methods:  "GET"
+    defaults: { _controller: SubugoeIIIFBundle:Presentation:manifest }
+
+subugoe_iiif_canvas:
+    path:     "presentation/{id}/canvas/{canvas}"
+    methods:  "GET"
+    defaults: {_controller: SubugoeIIIFBundle:Presentation:canvas}
+
+subugoe_iiif_sequence:
+    path:     "presentation/{id}/sequence/{name}"
+    methods:  "GET"
+    defaults: {name: "normal", _controller: SubugoeIIIFBundle:Presentation:sequence}
+
+subugoe_iiif_imagepresentation:
+    path:     "presentation/{id}/annotation/{name}"
+    methods:  "GET"
+    defaults: {_controller: SubugoeIIIFBundle:Presentation:sequence}
+
+subugoe_iiif_range:
+    path:     "presentation/{id}/range/{range}"
+    methods:  "GET"
+    defaults: {_controller: SubugoeIIIFBundle:Presentation:range}
+
+subugoe_iiif_image_json:
+    path:     "image/{identifier}/info.json"
+    methods:  "GET"
+    defaults: {_controller: SubugoeIIIFBundle:Image:infoJson}
