@@ -77,14 +77,25 @@ class Document
      */
     private $logicalTypes;
 
+    /**
+     * @var array
+     */
     private $logicalStartPage;
 
+    /**
+     * @var array
+     */
     private $logicalEndPage;
 
     /**
      * @var array
      */
     private $physicalOrderPages;
+
+    /**
+     * @var string
+     */
+    private $imageFormat = 'jpg';
 
     /**
      * @return string
@@ -387,19 +398,19 @@ class Document
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getLogicalStartPage()
+    public function getLogicalStartPage(): array
     {
         return $this->logicalStartPage;
     }
 
     /**
-     * @param mixed $logicalStartPage
+     * @param array $logicalStartPage
      *
      * @return Document
      */
-    public function setLogicalStartPage($logicalStartPage)
+    public function setLogicalStartPage(array $logicalStartPage): Document
     {
         $this->logicalStartPage = $logicalStartPage;
 
@@ -407,21 +418,41 @@ class Document
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getLogicalEndPage()
+    public function getLogicalEndPage(): array
     {
         return $this->logicalEndPage;
     }
 
     /**
-     * @param mixed $logicalEndPage
+     * @param array $logicalEndPage
      *
      * @return Document
      */
-    public function setLogicalEndPage($logicalEndPage)
+    public function setLogicalEndPage(array $logicalEndPage): Document
     {
         $this->logicalEndPage = $logicalEndPage;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageFormat(): string
+    {
+        return $this->imageFormat;
+    }
+
+    /**
+     * @param string $imageFormat
+     *
+     * @return Document
+     */
+    public function setImageFormat(string $imageFormat): Document
+    {
+        $this->imageFormat = $imageFormat;
 
         return $this;
     }

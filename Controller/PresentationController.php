@@ -21,9 +21,7 @@ class PresentationController extends Controller
      */
     public function manifestAction(string $id)
     {
-        $documentService = $this->get('subugoe_iiif.presentation_service');
-
-        return $this->view($documentService->getManifest($id), Response::HTTP_OK);
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getManifest($id), Response::HTTP_OK);
     }
 
     /**
@@ -39,7 +37,7 @@ class PresentationController extends Controller
      */
     public function canvasAction(string $id, string $canvas): View
     {
-        return $this->view($this->get('document_service')->getCanvas($id, $canvas), Response::HTTP_OK);
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getCanvas($id, $canvas), Response::HTTP_OK);
     }
 
     /**

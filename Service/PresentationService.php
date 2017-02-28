@@ -5,6 +5,8 @@ namespace Subugoe\IIIFBundle\Service;
 use Subugoe\IIIFBundle\Model\Presentation\Canvas;
 use Subugoe\IIIFBundle\Model\Presentation\Document;
 use Subugoe\IIIFBundle\Model\Presentation\Image;
+use Subugoe\IIIFBundle\Model\Presentation\ImageResource;
+use Subugoe\IIIFBundle\Model\Presentation\ResourceData;
 use Subugoe\IIIFBundle\Model\Presentation\Sequence;
 use Subugoe\IIIFBundle\Model\Presentation\Service;
 use Subugoe\IIIFBundle\Model\Presentation\Structure;
@@ -229,6 +231,73 @@ class PresentationService
             );
 
         return $sequences;
+    }
+
+    /**
+     * @param string $documentId
+     * @param string $canvasId
+     *
+     * @return Canvas
+     */
+    public function getCanvas(string $documentId, string $canvasId): Canvas
+    {
+        $images = $this->getImages($documentId, $canvasId);
+
+        $canvas = new Canvas();
+        $canvas
+            ->setId($this->router->generate('subugoe_iiif_canvas', ['id' => $documentId, 'canvas' => $canvasId]))
+            ->setLabel($canvasId)
+            ->setImages($images);
+
+        return $canvas;
+    }
+
+    /**
+     * @param string $id
+     * @param string $canvasId
+     *
+     * @return array
+     */
+    private function getImages(string $id, string $canvasId): array
+    {
+        return [$this->getImage($id, $canvasId)];
+    }
+
+    /**
+     * @param string $id
+     * @param string $imageId
+     *
+     * @return ImageResource
+     */
+    public function getImage(string $id, string $imageId): ImageResource
+    {
+        $document = $this->translator->getDocumentById($id);
+
+        $imageParameters = [
+            'identifier' => vsprintf('%s:%s', [$id, $imageId]),
+            'region' => 'full',
+            'size' => 'full',
+            'rotation' => 0,
+            'quality' => 'default',
+            'format' => $document->getImageFormat(),
+        ];
+
+        $image = new ImageResource();
+        $resource = new ResourceData();
+        $mimes = new \Mimey\MimeTypes();
+
+        $format = $mimes->getMimeType($document->getImageFormat());
+
+        $resource
+            ->setId($this->router->generate('subugoe_iiif_image', $imageParameters, Router::ABSOLUTE_URL))
+            ->setFormat($format)
+            ->setService(new Service());
+
+        $image
+            ->setId($this->router->generate('subugoe_iiif_imagepresentation', ['id' => $id, 'name' => $imageId], Router::ABSOLUTE_URL))
+            ->setResource($resource);
+
+        return $image;
     }
 
     /**
