@@ -12,11 +12,21 @@ class SubugoeTranslator implements TranslatorInterface
      */
     private $searchService;
 
+    /**
+     * SubugoeTranslator constructor.
+     *
+     * @param SearchService $searchService
+     */
     public function __construct(SearchService $searchService)
     {
         $this->searchService = $searchService;
     }
 
+    /**
+     * @param string $id
+     *
+     * @return Document
+     */
     public function getDocumentById(string $id): Document
     {
         $document = new Document();

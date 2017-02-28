@@ -61,10 +61,13 @@ class PresentationService
         $attribution = $this->getAttribution($document);
 
         $manifest
-            ->setId($this->router->generate('_detail', [
-                'id' => $document->getId(),
-            ],
-                Router::ABSOLUTE_URL))
+            ->setId($this->router->generate(
+                '_detail',
+                [
+                    'id' => $document->getId(),
+                ],
+                Router::ABSOLUTE_URL)
+            )
             ->setLabel($document->getTitle()[0])
             ->setThumbnail($thumbnail)
             ->setMetadata($metadata)
@@ -96,7 +99,12 @@ class PresentationService
             'format' => 'jpg',
         ];
 
-        $thumbnail->setId($this->router->generate('subugoe_iiif_image', $thumbnailParameters, Router::ABSOLUTE_URL));
+        $thumbnail->setId($this->router->generate(
+            'subugoe_iiif_image',
+            $thumbnailParameters,
+            Router::ABSOLUTE_URL
+            )
+        );
         $thumbnail->setService($thumbnailService);
 
         return $thumbnail;
