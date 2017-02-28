@@ -8,6 +8,9 @@
             "email": "i.pfennigstorf@gmail.com"
         }
     ],
+    "autoload": {
+       "psr-4": { "Subugoe\\IIIFBundle\\": "" }
+    },
     "require": {
         "jms/serializer-bundle": "^1.2",
         "liip/imagine-bundle": "^1.7"
