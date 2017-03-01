@@ -145,6 +145,15 @@ class PresentationService
             'subtitle' => $document->getSubtitle(),
         ];
 
+        $metadata = array_filter(
+            $metadata,
+            function($value) {
+                if (!empty($value)) {
+                    return true;
+                }
+                return false;
+            });
+
         return $metadata;
     }
 
