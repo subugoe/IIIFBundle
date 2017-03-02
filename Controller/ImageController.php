@@ -110,28 +110,6 @@ class ImageController extends Controller
     }
 
     /**
-     * @param string $identifier
-     *
-     * @return string
-     */
-    protected function getImageFormat($identifier)
-    {
-        $client = $this->get('solarium.client');
-        $selectDocument = $client->createSelect()
-            ->setQuery(sprintf('work:%s', $identifier));
-
-        $document = $client->select($selectDocument)->getDocuments()[0];
-
-        if (isset($document['image_format'])) {
-            $format = $document['image_format'];
-        } else {
-            $format = $this->getParameter('default_backend_image_format');
-        }
-
-        return $format;
-    }
-
-    /**
      * @Route("/image/{identifier}/info.json", name="_iiifjson", methods={"GET"})
      */
     public function infoJsonAction(string $identifier): View
@@ -152,35 +130,5 @@ class ImageController extends Controller
         return $this->render('images/view.html.twig', [
             'identifier' => $identifier,
         ]);
-    }
-
-    /**
-     * @param string $file
-     */
-    protected function createCacheDirectory(string $file)
-    {
-        $fs = new Filesystem();
-
-        if (!$fs->exists(dirname($file))) {
-            $fs->mkdir(dirname($file));
-        }
-    }
-
-    /**
-     * @param ConstraintViolationListInterface $errors
-     */
-    protected function processErrors(ConstraintViolationListInterface $errors)
-    {
-        $errorCounter = count($errors);
-
-        if ($errorCounter > 0) {
-            $errorMessages = [];
-
-            for ($i = 0; $i < $errorCounter; ++$i) {
-                $errorMessages[] = $errors->get($i)->getMessage();
-            }
-
-            throw new BadRequestHttpException(implode('. ', $errorMessages));
-        }
     }
 }
