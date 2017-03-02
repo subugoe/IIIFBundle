@@ -65,27 +65,7 @@ class Document
     /**
      * @var array
      */
-    private $logicalIds;
-
-    /**
-     * @var array
-     */
-    private $logicalLabels;
-
-    /**
-     * @var array
-     */
-    private $logicalTypes;
-
-    /**
-     * @var array
-     */
-    private $logicalStartPage;
-
-    /**
-     * @var array
-     */
-    private $logicalEndPage;
+    private $logicalStructures = [];
 
     /**
      * @var array
@@ -338,106 +318,6 @@ class Document
     }
 
     /**
-     * @return array
-     */
-    public function getLogicalIds(): array
-    {
-        return $this->logicalIds;
-    }
-
-    /**
-     * @param array $logicalIds
-     *
-     * @return Document
-     */
-    public function setLogicalIds(array $logicalIds): Document
-    {
-        $this->logicalIds = $logicalIds;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getLogicalLabels(): array
-    {
-        return $this->logicalLabels;
-    }
-
-    /**
-     * @param array $logicalLabels
-     *
-     * @return Document
-     */
-    public function setLogicalLabels(array $logicalLabels): Document
-    {
-        $this->logicalLabels = $logicalLabels;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getLogicalTypes(): array
-    {
-        return $this->logicalTypes;
-    }
-
-    /**
-     * @param array $logType
-     *
-     * @return Document
-     */
-    public function setLogicalTypes(array $logType): Document
-    {
-        $this->logicalTypes = $logType;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getLogicalStartPage(): array
-    {
-        return $this->logicalStartPage;
-    }
-
-    /**
-     * @param array $logicalStartPage
-     *
-     * @return Document
-     */
-    public function setLogicalStartPage(array $logicalStartPage): Document
-    {
-        $this->logicalStartPage = $logicalStartPage;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getLogicalEndPage(): array
-    {
-        return $this->logicalEndPage;
-    }
-
-    /**
-     * @param array $logicalEndPage
-     *
-     * @return Document
-     */
-    public function setLogicalEndPage(array $logicalEndPage): Document
-    {
-        $this->logicalEndPage = $logicalEndPage;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getImageFormat(): string
@@ -455,5 +335,33 @@ class Document
         $this->imageFormat = $imageFormat;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLogicalStructures(): array
+    {
+        return $this->logicalStructures;
+    }
+
+    /**
+     * @param array $logicalStructures
+     *
+     * @return Document
+     */
+    public function setLogicalStructures(array $logicalStructures): Document
+    {
+        $this->logicalStructures = $logicalStructures;
+
+        return $this;
+    }
+
+    /**
+     * @param LogicalStructure $structure
+     */
+    public function addLogicalStructure(LogicalStructure $structure)
+    {
+        $this->logicalStructures[] = $structure;
     }
 }

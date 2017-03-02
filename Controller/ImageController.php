@@ -7,10 +7,7 @@ namespace Subugoe\IIIFBundle\Controller;
 use FOS\RestBundle\View\View;
 use Subugoe\IIIFBundle\Model\Image\Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\FOSRestController as Controller;
 

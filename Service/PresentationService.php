@@ -2,6 +2,7 @@
 
 namespace Subugoe\IIIFBundle\Service;
 
+use Subugoe\IIIFBundle\Model\LogicalStructure;
 use Subugoe\IIIFBundle\Model\Presentation\Canvas;
 use Subugoe\IIIFBundle\Model\Presentation\Document;
 use Subugoe\IIIFBundle\Model\Presentation\Image;
@@ -180,11 +181,14 @@ class PresentationService
     private function getStructures(\Subugoe\IIIFBundle\Model\Document $document): array
     {
         $structures = [];
-        $numberOfStructureElements = count($document->getLogicalIds()) - 1;
+        $numberOfStructureElements = count($document->getLogicalStructures()) - 1;
 
         for ($i = 0; $i < $numberOfStructureElements; ++$i) {
-            $structureStart = $document->getLogicalStartPage()[$i] - 1;
-            $structureEnd = $document->getLogicalEndPage()[$i] - 1;
+            /** @var LogicalStructure $logicalStructure */
+            $logicalStructure = $document->getLogicalStructures()[$i];
+
+            $structureStart = $logicalStructure->getStartPage();
+            $structureEnd = $logicalStructure->getEndPage();
 
             $canvases = [];
             for ($j = $structureStart; $j < $structureEnd; ++$j) {
@@ -201,11 +205,11 @@ class PresentationService
             $structure
                 ->setId($this->router->generate('subugoe_iiif_range', [
                         'id' => $document->getId(),
-                        'range' => $document->getLogicalIds()[$i],
+                        'range' => $logicalStructure->getId(),
                     ], Router::ABSOLUTE_URL)
                 )
-                ->setLabel($document->getLogicalLabels()[$i])
-                ->setType($document->getLogicalTypes()[$i])
+                ->setLabel($logicalStructure->getLabel())
+                ->setType($logicalStructure->getType())
                 ->setCanvases($canvases)
             ;
 

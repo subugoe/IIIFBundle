@@ -4,6 +4,7 @@ namespace Subugoe\IIIFBundle\Translator;
 
 use Subugoe\FindBundle\Service\SearchService;
 use Subugoe\IIIFBundle\Model\Document;
+use Subugoe\IIIFBundle\Model\LogicalStructure;
 
 class SubugoeTranslator implements TranslatorInterface
 {
@@ -31,6 +32,8 @@ class SubugoeTranslator implements TranslatorInterface
     {
         $document = new Document();
         $solrDocument = $this->searchService->getDocumentById($id);
+        $numberOfLogicalStructures = count($solrDocument['log_id']);
+
         $document
             ->setId($id)
             ->setPages($solrDocument['page'])
@@ -43,12 +46,21 @@ class SubugoeTranslator implements TranslatorInterface
             ->setPublisher($solrDocument['publisher'] ?: [])
             ->setLanguage($solrDocument['lang'])
             ->setImageFormat($solrDocument['image_format'])
-            ->setLogicalIds($solrDocument['log_id'])
-            ->setLogicalLabels($solrDocument['log_label'])
-            ->setLogicalTypes($solrDocument['log_type'])
-            ->setLogicalStartPage($solrDocument['log_start_page_index'])
-            ->setLogicalEndPage($solrDocument['log_end_page_index'])
             ->setPhysicalOrderPages($solrDocument['phys_orderlabel']);
+
+        for ($i = 0; $i < $numberOfLogicalStructures; ++$i) {
+            $structure = new LogicalStructure();
+
+            $structure
+                ->setId($solrDocument['log_id'][$i])
+                ->setLabel($solrDocument['log_label'][$i])
+                ->setType($solrDocument['log_type'][$i])
+                ->setLevel($solrDocument['log_level'][$i])
+                ->setStartPage($solrDocument['log_start_page_index'][$i])
+                ->setEndPage($solrDocument['log_end_page_index'][$i]);
+
+            $document->addLogicalStructure($structure);
+        }
 
         return $document;
     }
