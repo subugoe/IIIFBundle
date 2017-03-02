@@ -53,7 +53,7 @@ class PresentationController extends Controller
      */
     public function imageAction(string $id, string $name): View
     {
-        return $this->view($this->get('document_service')->getImage($id, $name), Response::HTTP_OK);
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getImage($id, $name), Response::HTTP_OK);
     }
 
     /**
@@ -71,7 +71,7 @@ class PresentationController extends Controller
      */
     public function sequenceAction(string $id, string $name): View
     {
-        return $this->view($this->get('document_service')->getSequence($id, $name), Response::HTTP_OK);
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getSequence($id, $name), Response::HTTP_OK);
     }
 
     /**
