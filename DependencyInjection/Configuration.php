@@ -20,6 +20,12 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('presentation')
+                    ->children()
+                        ->scalarNode('logo')->end()
+                        ->scalarNode('service_id')->end()
+                    ->end()
+                ->end()
                 ->arrayNode('image')
                     ->children()
                         ->integerNode('tile_width')->defaultValue(512)->end()

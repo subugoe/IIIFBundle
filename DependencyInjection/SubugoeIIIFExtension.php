@@ -25,5 +25,6 @@ class SubugoeIIIFExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         $container->setParameter('image', $config['image']);
+        $container->setParameter('presentation', $config['presentation']);
     }
 }

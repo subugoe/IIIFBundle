@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Subugoe\IIIFBundle\Controller;
 
 use FOS\RestBundle\View\View;
+use League\Flysystem\Filesystem;
 use Subugoe\IIIFBundle\Model\Image\Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,7 +75,7 @@ class ImageController extends Controller
         $cacheAdapterConfiguration = $imageParameters['adapters']['cache']['configuration'];
         $cacheAdapterClass = $imageParameters['adapters']['cache']['class'];
         $cacheFilesystemAdapter = new $cacheAdapterClass($cacheAdapterConfiguration);
-        $cacheFilesystem = new \League\Flysystem\Filesystem($cacheFilesystemAdapter);
+        $cacheFilesystem = new Filesystem($cacheFilesystemAdapter);
 
         $response = new Response();
         if ($cacheFilesystem->has($cachedFile)) {

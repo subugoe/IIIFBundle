@@ -9,4 +9,4 @@ services:
 
   subugoe_iiif.presentation_service:
     class:      Subugoe\IIIFBundle\Service\PresentationService
-    arguments:  ["@router", "@subugoe_iiif.translator", "%image%"]
+    arguments:  ["@router", "@subugoe_iiif.translator", "%image%", "%presentation%"]

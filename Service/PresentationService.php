@@ -22,14 +22,19 @@ class PresentationService
     private $router;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @var array
      */
     private $imageConfiguration;
 
     /**
-     * @var TranslatorInterface
+     * @var array
      */
-    private $translator;
+    private $presentationConfiguration;
 
     /**
      * PresentationService constructor.
@@ -37,12 +42,14 @@ class PresentationService
      * @param Router              $router
      * @param TranslatorInterface $translator
      * @param array               $imageConfiguration
+     * @param array               $presentationConfiguration
      */
-    public function __construct(Router $router, TranslatorInterface $translator, array $imageConfiguration)
+    public function __construct(Router $router, TranslatorInterface $translator, array $imageConfiguration, array $presentationConfiguration)
     {
         $this->router = $router;
-        $this->imageConfiguration = $imageConfiguration;
         $this->translator = $translator;
+        $this->imageConfiguration = $imageConfiguration;
+        $this->presentationConfiguration = $presentationConfiguration;
     }
 
     /**
@@ -121,8 +128,8 @@ class PresentationService
         $logo = new Image();
         $logoService = new Service();
 
-        $logoService->setId('http://gdzdev.sub.uni-goettingen.de/');
-        $logo->setId('http://gdz.sub.uni-goettingen.de/fileadmin/gdz/layout/head_logo.jpg');
+        $logoService->setId($this->presentationConfiguration['service_id']);
+        $logo->setId($this->presentationConfiguration['logo']);
 
         $logo->setService($logoService);
 
