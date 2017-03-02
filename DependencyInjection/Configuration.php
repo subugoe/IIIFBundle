@@ -7,22 +7,43 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
  * This is the class that validates and merges configuration from your app/config files.
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/configuration.html}
  */
 class Configuration implements ConfigurationInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('subugoe_iiif');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->arrayNode('image')
+                    ->children()
+                        ->integerNode('tile_width')->defaultValue(512)->end()
+                        ->integerNode('tile_height')->defaultValue(512)->end()
+                        ->scalarNode('thumbnail_size')->defaultValue('92,')->end()
+                        ->arrayNode('adapters')
+                            ->children()
+                                ->arrayNode('source')
+                                    ->children()
+                                        ->scalarNode('class')->end()
+                                        ->variableNode('configuration')->end()
+                                    ->end()
+                                ->end()
+                                ->arrayNode('cache')
+                                    ->children()
+                                        ->scalarNode('class')->end()
+                                        ->variableNode('configuration')->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }

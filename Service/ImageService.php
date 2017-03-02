@@ -36,11 +36,13 @@ class ImageService
      *
      * @param ImagineInterface $imagine
      * @param Router           $router
+     * @param array            $imageConfiguration
      */
-    public function __construct(ImagineInterface $imagine, Router $router)
+    public function __construct(ImagineInterface $imagine, Router $router, array $imageConfiguration)
     {
         $this->imagine = $imagine;
         $this->router = $router;
+        $this->imageConfiguration = $imageConfiguration;
     }
 
     /*
@@ -288,7 +290,7 @@ class ImageService
            ->setWidth($originalSize->getWidth())
            ->setHeight($originalSize->getHeight())
            ->setSizes($sizes)
-            ->setTiles($tiles);
+           ->setTiles($tiles);
 
         return $imageInformation;
     }
@@ -324,12 +326,48 @@ class ImageService
         $tiles = [];
         $tile = new Tile();
         $tile
-            ->setWidth(512)
-            ->setHeight(512)
+            ->setWidth($this->imageConfiguration['tile_width'])
+            ->setHeight($this->imageConfiguration['tile_height'])
             ->setScaleFactors($sizeList);
 
         $tiles[] = $tile;
 
         return $tiles;
+    }
+
+    /**
+     * Stores the original image in a cache file.
+     *
+     * @param \Subugoe\IIIFBundle\Model\Image\Image $image
+     *
+     * @return \Psr\Http\Message\StreamInterface|string
+     */
+    public function getOriginalFileContents(\Subugoe\IIIFBundle\Model\Image\Image $image, string $originalIdentifier)
+    {
+        $sourceAdapterConfiguration = $this->imageConfiguration['adapters']['source']['configuration'];
+        $sourceAdapterClass = $this->imageConfiguration['adapters']['source']['class'];
+        $sourceAdapter = new $sourceAdapterClass($sourceAdapterConfiguration);
+        $sourceFilesystem = new \League\Flysystem\Filesystem($sourceAdapter);
+
+        $cacheAdapterConfiguration = $this->imageConfiguration['adapters']['cache']['configuration'];
+        $cacheAdapterClass = $this->imageConfiguration['adapters']['cache']['class'];
+        $cacheFilesystemAdapter = new $cacheAdapterClass($cacheAdapterConfiguration);
+        $cacheFilesystem = new \League\Flysystem\Filesystem($cacheFilesystemAdapter);
+
+        $bild = $sourceFilesystem->read($image->getIdentifier().'.tif');
+
+        $originalImageCacheFile = sprintf('/originals/%s.tif', $originalIdentifier);
+
+        if (!$cacheFilesystem->has($originalImageCacheFile)) {
+            $cacheFilesystem->write($originalImageCacheFile, $bild);
+        }
+
+        if ($cacheFilesystem->has($originalImageCacheFile)) {
+            $originalImage = $cacheFilesystem->read($originalImageCacheFile);
+        } else {
+            $originalImage = $bild;
+        }
+
+        return $originalImage;
     }
 }

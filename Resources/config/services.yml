@@ -1,12 +1,12 @@
 services:
   subugoe_iiif.image_service:
     class:      Subugoe\IIIFBundle\Service\ImageService
-    arguments:  ["@liip_imagine", "@router"]
+    arguments:  ["@liip_imagine", "@router", "%image%"]
 
-  subugoe_iiif.transator:
+  subugoe_iiif.translator:
     class:      Subugoe\IIIFBundle\Translator\SubugoeTranslator
     arguments:  ["@subugoe_find.search_service"]
 
   subugoe_iiif.presentation_service:
     class:      Subugoe\IIIFBundle\Service\PresentationService
-    arguments:  ["@router", "@subugoe_iiif.transator", "%thumbnail_size%"]
+    arguments:  ["@router", "@subugoe_iiif.translator", "%image%"]

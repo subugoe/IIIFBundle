@@ -21,9 +21,9 @@ class PresentationService
     private $router;
 
     /**
-     * @var string
+     * @var array
      */
-    private $thumbnailSize;
+    private $imageConfiguration;
 
     /**
      * @var TranslatorInterface
@@ -35,12 +35,12 @@ class PresentationService
      *
      * @param Router              $router
      * @param TranslatorInterface $translator
-     * @param string              $thumbnailSize
+     * @param array               $imageConfiguration
      */
-    public function __construct(Router $router, TranslatorInterface $translator, string $thumbnailSize)
+    public function __construct(Router $router, TranslatorInterface $translator, array $imageConfiguration)
     {
         $this->router = $router;
-        $this->thumbnailSize = $thumbnailSize;
+        $this->imageConfiguration = $imageConfiguration;
         $this->translator = $translator;
     }
 
@@ -95,7 +95,7 @@ class PresentationService
         $thumbnailParameters = [
             'identifier' => vsprintf('%s:%s', [$document->getId(), $document->getPages()[0]]),
             'region' => 'full',
-            'size' => $this->thumbnailSize,
+            'size' => $this->imageConfiguration['thumbnail_size'],
             'rotation' => 0,
             'quality' => 'default',
             'format' => 'jpg',
@@ -147,10 +147,11 @@ class PresentationService
 
         $metadata = array_filter(
             $metadata,
-            function($value) {
+            function ($value) {
                 if (!empty($value)) {
                     return true;
                 }
+
                 return false;
             });
 

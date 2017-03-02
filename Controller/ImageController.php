@@ -8,10 +8,8 @@ use FOS\RestBundle\View\View;
 use Subugoe\IIIFBundle\Model\Image\Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\FOSRestController as Controller;
@@ -52,10 +50,9 @@ class ImageController extends Controller
      * @var string $quality
      * @var string $format
      *
-     * @return BinaryFileResponse
-     * @Route("/image/{identifier}/{region}/{size}/{rotation}/{quality}.{format}", name="_image", methods={"GET"})
+     * @return Response
      */
-    public function indexAction(string $identifier, string $region, string $size, string $rotation, string $quality, string $format): BinaryFileResponse
+    public function indexAction(string $identifier, string $region, string $size, string $rotation, string $quality, string $format): Response
     {
         $imageEntity = new Image();
         $imageEntity
@@ -68,43 +65,48 @@ class ImageController extends Controller
 
         $hash = sha1(serialize(func_get_args()));
         $cachedFile = vsprintf(
-            '%s/%s.%s',
+            '%s.%s',
             [
-                $this->getParameter('image_cache'),
                 $hash,
                 $imageEntity->getFormat(),
             ]
         );
 
-        $this->createCacheDirectory($cachedFile);
+        $imageParameters = $this->getParameter('image');
 
-        $fs = new Filesystem();
+        $cacheAdapterConfiguration = $imageParameters['adapters']['cache']['configuration'];
+        $cacheAdapterClass = $imageParameters['adapters']['cache']['class'];
+        $cacheFilesystemAdapter = new $cacheAdapterClass($cacheAdapterConfiguration);
+        $cacheFilesystem = new \League\Flysystem\Filesystem($cacheFilesystemAdapter);
 
-        if ($fs->exists($cachedFile)) {
-            return new BinaryFileResponse($cachedFile);
+        $response = new Response();
+        if ($cacheFilesystem->has($cachedFile)) {
+            $response->headers->add(['content-type' => $cacheFilesystem->getMimetype($cachedFile)]);
+            $response->setContent($cacheFilesystem->read($cachedFile));
+
+            return $response;
         }
 
         $imagine = $this->get('liip_imagine');
         $imageService = $this->get('subugoe_iiif.image_service');
 
-        try {
-            $image = $imagine->load($this->getOriginalFileContents($imageEntity, $identifier));
-        } catch (\Exception $e) {
-            throw new NotFoundHttpException(sprintf('Image with identifier %s not found', $imageEntity->getIdentifier()));
-        }
+        $image = $imagine->load($imageService->getOriginalFileContents($imageEntity, $identifier));
 
         $imageService->getRegion($imageEntity->getRegion(), $image);
         $imageService->getSize($imageEntity->getSize(), $image);
         $imageService->getRotation($imageEntity->getRotation(), $image);
         $imageService->getQuality($imageEntity->getQuality(), $image);
 
-        $image
+        $tempImage = $image
             ->strip()
-            ->save($cachedFile,
-                ['format' => $imageEntity->getFormat()]
-            );
+            ->get($imageEntity->getFormat());
 
-        return new BinaryFileResponse($cachedFile);
+        $cacheFilesystem->write($cachedFile, $tempImage);
+
+        $response->setContent($tempImage);
+        $response->headers->add(['content-type' => $cacheFilesystem->getMimetype($cachedFile)]);
+
+        return $response;
     }
 
     /**
@@ -137,32 +139,9 @@ class ImageController extends Controller
         $imageService = $this->get('subugoe_iiif.image_service');
         $imageEntity = new Image();
         $imageEntity->setIdentifier($identifier);
-        $image = $imageService->getImageJsonInformation($identifier, $this->getOriginalFileContents($imageEntity, $identifier));
+        $image = $imageService->getImageJsonInformation($identifier, $imageService->getOriginalFileContents($imageEntity, $identifier));
 
         return $this->view($image, Response::HTTP_OK);
-    }
-
-    /**
-     * @param Image $image
-     *
-     * @return \Psr\Http\Message\StreamInterface|string
-     */
-    protected function getOriginalFileContents(Image $image, string $originalIdentifier)
-    {
-        $client = $this->get('guzzle.client.tiff');
-        $fs = new Filesystem();
-
-        $originalImageCacheFile = $this->getParameter('kernel.cache_dir').'/originals/'.$originalIdentifier.'.tif';
-
-        $this->createCacheDirectory($originalImageCacheFile);
-
-        if ($fs->exists($originalImageCacheFile)) {
-            $originalImage = file_get_contents($originalImageCacheFile);
-        } else {
-            $originalImage = $client->get($image->getIdentifier().'.tif', ['sink' => $originalImageCacheFile])->getBody();
-        }
-
-        return $originalImage;
     }
 
     /**
