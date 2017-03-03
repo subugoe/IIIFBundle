@@ -176,7 +176,7 @@ class PresentationService
     private function getAttribution(\Subugoe\IIIFBundle\Model\Document $document): string
     {
         if (array_key_exists('0', $document->getRightsOwner())) {
-            return $document->getRightsOwner();
+            return $document->getRightsOwner()[0];
         }
 
         return '';
