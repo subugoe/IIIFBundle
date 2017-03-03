@@ -44,7 +44,7 @@ class SubugoeTranslator implements TranslatorInterface
             ->setAuthors($solrDocument['creator'] ?: [])
             ->setPublishingPlaces($solrDocument['place_publish'] ?: [])
             ->setClassification($solrDocument['dc'])
-            ->setPublishingYear($solrDocument['year_publish'] ?: '')
+            ->setPublishingYear((string) $solrDocument['year_publish'] ?: '')
             ->setPublisher($solrDocument['publisher'] ?: [])
             ->setLanguage($solrDocument['lang'])
             ->setImageFormat($solrDocument['image_format'])
@@ -57,7 +57,7 @@ class SubugoeTranslator implements TranslatorInterface
                 ->setId($solrDocument['log_id'][$i])
                 ->setLabel($solrDocument['log_label'][$i])
                 ->setType($solrDocument['log_type'][$i])
-                ->setLevel($solrDocument['log_level'][$i])
+                ->setLevel((int) $solrDocument['log_level'][$i])
                 ->setStartPage($solrDocument['log_start_page_index'][$i])
                 ->setEndPage($solrDocument['log_end_page_index'][$i]);
 

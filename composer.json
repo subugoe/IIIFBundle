@@ -16,5 +16,8 @@
         "liip/imagine-bundle": "^1.7",
         "ralouphie/mimey": "^1.0",
         "oneup/flysystem-bundle": "^1.10"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^3.2"
     }
 }

@@ -35,7 +35,7 @@ class LogicalStructure
     private $endPage;
 
     /**
-     * @var string
+     * @var int
      */
     private $level;
 
@@ -120,19 +120,19 @@ class LogicalStructure
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getEndPage(): string
+    public function getEndPage(): int
     {
         return $this->endPage;
     }
 
     /**
-     * @param string $endPage
+     * @param int $endPage
      *
      * @return LogicalStructure
      */
-    public function setEndPage(string $endPage): LogicalStructure
+    public function setEndPage(int $endPage): LogicalStructure
     {
         $this->endPage = $endPage;
 
@@ -140,19 +140,19 @@ class LogicalStructure
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getLevel(): string
+    public function getLevel(): int
     {
         return $this->level;
     }
 
     /**
-     * @param string $level
+     * @param int $level
      *
      * @return LogicalStructure
      */
-    public function setLevel(string $level): LogicalStructure
+    public function setLevel(int $level): LogicalStructure
     {
         $this->level = $level;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace tests\AppBundle\Service;
+namespace tests\Subugoe\IIIFBundle\Model\Image;
 
 use Subugoe\IIIFBundle\Model\Image\Image;
 
