@@ -278,8 +278,8 @@ class ImageService
         $ppi = $image->getImagick()->getImageResolution();
         $image->strip();
         $originalSize = $image->getSize();
-        $sizeList = [1, 2, 4, 8, 16];
-        $sizes = $this->getImageSizes($originalSize, $sizeList);
+        $sizeList = $this->imageConfiguration['zoom_levels'];
+        $sizes = $this->getImageSizes($originalSize);
 
         $tiles = $this->getTileInformation($sizeList);
 
@@ -300,9 +300,10 @@ class ImageService
      *
      * @return array
      */
-    private function getImageSizes(BoxInterface $originalSize, array $sizeList): array
+    private function getImageSizes(BoxInterface $originalSize): array
     {
         $sizes = [];
+        $sizeList = $this->imageConfiguration['zoom_levels'];
 
         foreach ($sizeList as $size) {
             $dimension = new Dimension();
