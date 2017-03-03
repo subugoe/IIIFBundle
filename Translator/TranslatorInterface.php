@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Subugoe\IIIFBundle\Translator;
 
 use Subugoe\IIIFBundle\Model\Document;

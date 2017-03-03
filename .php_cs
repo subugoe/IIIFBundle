@@ -10,7 +10,7 @@ $finder =  PhpCsFixer\Finder::create()
 $config = PhpCsFixer\Config::create();
 $config
     ->setRules([
-        '@Symfony' => true
+        '@Symfony' => true,
     ])
     ->setFinder($finder);
 
