@@ -264,6 +264,8 @@ class PresentationService
         $canvas
             ->setId($this->router->generate('subugoe_iiif_canvas', ['id' => $documentId, 'canvas' => $canvasId]))
             ->setLabel($canvasId)
+            ->setHeight(400)
+            ->setWidth(300)
             ->setImages($images);
 
         return $canvas;
