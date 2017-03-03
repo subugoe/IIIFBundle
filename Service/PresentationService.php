@@ -201,13 +201,7 @@ class PresentationService
 
             $canvases = [];
             for ($j = $structureStart; $j < $structureEnd; ++$j) {
-                $canvas = $this->router->generate(
-                    'subugoe_iiif_canvas', [
-                        'id' => $document->getId(),
-                        'canvas' => $document->getPages()[$j],
-                    ],
-                    Router::ABSOLUTE_URL);
-                $canvases[] = $canvas;
+                $canvases[] = $this->getCanvas($document->getId(), $document->getPages()[$j]);
             }
 
             $structure = new Structure();
@@ -334,15 +328,7 @@ class PresentationService
         $numberOfPages = count($document->getPages());
 
         for ($i = 0; $i < $numberOfPages; ++$i) {
-            $canvas = new Canvas();
-            $canvas
-                ->setLabel($document->getPhysicalOrderPages()[$i])
-                ->setId($this->router->generate('subugoe_iiif_canvas', [
-                    'id' => $document->getId(),
-                    'canvas' => $document->getPages()[$i], ],
-                    Router::ABSOLUTE_URL)
-                );
-            $canvases[] = $canvas;
+            $canvases[] = $this->getCanvas($document->getId(), $document->getPages()[$i]);
         }
 
         return $canvases;
