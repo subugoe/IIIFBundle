@@ -285,7 +285,7 @@ class ImageService
 
         $imageInformation = new ImageInformation();
         $imageInformation
-           ->setId($this->router->generate('subugoe_iiif_image_json', ['identifier' => $identifier]))
+           ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $identifier], Router::ABSOLUTE_URL))
            ->setPpi($ppi)
            ->setWidth($originalSize->getWidth())
            ->setHeight($originalSize->getHeight())

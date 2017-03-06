@@ -262,7 +262,7 @@ class PresentationService
 
         $canvas = new Canvas();
         $canvas
-            ->setId($this->router->generate('subugoe_iiif_canvas', ['id' => $documentId, 'canvas' => $canvasId]))
+            ->setId($this->router->generate('subugoe_iiif_canvas', ['id' => $documentId, 'canvas' => $canvasId], Router::ABSOLUTE_URL))
             ->setLabel($canvasId)
             ->setHeight(400)
             ->setWidth(300)
@@ -307,10 +307,17 @@ class PresentationService
 
         $format = $mimes->getMimeType($document->getImageFormat());
 
+        $imageService = new Service();
+        $imageService
+            ->setId($this->router->generate(
+                'subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], Router::ABSOLUTE_URL));
+
         $resource
-            ->setId($this->router->generate('subugoe_iiif_image', $imageParameters, Router::ABSOLUTE_URL))
+            ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], Router::ABSOLUTE_URL))
             ->setFormat($format)
-            ->setService(new Service());
+            ->setWidth(300)
+            ->setHeight(400)
+            ->setService($imageService);
 
         $image
             ->setId($this->router->generate('subugoe_iiif_imagepresentation', ['id' => $id, 'name' => $imageId], Router::ABSOLUTE_URL))

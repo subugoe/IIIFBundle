@@ -15,16 +15,19 @@ class ImageResource
 {
     /**
      * @var string
+     * @Serializer\SerializedName("@context")
      */
     private $context = 'http://iiif.io/api/presentation/2/context.json';
 
     /**
      * @var string
+     * @Serializer\SerializedName("@id")
      */
     private $id;
 
     /**
      * @var string
+     * @Serializer\SerializedName("@type")
      */
     private $type = 'oa:Annotation';
 

@@ -32,3 +32,6 @@ subugoe_iiif_image_json:
     path:     "image/{identifier}/info.json"
     methods:  "GET"
     defaults: {_controller: SubugoeIIIFBundle:Image:infoJson}
+
+subugoe_iiif_image_base:
+    path:     "image/{identifier}"
