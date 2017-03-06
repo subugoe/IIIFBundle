@@ -14,11 +14,13 @@ class Structure
 {
     /**
      * @var string
+     * @Serializer\SerializedName("@id")
      */
     private $id;
 
     /**
      * @var string
+     * @Serializer\SerializedName("@type")
      */
     private $type;
 

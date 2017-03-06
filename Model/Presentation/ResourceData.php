@@ -11,6 +11,10 @@ use JMS\Serializer\Annotation as Serializer;
  */
 class ResourceData
 {
+    /**
+     * @var string
+     * @Serializer\SerializedName("@id")
+     */
     private $id;
 
     /**
@@ -40,15 +44,15 @@ class ResourceData
     private $width;
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * @param mixed $id
+     * @param string $id
      *
      * @return ResourceData
      */
