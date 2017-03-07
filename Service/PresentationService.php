@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Service;
 
-use Subugoe\IIIFBundle\Model\LogicalStructure;
 use Subugoe\IIIFBundle\Model\Presentation\Canvas;
 use Subugoe\IIIFBundle\Model\Presentation\Document;
 use Subugoe\IIIFBundle\Model\Presentation\Image;
@@ -103,7 +102,7 @@ class PresentationService
         $thumbnailService = new Service();
 
         $thumbnailParameters = [
-            'identifier' => vsprintf('%s:%s', [$document->getId(), $document->getPages()[0]]),
+            'identifier' => $document->getPhysicalStructure(0)->getIdentifier(),
             'region' => 'full',
             'size' => $this->imageConfiguration['thumbnail_size'],
             'rotation' => 0,
@@ -193,15 +192,14 @@ class PresentationService
         $numberOfStructureElements = count($document->getLogicalStructures()) - 1;
 
         for ($i = 0; $i < $numberOfStructureElements; ++$i) {
-            /** @var LogicalStructure $logicalStructure */
-            $logicalStructure = $document->getLogicalStructures()[$i];
+            $logicalStructure = $document->getLogicalStructure($i);
 
             $structureStart = $logicalStructure->getStartPage();
             $structureEnd = $logicalStructure->getEndPage();
 
             $canvases = [];
             for ($j = $structureStart; $j < $structureEnd; ++$j) {
-                $canvases[] = $this->getCanvas($document->getId(), $document->getPages()[$j]);
+                $canvases[] = $this->getCanvas($document->getId(), $document->getPhysicalStructure($j)->getPage());
             }
 
             $structure = new Structure();
@@ -242,7 +240,7 @@ class PresentationService
             ->setCanvases($canvases)
             ->setStartCanvas($this->router->generate('subugoe_iiif_canvas', [
                 'id' => $document->getId(),
-                'canvas' => $document->getPages()[0],
+                'canvas' => $document->getPhysicalStructure(0)->getPage(),
             ],
                 Router::ABSOLUTE_URL)
             );
@@ -334,10 +332,10 @@ class PresentationService
     private function getCanvases(\Subugoe\IIIFBundle\Model\Document $document): array
     {
         $canvases = [];
-        $numberOfPages = count($document->getPages());
+        $numberOfPages = count($document->getPhysicalStructures());
 
         for ($i = 0; $i < $numberOfPages; ++$i) {
-            $canvases[] = $this->getCanvas($document->getId(), $document->getPages()[$i]);
+            $canvases[] = $this->getCanvas($document->getId(), $document->getPhysicalStructure($i)->getPage());
         }
 
         return $canvases;

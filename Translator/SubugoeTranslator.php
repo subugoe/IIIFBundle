@@ -6,7 +6,9 @@ namespace Subugoe\IIIFBundle\Translator;
 
 use Subugoe\FindBundle\Service\SearchService;
 use Subugoe\IIIFBundle\Model\Document;
+use Subugoe\IIIFBundle\Model\DocumentTypes;
 use Subugoe\IIIFBundle\Model\LogicalStructure;
+use Subugoe\IIIFBundle\Model\PhysicalStructure;
 
 class SubugoeTranslator implements TranslatorInterface
 {
@@ -35,20 +37,20 @@ class SubugoeTranslator implements TranslatorInterface
         $document = new Document();
         $solrDocument = $this->searchService->getDocumentById($id);
         $numberOfLogicalStructures = count($solrDocument['log_id']);
+        $numberOfPhysicalStructures = count($solrDocument['phys_order']);
 
         $document
             ->setId($id)
-            ->setPages($solrDocument['page'])
-            ->setRightsOwner($solrDocument['attribution'] ?: [])
+            ->setType(DocumentTypes::MONOGRAPH)
+            ->setRightsOwner($solrDocument['rights_owner'] ?: [])
             ->setTitle($solrDocument['title'])
             ->setAuthors($solrDocument['creator'] ?: [])
             ->setPublishingPlaces($solrDocument['place_publish'] ?: [])
             ->setClassification($solrDocument['dc'])
-            ->setPublishingYear((string) $solrDocument['year_publish'] ?: '')
+            ->setPublishingYear((int) $solrDocument['year_publish'] ?: 0)
             ->setPublisher($solrDocument['publisher'] ?: [])
             ->setLanguage($solrDocument['lang'])
-            ->setImageFormat($solrDocument['image_format'])
-            ->setPhysicalOrderPages($solrDocument['phys_orderlabel']);
+            ->setImageFormat($solrDocument['image_format']);
 
         for ($i = 0; $i < $numberOfLogicalStructures; ++$i) {
             $structure = new LogicalStructure();
@@ -62,6 +64,17 @@ class SubugoeTranslator implements TranslatorInterface
                 ->setEndPage($solrDocument['log_end_page_index'][$i]);
 
             $document->addLogicalStructure($structure);
+        }
+
+        for ($i = 0; $i < $numberOfPhysicalStructures; ++$i) {
+            $structure = new PhysicalStructure();
+            $structure
+                ->setIdentifier($solrDocument['page_key'][$i])
+                ->setLabel($solrDocument['phys_orderlabel'][$i])
+                ->setOrder($solrDocument['phys_order'][$i])
+                ->setPage($solrDocument['page'][$i]);
+
+            $document->addPhysicalStructure($structure);
         }
 
         return $document;

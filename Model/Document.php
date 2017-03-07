@@ -27,11 +27,6 @@ class Document
     /**
      * @var array
      */
-    private $pages;
-
-    /**
-     * @var array
-     */
     private $rightsOwner;
 
     /**
@@ -50,7 +45,7 @@ class Document
     private $publishingPlaces;
 
     /**
-     * @var string
+     * @var int
      */
     private $publishingYear;
 
@@ -72,12 +67,17 @@ class Document
     /**
      * @var array
      */
-    private $physicalOrderPages;
+    private $physicalStructures = [];
 
     /**
      * @var string
      */
     private $imageFormat = 'jpg';
+
+    /**
+     * @var string
+     */
+    private $type;
 
     /**
      * @return string
@@ -115,26 +115,6 @@ class Document
     public function setTitle(array $title): Document
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPages(): array
-    {
-        return $this->pages;
-    }
-
-    /**
-     * @param array $pages
-     *
-     * @return Document
-     */
-    public function setPages(array $pages): Document
-    {
-        $this->pages = $pages;
 
         return $this;
     }
@@ -220,19 +200,19 @@ class Document
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getPublishingYear(): string
+    public function getPublishingYear(): int
     {
         return $this->publishingYear;
     }
 
     /**
-     * @param string $publishingYear
+     * @param int $publishingYear
      *
      * @return Document
      */
-    public function setPublishingYear(string $publishingYear): Document
+    public function setPublishingYear(int $publishingYear): Document
     {
         $this->publishingYear = $publishingYear;
 
@@ -300,26 +280,6 @@ class Document
     }
 
     /**
-     * @return array
-     */
-    public function getPhysicalOrderPages(): array
-    {
-        return $this->physicalOrderPages;
-    }
-
-    /**
-     * @param array $physicalOrderPages
-     *
-     * @return Document
-     */
-    public function setPhysicalOrderPages(array $physicalOrderPages): Document
-    {
-        $this->physicalOrderPages = $physicalOrderPages;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getImageFormat(): string
@@ -365,5 +325,73 @@ class Document
     public function addLogicalStructure(LogicalStructure $structure)
     {
         $this->logicalStructures[] = $structure;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return LogicalStructure
+     */
+    public function getLogicalStructure(int $id): LogicalStructure
+    {
+        return $this->logicalStructures[$id];
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return Document
+     */
+    public function setType(string $type): Document
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPhysicalStructures(): array
+    {
+        return $this->physicalStructures;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return PhysicalStructure
+     */
+    public function getPhysicalStructure(int $id): PhysicalStructure
+    {
+        return $this->physicalStructures[$id];
+    }
+
+    /**
+     * @param array $physicalStructures
+     *
+     * @return Document
+     */
+    public function setPhysicalStructures(array $physicalStructures): Document
+    {
+        $this->physicalStructures = $physicalStructures;
+
+        return $this;
+    }
+
+    /**
+     * @param PhysicalStructure $structure
+     */
+    public function addPhysicalStructure(PhysicalStructure $structure)
+    {
+        $this->physicalStructures[] = $structure;
     }
 }

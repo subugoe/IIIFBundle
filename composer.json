@@ -15,7 +15,8 @@
         "jms/serializer-bundle": "^1.2",
         "liip/imagine-bundle": "^1.7",
         "ralouphie/mimey": "^1.0",
-        "oneup/flysystem-bundle": "^1.10"
+        "oneup/flysystem-bundle": "^1.10",
+        "myclabs/php-enum": "^1.5"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^3.2"
