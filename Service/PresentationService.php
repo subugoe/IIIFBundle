@@ -199,7 +199,7 @@ class PresentationService
 
             $canvases = [];
             for ($j = $structureStart; $j < $structureEnd; ++$j) {
-                $canvases[] = $this->getCanvas($document->getId(), $document->getPhysicalStructure($j)->getIdentifier());
+                $canvases[] = $this->router->generate('subugoe_iiif_canvas', ['id' => $document->getId(), 'canvas' => $document->getPhysicalStructure($j)->getIdentifier()], Router::ABSOLUTE_URL);
             }
 
             $structure = new Structure();
@@ -210,7 +210,7 @@ class PresentationService
                     ], Router::ABSOLUTE_URL)
                 )
                 ->setLabel($logicalStructure->getLabel())
-                ->setType($logicalStructure->getType())
+                ->setType('sc:Range')
                 ->setCanvases($canvases)
             ;
 

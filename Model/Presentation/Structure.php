@@ -22,7 +22,7 @@ class Structure
      * @var string
      * @Serializer\SerializedName("@type")
      */
-    private $type;
+    private $type = 'sc:Range';
 
     /**
      * @var string
