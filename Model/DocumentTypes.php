@@ -32,4 +32,6 @@ class DocumentTypes extends Enum
     const TITLE_PAGE = 'title_page';
     const PREFACE = 'preface';
     const DEDICATION = 'dedication';
+
+    const UNKNOWN = 'unknown';
 }

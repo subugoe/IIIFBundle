@@ -39,9 +39,11 @@ class SubugoeTranslator implements TranslatorInterface
         $numberOfLogicalStructures = count($solrDocument['log_id']);
         $numberOfPhysicalStructures = count($solrDocument['phys_order']);
 
+        $documentType = $solrDocument['doctype'] === 'work' ? DocumentTypes::MONOGRAPH : DocumentTypes::MULTIVOLUME_WORK;
+
         $document
             ->setId($id)
-            ->setType(DocumentTypes::MONOGRAPH)
+            ->setType($this->getMappedDocumentType($solrDocument['doctype']))
             ->setRightsOwner($solrDocument['rights_owner'] ?: [])
             ->setTitle($solrDocument['title'])
             ->setAuthors($solrDocument['creator'] ?: [])
@@ -78,5 +80,30 @@ class SubugoeTranslator implements TranslatorInterface
         }
 
         return $document;
+    }
+
+    /**
+     * @param string $doctype
+     *
+     * @return string
+     */
+    private function getMappedDocumentType(string $doctype)
+    {
+        $typeMapping = [
+            'monograph' => DocumentTypes::MONOGRAPH,
+            'periodicalvolume' => DocumentTypes::ISSUE,
+            'volume' => DocumentTypes::VOLUME,
+            'periodical' => DocumentTypes::PERIODICAL,
+            'multivolume_work' => DocumentTypes::MULTIVOLUME_WORK,
+            'multivolumework' => DocumentTypes::MULTIVOLUME_WORK,
+            'folder' => DocumentTypes::MULTIVOLUME_WORK,
+            'manuscript' => DocumentTypes::MONOGRAPH,
+        ];
+
+        if (array_key_exists($doctype, $typeMapping)) {
+            return $typeMapping[$doctype];
+        }
+
+        return DocumentTypes::UNKNOWN;
     }
 }

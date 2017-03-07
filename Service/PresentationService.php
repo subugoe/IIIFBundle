@@ -199,7 +199,7 @@ class PresentationService
 
             $canvases = [];
             for ($j = $structureStart; $j < $structureEnd; ++$j) {
-                $canvases[] = $this->getCanvas($document->getId(), $document->getPhysicalStructure($j)->getPage());
+                $canvases[] = $this->getCanvas($document->getId(), $document->getPhysicalStructure($j)->getIdentifier());
             }
 
             $structure = new Structure();
@@ -270,7 +270,7 @@ class PresentationService
     }
 
     /**
-     * @param string $id
+     * @param string $id       Document ID
      * @param string $canvasId
      *
      * @return array
@@ -291,7 +291,7 @@ class PresentationService
         $document = $this->translator->getDocumentById($id);
 
         $imageParameters = [
-            'identifier' => vsprintf('%s:%s', [$id, $imageId]),
+            'identifier' => $imageId,
             'region' => 'full',
             'size' => 'full',
             'rotation' => 0,
@@ -335,7 +335,7 @@ class PresentationService
         $numberOfPages = count($document->getPhysicalStructures());
 
         for ($i = 0; $i < $numberOfPages; ++$i) {
-            $canvases[] = $this->getCanvas($document->getId(), $document->getPhysicalStructure($i)->getPage());
+            $canvases[] = $this->getCanvas($document->getId(), $document->getPhysicalStructure($i)->getIdentifier());
         }
 
         return $canvases;
