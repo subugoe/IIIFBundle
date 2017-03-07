@@ -6,6 +6,10 @@
         {
             "name": "Ingo Pfennigstorf",
             "email": "i.pfennigstorf@gmail.com"
+        },
+        {
+            "name": "Ali Sajedi",
+            "email": "sajedi@sub.uni-goettingen.de"
         }
     ],
     "autoload": {
