@@ -355,18 +355,18 @@ class ImageService
         $cacheFilesystemAdapter = new $cacheAdapterClass($cacheAdapterConfiguration);
         $cacheFilesystem = new \League\Flysystem\Filesystem($cacheFilesystemAdapter);
 
-        $bild = $sourceFilesystem->read($image->getIdentifier().'.tif');
+        $sourceImage = $sourceFilesystem->read($image->getIdentifier().'.tif');
 
         $originalImageCacheFile = sprintf('/originals/%s.tif', $originalIdentifier);
 
         if (!$cacheFilesystem->has($originalImageCacheFile)) {
-            $cacheFilesystem->write($originalImageCacheFile, $bild);
+            $cacheFilesystem->write($originalImageCacheFile, $sourceImage);
         }
 
         if ($cacheFilesystem->has($originalImageCacheFile)) {
             $originalImage = $cacheFilesystem->read($originalImageCacheFile);
         } else {
-            $originalImage = $bild;
+            $originalImage = $sourceImage;
         }
 
         return $originalImage;
