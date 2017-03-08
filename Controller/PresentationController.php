@@ -21,7 +21,9 @@ class PresentationController extends Controller
      */
     public function manifestAction(string $id)
     {
-        return $this->view($this->get('subugoe_iiif.presentation_service')->getManifest($id), Response::HTTP_OK);
+        $document = $this->get('subugoe_iiif.translator')->getDocumentById($id);
+
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getManifest($document), Response::HTTP_OK);
     }
 
     /**
@@ -37,7 +39,9 @@ class PresentationController extends Controller
      */
     public function canvasAction(string $id, string $canvas): View
     {
-        return $this->view($this->get('subugoe_iiif.presentation_service')->getCanvas($id, $canvas), Response::HTTP_OK);
+        $document = $this->get('subugoe_iiif.translator')->getDocumentById($id);
+
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getCanvas($document, $canvas), Response::HTTP_OK);
     }
 
     /**
@@ -53,7 +57,9 @@ class PresentationController extends Controller
      */
     public function imageAction(string $id, string $name): View
     {
-        return $this->view($this->get('subugoe_iiif.presentation_service')->getImage($id, $name), Response::HTTP_OK);
+        $document = $this->get('subugoe_iiif.translator')->getDocumentById($id);
+
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getImage($document, $name), Response::HTTP_OK);
     }
 
     /**
@@ -71,7 +77,9 @@ class PresentationController extends Controller
      */
     public function sequenceAction(string $id, string $name): View
     {
-        return $this->view($this->get('subugoe_iiif.presentation_service')->getSequence($id, $name), Response::HTTP_OK);
+        $document = $this->get('subugoe_iiif.translator')->getDocumentById($id);
+
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getSequence($document, $name), Response::HTTP_OK);
     }
 
     /**

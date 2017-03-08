@@ -55,14 +55,12 @@ class PresentationService
     }
 
     /**
-     * @param string $id
+     * @param \Subugoe\IIIFBundle\Model\Document $document
      *
      * @return Document
      */
-    public function getManifest(string $id): Document
+    public function getManifest(\Subugoe\IIIFBundle\Model\Document $document): Document
     {
-        $document = $this->translator->getDocumentById($id);
-
         $manifest = new Document();
 
         $metadata = $this->getMetadata($document);
@@ -249,25 +247,28 @@ class PresentationService
                 'id' => $document->getId(),
                 'canvas' => $document->getPhysicalStructure(0)->getPage(),
             ],
-                Router::ABSOLUTE_URL)
-            );
+                Router::ABSOLUTE_URL));
 
         return $sequences;
     }
 
     /**
-     * @param string $documentId
-     * @param string $canvasId
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param string                             $canvasId
      *
      * @return Canvas
      */
-    public function getCanvas(string $documentId, string $canvasId): Canvas
+    public function getCanvas(\Subugoe\IIIFBundle\Model\Document $document, string $canvasId): Canvas
     {
-        $images = $this->getImages($documentId, $canvasId);
+        $images = $this->getImages($document, $canvasId);
 
         $canvas = new Canvas();
         $canvas
-            ->setId($this->router->generate('subugoe_iiif_canvas', ['id' => $documentId, 'canvas' => $canvasId], Router::ABSOLUTE_URL))
+            ->setId($this->router->generate('subugoe_iiif_canvas', [
+                'id' => $document->getId(),
+                'canvas' => $canvasId,
+            ],
+                Router::ABSOLUTE_URL))
             ->setLabel($canvasId)
             ->setHeight(400)
             ->setWidth(300)
@@ -277,26 +278,24 @@ class PresentationService
     }
 
     /**
-     * @param string $id       Document ID
-     * @param string $canvasId
+     * @param \Subugoe\IIIFBundle\Model\Document $document Document ID
+     * @param string                             $canvasId
      *
      * @return array
      */
-    private function getImages(string $id, string $canvasId): array
+    private function getImages(\Subugoe\IIIFBundle\Model\Document $document, string $canvasId): array
     {
-        return [$this->getImage($id, $canvasId)];
+        return [$this->getImage($document, $canvasId)];
     }
 
     /**
-     * @param string $id
-     * @param string $imageId
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param string                             $imageId
      *
      * @return ImageResource
      */
-    public function getImage(string $id, string $imageId): ImageResource
+    public function getImage(\Subugoe\IIIFBundle\Model\Document $document, string $imageId): ImageResource
     {
-        $document = $this->translator->getDocumentById($id);
-
         $imageParameters = [
             'identifier' => $imageId,
             'region' => 'full',
@@ -325,7 +324,7 @@ class PresentationService
             ->setService($imageService);
 
         $image
-            ->setId($this->router->generate('subugoe_iiif_imagepresentation', ['id' => $id, 'name' => $imageId], Router::ABSOLUTE_URL))
+            ->setId($this->router->generate('subugoe_iiif_imagepresentation', ['id' => $document->getId(), 'name' => $imageId], Router::ABSOLUTE_URL))
             ->setResource($resource);
 
         return $image;
@@ -342,34 +341,33 @@ class PresentationService
         $numberOfPages = count($document->getPhysicalStructures());
 
         for ($i = 0; $i < $numberOfPages; ++$i) {
-            $canvases[] = $this->getCanvas($document->getId(), $document->getPhysicalStructure($i)->getIdentifier());
+            $canvases[] = $this->getCanvas($document, $document->getPhysicalStructure($i)->getIdentifier());
         }
 
         return $canvases;
     }
 
     /**
-     * @param string $documentId
-     * @param string $name
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param string                             $name
      *
      * @return Sequence
      */
-    public function getSequence(string $documentId, $name): Sequence
+    public function getSequence(\Subugoe\IIIFBundle\Model\Document $document, $name): Sequence
     {
-        $document = $this->translator->getDocumentById($documentId);
         $canvases = $this->getCanvases($document);
 
         $sequence = new Sequence();
         $sequence
             ->setId($this->router->generate('subugoe_iiif_sequence', [
-                'id' => $documentId,
+                'id' => $document->getId(),
                 'name' => $name,
             ],
                 Router::ABSOLUTE_URL))
             ->setCanvases($canvases)
             ->setStartCanvas($this->router->generate('subugoe_iiif_canvas', [
-                'id' => $documentId,
-                'canvas' => $document->getPages()[0],
+                'id' => $document->getId(),
+                'canvas' => $document->getPhysicalStructure(0)->getPage(),
             ],
                 Router::ABSOLUTE_URL));
 
