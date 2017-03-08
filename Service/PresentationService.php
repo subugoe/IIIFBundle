@@ -198,8 +198,11 @@ class PresentationService
             $structureEnd = $logicalStructure->getEndPage();
 
             $canvases = [];
-            for ($j = $structureStart; $j < $structureEnd; ++$j) {
-                $canvases[] = $this->router->generate('subugoe_iiif_canvas', ['id' => $document->getId(), 'canvas' => $document->getPhysicalStructure($j)->getIdentifier()], Router::ABSOLUTE_URL);
+            for ($j = $structureStart; $j <= $structureEnd; ++$j) {
+                $canvases[] = $this->router->generate('subugoe_iiif_canvas', [
+                    'id' => $document->getId(),
+                    'canvas' => $document->getPhysicalStructure($j - 1)->getIdentifier(),
+                ], Router::ABSOLUTE_URL);
             }
 
             $structure = new Structure();
