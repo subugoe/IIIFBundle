@@ -79,6 +79,6 @@ class PresentationController extends Controller
      */
     public function rangeAction(string $id, string $range)
     {
-        return new Response('Range');
+        return new Response(sprintf('Range %s for document %s', $range, $id));
     }
 }

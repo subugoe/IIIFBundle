@@ -8,6 +8,7 @@ use Subugoe\IIIFBundle\Model\Presentation\Canvas;
 use Subugoe\IIIFBundle\Model\Presentation\Document;
 use Subugoe\IIIFBundle\Model\Presentation\Image;
 use Subugoe\IIIFBundle\Model\Presentation\ImageResource;
+use Subugoe\IIIFBundle\Model\Presentation\Metadata;
 use Subugoe\IIIFBundle\Model\Presentation\ResourceData;
 use Subugoe\IIIFBundle\Model\Presentation\Sequence;
 use Subugoe\IIIFBundle\Model\Presentation\Service;
@@ -148,23 +149,24 @@ class PresentationService
             'author' => $document->getAuthors(),
             'publishing_place' => $document->getPublishingPlaces(),
             'classification' => $document->getClassification(),
-            'publishing_year' => $document->getPublishingYear(),
+            'publishing_year' => (string) $document->getPublishingYear(),
             'publisher' => $document->getPublisher(),
             'language' => $document->getLanguage(),
             'subtitle' => $document->getSubtitle(),
         ];
 
-        $metadata = array_filter(
-            $metadata,
-            function ($value) {
-                if (!empty($value)) {
-                    return true;
-                }
+        $md = [];
+        foreach ($metadata as $key => $value) {
+            if (!empty($value)) {
+                $data = new Metadata();
+                $data
+                    ->setLabel($key)
+                    ->setValue($value);
+                $md[] = $data;
+            }
+        }
 
-                return false;
-            });
-
-        return $metadata;
+        return $md;
     }
 
     /**
@@ -191,33 +193,35 @@ class PresentationService
         $structures = [];
         $numberOfStructureElements = count($document->getLogicalStructures()) - 1;
 
+        $levelOfFirstStructure = $document->getLogicalStructure(0)->getLevel();
+
         for ($i = 0; $i < $numberOfStructureElements; ++$i) {
             $logicalStructure = $document->getLogicalStructure($i);
+            if ($levelOfFirstStructure === $logicalStructure->getLevel()) {
+                $structureStart = $logicalStructure->getStartPage();
+                $structureEnd = $logicalStructure->getEndPage();
 
-            $structureStart = $logicalStructure->getStartPage();
-            $structureEnd = $logicalStructure->getEndPage();
+                $canvases = [];
+                for ($j = $structureStart; $j <= $structureEnd; ++$j) {
+                    $canvases[] = $this->router->generate('subugoe_iiif_canvas', [
+                        'id' => $document->getId(),
+                        'canvas' => $document->getPhysicalStructure($j - 1)->getIdentifier(),
+                    ], Router::ABSOLUTE_URL);
+                }
 
-            $canvases = [];
-            for ($j = $structureStart; $j <= $structureEnd; ++$j) {
-                $canvases[] = $this->router->generate('subugoe_iiif_canvas', [
-                    'id' => $document->getId(),
-                    'canvas' => $document->getPhysicalStructure($j - 1)->getIdentifier(),
-                ], Router::ABSOLUTE_URL);
-            }
-
-            $structure = new Structure();
-            $structure
-                ->setId($this->router->generate('subugoe_iiif_range', [
+                $structure = new Structure();
+                $structure
+                    ->setId($this->router->generate('subugoe_iiif_range', [
                         'id' => $document->getId(),
                         'range' => $logicalStructure->getId(),
                     ], Router::ABSOLUTE_URL)
-                )
-                ->setLabel($logicalStructure->getLabel())
-                ->setType('sc:Range')
-                ->setCanvases($canvases)
-            ;
+                    )
+                    ->setLabel($logicalStructure->getLabel())
+                    ->setType('sc:Canvas')
+                    ->setCanvases($canvases);
 
-            $structures[] = $structure;
+                $structures[] = $structure;
+            }
         }
 
         return $structures;
