@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Service;
 
+use Subugoe\IIIFBundle\Model\PhysicalStructure;
 use Subugoe\IIIFBundle\Model\Presentation\Canvas;
 use Subugoe\IIIFBundle\Model\Presentation\Document;
 use Subugoe\IIIFBundle\Model\Presentation\Image;
@@ -192,7 +193,7 @@ class PresentationService
         $numberOfStructureElements = count($document->getLogicalStructures());
 
         if ($numberOfStructureElements > 0) {
-            $numberOfStructureElements = count($document->getLogicalStructures()) - 1;
+            $numberOfStructureElements = --$numberOfStructureElements;
 
             $levelOfFirstStructure = $document->getLogicalStructure(0)->getLevel();
 
@@ -259,12 +260,19 @@ class PresentationService
     /**
      * @param \Subugoe\IIIFBundle\Model\Document $document
      * @param string                             $canvasId
+     * @param int                                $physicalStructureId
      *
      * @return Canvas
      */
-    public function getCanvas(\Subugoe\IIIFBundle\Model\Document $document, string $canvasId): Canvas
+    public function getCanvas(\Subugoe\IIIFBundle\Model\Document $document, string $canvasId, int $physicalStructureId = -1): Canvas
     {
         $images = $this->getImages($document, $canvasId);
+
+        if ($physicalStructureId !== -1) {
+            $label = $document->getPhysicalStructure($physicalStructureId)->getLabel();
+        } else {
+            $label = $this->getLabelForCanvas($document, $canvasId);
+        }
 
         $canvas = new Canvas();
         $canvas
@@ -273,12 +281,32 @@ class PresentationService
                 'canvas' => $canvasId,
             ],
                 Router::ABSOLUTE_URL))
-            ->setLabel($canvasId)
+            ->setLabel($label)
             ->setHeight(400)
             ->setWidth(300)
             ->setImages($images);
 
         return $canvas;
+    }
+
+    /**
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param string                             $canvasId
+     *
+     * @return string
+     */
+    private function getLabelForCanvas(\Subugoe\IIIFBundle\Model\Document $document, string $canvasId)
+    {
+        $physicalStructures = $document->getPhysicalStructures();
+
+        /** @var PhysicalStructure $physicalStructure */
+        foreach ($physicalStructures as $physicalStructure) {
+            if ($physicalStructure->getIdentifier() === $canvasId) {
+                return $physicalStructure->getLabel();
+            }
+        }
+
+        return '';
     }
 
     /**
@@ -345,7 +373,7 @@ class PresentationService
         $numberOfPages = count($document->getPhysicalStructures());
 
         for ($i = 0; $i < $numberOfPages; ++$i) {
-            $canvases[] = $this->getCanvas($document, $document->getPhysicalStructure($i)->getIdentifier());
+            $canvases[] = $this->getCanvas($document, $document->getPhysicalStructure($i)->getIdentifier(), $i);
         }
 
         return $canvases;
