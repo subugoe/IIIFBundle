@@ -189,36 +189,40 @@ class PresentationService
     private function getStructures(\Subugoe\IIIFBundle\Model\Document $document): array
     {
         $structures = [];
-        $numberOfStructureElements = count($document->getLogicalStructures()) - 1;
+        $numberOfStructureElements = count($document->getLogicalStructures());
 
-        $levelOfFirstStructure = $document->getLogicalStructure(0)->getLevel();
+        if ($numberOfStructureElements > 0) {
+            $numberOfStructureElements = count($document->getLogicalStructures()) - 1;
 
-        for ($i = 0; $i < $numberOfStructureElements; ++$i) {
-            $logicalStructure = $document->getLogicalStructure($i);
-            if ($levelOfFirstStructure === $logicalStructure->getLevel()) {
-                $structureStart = $logicalStructure->getStartPage();
-                $structureEnd = $logicalStructure->getEndPage();
+            $levelOfFirstStructure = $document->getLogicalStructure(0)->getLevel();
 
-                $canvases = [];
-                for ($j = $structureStart; $j <= $structureEnd; ++$j) {
-                    $canvases[] = $this->router->generate('subugoe_iiif_canvas', [
-                        'id' => $document->getId(),
-                        'canvas' => $document->getPhysicalStructure($j - 1)->getIdentifier(),
-                    ], Router::ABSOLUTE_URL);
+            for ($i = 0; $i < $numberOfStructureElements; ++$i) {
+                $logicalStructure = $document->getLogicalStructure($i);
+                if ($levelOfFirstStructure === $logicalStructure->getLevel()) {
+                    $structureStart = $logicalStructure->getStartPage();
+                    $structureEnd = $logicalStructure->getEndPage();
+
+                    $canvases = [];
+                    for ($j = $structureStart; $j <= $structureEnd; ++$j) {
+                        $canvases[] = $this->router->generate('subugoe_iiif_canvas', [
+                            'id' => $document->getId(),
+                            'canvas' => $document->getPhysicalStructure($j - 1)->getIdentifier(),
+                        ], Router::ABSOLUTE_URL);
+                    }
+
+                    $structure = new Structure();
+                    $structure
+                        ->setId($this->router->generate('subugoe_iiif_range', [
+                            'id' => $document->getId(),
+                            'range' => $logicalStructure->getId(),
+                        ], Router::ABSOLUTE_URL)
+                        )
+                        ->setLabel($logicalStructure->getLabel())
+                        ->setType('sc:Canvas')
+                        ->setCanvases($canvases);
+
+                    $structures[] = $structure;
                 }
-
-                $structure = new Structure();
-                $structure
-                    ->setId($this->router->generate('subugoe_iiif_range', [
-                        'id' => $document->getId(),
-                        'range' => $logicalStructure->getId(),
-                    ], Router::ABSOLUTE_URL)
-                    )
-                    ->setLabel($logicalStructure->getLabel())
-                    ->setType('sc:Canvas')
-                    ->setCanvases($canvases);
-
-                $structures[] = $structure;
             }
         }
 

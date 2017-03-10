@@ -205,6 +205,10 @@ class ImageService
      */
     public function getRotation(string $rotation, Image $image): Image
     {
+        if ((int) $rotation === 0) {
+            return $image;
+        }
+
         if (isset($rotation) && !empty($rotation)) {
             $rotationDegree = str_replace('!', '', $rotation);
             if (intval($rotationDegree) <= 360) {

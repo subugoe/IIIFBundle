@@ -39,8 +39,6 @@ class SubugoeTranslator implements TranslatorInterface
         $numberOfLogicalStructures = count($solrDocument['log_id']);
         $numberOfPhysicalStructures = count($solrDocument['phys_order']);
 
-        $documentType = $solrDocument['doctype'] === 'work' ? DocumentTypes::MONOGRAPH : DocumentTypes::MULTIVOLUME_WORK;
-
         $document
             ->setId($id)
             ->setType($this->getMappedDocumentType($solrDocument['doctype']))
