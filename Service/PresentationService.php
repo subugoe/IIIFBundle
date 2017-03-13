@@ -16,6 +16,7 @@ use Subugoe\IIIFBundle\Model\Presentation\Service;
 use Subugoe\IIIFBundle\Model\Presentation\Structure;
 use Subugoe\IIIFBundle\Translator\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeByExtensionGuesser;
 
 class PresentationService
 {
@@ -341,7 +342,7 @@ class PresentationService
         $resource = new ResourceData();
         $mimes = new \Mimey\MimeTypes();
 
-        $format = $mimes->getMimeType($document->getImageFormat());
+        $format = $mimes->getMimeType($document->getImageFormat()) ?: '';
 
         $imageService = new Service();
         $imageService
