@@ -394,9 +394,8 @@ class ImageService
         $sourceAdapter = new $sourceAdapterClass($sourceAdapterConfiguration);
         $sourceFilesystem = new \League\Flysystem\Filesystem($sourceAdapter);
 
-        $cacheAdapterConfiguration = $this->imageConfiguration['adapters']['cache']['configuration'];
         $cacheAdapterClass = $this->imageConfiguration['adapters']['cache']['class'];
-        $cacheFilesystemAdapter = new $cacheAdapterClass($cacheAdapterConfiguration);
+        $cacheFilesystemAdapter = new $cacheAdapterClass($this->imageConfiguration['adapters']['cache']['configuration']);
         $cacheFilesystem = new \League\Flysystem\Filesystem($cacheFilesystemAdapter);
 
         $sourceImage = $sourceFilesystem->read($image->getIdentifier().'.tif');
