@@ -6,6 +6,7 @@ namespace Subugoe\IIIFBundle\Service;
 
 use Imagine\Image\Box;
 use Imagine\Image\BoxInterface;
+use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
 use Imagine\Imagick\Image;
@@ -45,6 +46,37 @@ class ImageService
         $this->imageConfiguration = $imageConfiguration;
     }
 
+    /**
+     * @param \Subugoe\IIIFBundle\Model\Image\Image $imageEntity
+     *
+     * @return ImageInterface
+     */
+    public function process($imageEntity)
+    {
+        $image = $this->imagine->load($this->getOriginalFileContents($imageEntity));
+
+        $this->getRegion($imageEntity->getRegion(), $image);
+        $this->getSize($imageEntity->getSize(), $image);
+        $this->getRotation($imageEntity->getRotation(), $image);
+        $this->getQuality($imageEntity->getQuality(), $image);
+        $this->getFormat($imageEntity->getFormat(), $image);
+
+        return $image;
+    }
+
+    /**
+     * @param string         $format
+     * @param ImageInterface $image
+     *
+     * @return string
+     */
+    public function getFormat(string $format, ImageInterface $image)
+    {
+        return $image
+              ->strip()
+              ->get($format);
+    }
+
     /*
      * Apply the requested image region as per IIIF-Image API.
      * Region parameters may be:
@@ -55,11 +87,13 @@ class ImageService
      * @see http://iiif.io/api/image/2.0/#region
      *
      * @param string $region  The requested image region
-     * @param Image $image The image object
+     * @param ImageInterface $image The image object
      *
      * @throws BadRequestHttpException if a region parameter missing or parameter out of image bound
+     *
+     * @return ImageInterface
      */
-    public function getRegion(string $region, Image $image): Image
+    public function getRegion(string $region, ImageInterface $image): ImageInterface
     {
         $region = trim($region);
 
@@ -137,11 +171,13 @@ class ImageService
      * @see http://iiif.io/api/image/2.0/#size
      *
      * @param string $size The requested image size
-     * @param Image $image The image object
+     * @param ImageInterface $image The image object
      *
      * @throws BadRequestHttpException if wrong size syntax given
+     *
+     * @return ImageInterface
      */
-    public function getSize(string $size, Image $image): Image
+    public function getSize(string $size, ImageInterface $image): ImageInterface
     {
         if ($size === 'full' || $size === 'max') {
             return $image;
@@ -199,11 +235,13 @@ class ImageService
      * @see http://iiif.io/api/image/2.0/#rotation
      *
      * @param string $rotation The requested image rotation
-     * @param Image $image The image object
+     * @param ImageInterface $image The image object
      *
      * @throws BadRequestHttpException if wrong rotation parameters provided
+     *
+     * @return ImageInterface
      */
-    public function getRotation(string $rotation, Image $image): Image
+    public function getRotation(string $rotation, ImageInterface $image): ImageInterface
     {
         if ((int) $rotation === 0) {
             return $image;
@@ -236,11 +274,13 @@ class ImageService
      * @see http://iiif.io/api/image/2.0/#quality
      *
      * @param string $quality The requested image quality
-     * @param Image $image The image object
+     * @param ImageInterface $image The image object
      *
      * @throws BadRequestHttpException if wrong quality parameters provided
+     *
+     * @return ImageInterface
      */
-    public function getQuality(string $quality, Image $image): Image
+    public function getQuality(string $quality, ImageInterface $image): ImageInterface
     {
         if ($quality === 'default' || $quality === 'color') {
             return $image;
@@ -347,7 +387,7 @@ class ImageService
      *
      * @return \Psr\Http\Message\StreamInterface|string
      */
-    public function getOriginalFileContents(\Subugoe\IIIFBundle\Model\Image\Image $image, string $originalIdentifier)
+    public function getOriginalFileContents(\Subugoe\IIIFBundle\Model\Image\Image $image)
     {
         $sourceAdapterConfiguration = $this->imageConfiguration['adapters']['source']['configuration'];
         $sourceAdapterClass = $this->imageConfiguration['adapters']['source']['class'];
@@ -361,7 +401,7 @@ class ImageService
 
         $sourceImage = $sourceFilesystem->read($image->getIdentifier().'.tif');
 
-        $originalImageCacheFile = sprintf('/originals/%s.tif', $originalIdentifier);
+        $originalImageCacheFile = sprintf('/originals/%s.tif', $image->getIdentifier());
 
         if (!$cacheFilesystem->has($originalImageCacheFile)) {
             $cacheFilesystem->write($originalImageCacheFile, $sourceImage);

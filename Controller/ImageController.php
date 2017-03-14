@@ -71,12 +71,7 @@ class ImageController extends Controller
             ]
         );
 
-        $imageParameters = $this->getParameter('image');
-
-        $cacheAdapterConfiguration = $imageParameters['adapters']['cache']['configuration'];
-        $cacheAdapterClass = $imageParameters['adapters']['cache']['class'];
-        $cacheFilesystemAdapter = new $cacheAdapterClass($cacheAdapterConfiguration);
-        $cacheFilesystem = new Filesystem($cacheFilesystemAdapter);
+        $cacheFilesystem = $this->getCacheFilesystem();
 
         $response = new Response();
         if ($cacheFilesystem->has($cachedFile)) {
@@ -86,23 +81,12 @@ class ImageController extends Controller
             return $response;
         }
 
-        $imagine = $this->get('liip_imagine');
         $imageService = $this->get('subugoe_iiif.image_service');
+        $image = $imageService->process($imageEntity);
 
-        $image = $imagine->load($imageService->getOriginalFileContents($imageEntity, $identifier));
+        $cacheFilesystem->write($cachedFile, $image);
 
-        $imageService->getRegion($imageEntity->getRegion(), $image);
-        $imageService->getSize($imageEntity->getSize(), $image);
-        $imageService->getRotation($imageEntity->getRotation(), $image);
-        $imageService->getQuality($imageEntity->getQuality(), $image);
-
-        $tempImage = $image
-            ->strip()
-            ->get($imageEntity->getFormat());
-
-        $cacheFilesystem->write($cachedFile, $tempImage);
-
-        $response->setContent($tempImage);
+        $response->setContent($image);
         $response->headers->add(['content-type' => $cacheFilesystem->getMimetype($cachedFile)]);
 
         return $response;
@@ -116,7 +100,7 @@ class ImageController extends Controller
         $imageService = $this->get('subugoe_iiif.image_service');
         $imageEntity = new Image();
         $imageEntity->setIdentifier($identifier);
-        $image = $imageService->getImageJsonInformation($identifier, $imageService->getOriginalFileContents($imageEntity, $identifier));
+        $image = $imageService->getImageJsonInformation($identifier, $imageService->getOriginalFileContents($imageEntity));
 
         return $this->view($image, Response::HTTP_OK);
     }
@@ -129,5 +113,20 @@ class ImageController extends Controller
         return $this->render('images/view.html.twig', [
             'identifier' => $identifier,
         ]);
+    }
+
+    /**
+     * @return Filesystem
+     */
+    private function getCacheFilesystem(): Filesystem
+    {
+        $imageParameters = $this->getParameter('image');
+
+        $cacheAdapterConfiguration = $imageParameters['adapters']['cache']['configuration'];
+        $cacheAdapterClass = $imageParameters['adapters']['cache']['class'];
+        $cacheFilesystemAdapter = new $cacheAdapterClass($cacheAdapterConfiguration);
+        $cacheFilesystem = new Filesystem($cacheFilesystemAdapter);
+
+        return $cacheFilesystem;
     }
 }

@@ -16,7 +16,6 @@ use Subugoe\IIIFBundle\Model\Presentation\Service;
 use Subugoe\IIIFBundle\Model\Presentation\Structure;
 use Subugoe\IIIFBundle\Translator\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeByExtensionGuesser;
 
 class PresentationService
 {
