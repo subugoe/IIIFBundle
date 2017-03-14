@@ -63,8 +63,9 @@ class ImageController extends Controller
 
         $hash = sha1(serialize(func_get_args()));
         $cachedFile = vsprintf(
-            '%s.%s',
+            '%s/%s.%s',
             [
+                $identifier,
                 $hash,
                 $imageEntity->getFormat(),
             ]
