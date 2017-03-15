@@ -9,10 +9,12 @@ use Imagine\Image\BoxInterface;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
-use Imagine\Imagick\Image;
+use Subugoe\IIIFBundle\Model\Document;
 use Subugoe\IIIFBundle\Model\Image\Dimension;
 use Subugoe\IIIFBundle\Model\Image\ImageInformation;
 use Subugoe\IIIFBundle\Model\Image\Tile;
+use Subugoe\IIIFBundle\Model\PhysicalStructure;
+use Subugoe\IIIFBundle\Translator\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -33,23 +35,30 @@ class ImageService
     private $router;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * ImageService constructor.
      *
-     * @param ImagineInterface $imagine
-     * @param Router           $router
-     * @param array            $imageConfiguration
+     * @param ImagineInterface    $imagine
+     * @param Router              $router
+     * @param array               $imageConfiguration
+     * @param TranslatorInterface $translator
      */
-    public function __construct(ImagineInterface $imagine, Router $router, array $imageConfiguration)
+    public function __construct(ImagineInterface $imagine, Router $router, array $imageConfiguration, TranslatorInterface $translator)
     {
         $this->imagine = $imagine;
         $this->router = $router;
         $this->imageConfiguration = $imageConfiguration;
+        $this->translator = $translator;
     }
 
     /**
      * @param \Subugoe\IIIFBundle\Model\Image\Image $imageEntity
      *
-     * @return ImageInterface
+     * @return string
      */
     public function process($imageEntity)
     {
@@ -59,22 +68,8 @@ class ImageService
         $this->getSize($imageEntity->getSize(), $image);
         $this->getRotation($imageEntity->getRotation(), $image);
         $this->getQuality($imageEntity->getQuality(), $image);
-        $this->getFormat($imageEntity->getFormat(), $image);
 
-        return $image;
-    }
-
-    /**
-     * @param string         $format
-     * @param ImageInterface $image
-     *
-     * @return string
-     */
-    public function getFormat(string $format, ImageInterface $image)
-    {
-        return $image
-              ->strip()
-              ->get($format);
+        return $image->strip()->get($imageEntity->getFormat());
     }
 
     /*
@@ -93,7 +88,7 @@ class ImageService
      *
      * @return ImageInterface
      */
-    public function getRegion(string $region, ImageInterface $image): ImageInterface
+    private function getRegion(string $region, ImageInterface $image): ImageInterface
     {
         $region = trim($region);
 
@@ -177,7 +172,7 @@ class ImageService
      *
      * @return ImageInterface
      */
-    public function getSize(string $size, ImageInterface $image): ImageInterface
+    private function getSize(string $size, ImageInterface $image): ImageInterface
     {
         if ($size === 'full' || $size === 'max') {
             return $image;
@@ -241,7 +236,7 @@ class ImageService
      *
      * @return ImageInterface
      */
-    public function getRotation(string $rotation, ImageInterface $image): ImageInterface
+    private function getRotation(string $rotation, ImageInterface $image): ImageInterface
     {
         if ((int) $rotation === 0) {
             return $image;
@@ -280,7 +275,7 @@ class ImageService
      *
      * @return ImageInterface
      */
-    public function getQuality(string $quality, ImageInterface $image): ImageInterface
+    private function getQuality(string $quality, ImageInterface $image): ImageInterface
     {
         if ($quality === 'default' || $quality === 'color') {
             return $image;
@@ -308,7 +303,7 @@ class ImageService
      *
      * @return ImageInformation
      */
-    public function getImageJsonInformation(string $identifier, $originalImage)
+    public function getImageJsonInformation(string $identifier, $originalImage): ImageInformation
     {
         $imageEntity = new \Subugoe\IIIFBundle\Model\Image\Image();
         $imageEntity->setIdentifier($identifier);
@@ -389,6 +384,9 @@ class ImageService
      */
     public function getOriginalFileContents(\Subugoe\IIIFBundle\Model\Image\Image $image)
     {
+        $document = $this->translator->getDocumentByImageId($image->getIdentifier());
+        $filename = $this->getFilename($document, $image);
+
         $sourceAdapterConfiguration = $this->imageConfiguration['adapters']['source']['configuration'];
         $sourceAdapterClass = $this->imageConfiguration['adapters']['source']['class'];
         $sourceAdapter = new $sourceAdapterClass($sourceAdapterConfiguration);
@@ -398,9 +396,9 @@ class ImageService
         $cacheFilesystemAdapter = new $cacheAdapterClass($this->imageConfiguration['adapters']['cache']['configuration']);
         $cacheFilesystem = new \League\Flysystem\Filesystem($cacheFilesystemAdapter);
 
-        $sourceImage = $sourceFilesystem->read($image->getIdentifier().'.tif');
+        $sourceImage = $sourceFilesystem->read($filename);
 
-        $originalImageCacheFile = sprintf('/originals/%s.tif', $image->getIdentifier());
+        $originalImageCacheFile = sprintf('/originals/%s.%s', $image->getIdentifier(), $document->getImageFormat());
 
         if (!$cacheFilesystem->has($originalImageCacheFile)) {
             $cacheFilesystem->write($originalImageCacheFile, $sourceImage);
@@ -413,5 +411,17 @@ class ImageService
         }
 
         return $originalImage;
+    }
+
+    private function getFilename(Document $document, \Subugoe\IIIFBundle\Model\Image\Image $image): string
+    {
+        /** @var PhysicalStructure $physicalStructure */
+        foreach ($document->getPhysicalStructures() as $physicalStructure) {
+            if ($image->getIdentifier() === $physicalStructure->getIdentifier()) {
+                return $physicalStructure->getFilename();
+            }
+        }
+
+        return $image->getIdentifier().$image->getFormat();
     }
 }

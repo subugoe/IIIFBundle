@@ -28,6 +28,11 @@ class PhysicalStructure
     private $page;
 
     /**
+     * @var string
+     */
+    private $filename;
+
+    /**
      * @return int
      */
     public function getOrder(): int
@@ -103,6 +108,26 @@ class PhysicalStructure
     public function setPage(string $page): PhysicalStructure
     {
         $this->page = $page;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilename(): string
+    {
+        return $this->filename;
+    }
+
+    /**
+     * @param string $filename
+     *
+     * @return PhysicalStructure
+     */
+    public function setFilename(string $filename): PhysicalStructure
+    {
+        $this->filename = $filename;
 
         return $this;
     }

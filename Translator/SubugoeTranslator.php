@@ -72,12 +72,31 @@ class SubugoeTranslator implements TranslatorInterface
                 ->setIdentifier($solrDocument['page_key'][$i])
                 ->setLabel($solrDocument['phys_orderlabel'][$i])
                 ->setOrder($solrDocument['phys_order'][$i])
-                ->setPage($solrDocument['page'][$i]);
+                ->setPage($solrDocument['page'][$i])
+                ->setFilename(vsprintf(
+                    '%s/%s.%s', [
+                        $solrDocument['id'],
+                        $solrDocument['page'][$i],
+                        'tif',
+                    ]
+                ));
 
             $document->addPhysicalStructure($structure);
         }
 
         return $document;
+    }
+
+    /**
+     * @param string $imageId
+     *
+     * @return Document
+     */
+    public function getDocumentByImageId(string $imageId): Document
+    {
+        $solrDocument = $this->searchService->getDocumentBy('page_key', $imageId);
+
+        return $this->getDocumentById($solrDocument['id']);
     }
 
     /**

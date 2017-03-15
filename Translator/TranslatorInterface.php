@@ -14,4 +14,11 @@ interface TranslatorInterface
      * @return Document
      */
     public function getDocumentById(string $id): Document;
+
+    /**
+     * @param string $imageId
+     *
+     * @return Document
+     */
+    public function getDocumentByImageId(string $imageId): Document;
 }

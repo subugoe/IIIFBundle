@@ -14,7 +14,6 @@ class Image
     /**
      * @var string
      * @Assert\NotBlank()
-     * @Assert\Regex(pattern="/^[(\w+:\w+)|(\w)]/", message="Invalid identifier format.")
      */
     protected $identifier;
 
@@ -30,7 +29,7 @@ class Image
 
     /**
      * @var string|int
-     * @Assert\Regex(pattern="/^(!)?(-)?[0-9]{1,3}$/", message="Invalid rotation format")
+     * @Assert\Regex(pattern="/^(!)?(-)?[0-9]{1,3}$/", message="Invalid rotation format"))
      */
     protected $rotation = 0;
 
@@ -52,14 +51,7 @@ class Image
      */
     public function getIdentifier()
     {
-        if (preg_match('/\w:\w/', $this->identifier)) {
-            $identifier = str_replace(':', '/', $this->identifier);
-            $identifier = str_replace('gdz/', '', $identifier);
-        } else {
-            $identifier = $this->identifier.'/'.str_pad('1', 8, '0', STR_PAD_LEFT);
-        }
-
-        return $identifier;
+        return $this->identifier;
     }
 
     /**
