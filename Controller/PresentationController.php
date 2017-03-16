@@ -89,4 +89,21 @@ class PresentationController extends Controller
     {
         return new Response(sprintf('Range %s for document %s', $range, $id));
     }
+
+    /**
+     * @see http://iiif.io/api/presentation/2.1/#collection
+     * @ApiDoc(
+     *  resource=true,
+     *  description="IIIF presentation API collection resource",
+     *  requirements={
+     *      {"name"="id", "dataType"="string", "required"=true, "description"="collection identifier"}
+     *  }
+     * )
+     *
+     * @return View
+     */
+    public function collectionAction(string $id)
+    {
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getCollection($id), Response::HTTP_OK);
+    }
 }

@@ -92,12 +92,21 @@ class PresentationService
             $manifest->setDescription($document->getDescription());
         }
 
-        /** @var \Subugoe\IIIFBundle\Model\Document $parent */
-        foreach ($document->getParents() as $parent) {
-            $manifest->setWithin($this->router->generate('subugoe_iiif_manifest', ['id' => $parent->getId()], Router::ABSOLUTE_URL));
+        foreach ($document->getClassification() as $classification) {
+            $manifest->setWithin($this->router->generate('subugoe_iiif_collection', ['id' => $classification], Router::ABSOLUTE_URL));
         }
 
         return $manifest;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return string
+     */
+    public function getCollection(string $id)
+    {
+        return 'Not implemented yet';
     }
 
     /**
