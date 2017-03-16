@@ -50,7 +50,8 @@ class SubugoeTranslator implements TranslatorInterface
             ->setPublishingYear((int) $solrDocument['year_publish'] ?: 0)
             ->setPublisher($solrDocument['publisher'] ?: [])
             ->setLanguage($solrDocument['lang'] ?: [])
-            ->setImageFormat($solrDocument['image_format']);
+            ->setImageFormat($solrDocument['image_format'])
+            ->setDescription('');
 
         for ($i = 0; $i < $numberOfLogicalStructures; ++$i) {
             $structure = new LogicalStructure();

@@ -80,15 +80,38 @@ class PresentationService
                 Router::ABSOLUTE_URL)
             )
             ->setLabel($document->getTitle()[0])
+            ->setNavDate($this->getNavDate($document))
             ->setThumbnail($thumbnail)
             ->setMetadata($metadata)
             ->setAttribution($attribution)
             ->setLogo($logo)
             ->setSequences([$sequences])
-            ->setStructures($structures)
-        ;
+            ->setStructures($structures);
+
+        if (!empty($document->getDescription())) {
+            $manifest->setDescription($document->getDescription());
+        }
 
         return $manifest;
+    }
+
+    /**
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     *
+     * @return \DateTime
+     */
+    private function getNavDate(\Subugoe\IIIFBundle\Model\Document $document)
+    {
+        return \DateTime::createFromFormat('Y-m-d H:i:s', vsprintf('%d-%s-%s %s:%s:%s',
+            [
+                $document->getPublishingYear(),
+                '01',
+                '01',
+                '00',
+                '00',
+                '00',
+            ]
+        ));
     }
 
     /**

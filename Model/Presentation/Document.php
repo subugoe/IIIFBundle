@@ -51,6 +51,27 @@ class Document
     /**
      * @var string
      */
+    private $license;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @var \DateTime
+     * @Serializer\SerializedName("navDate")
+     */
+    private $navDate;
+
+    /**
+     * @var string
+     */
+    private $within;
+
+    /**
+     * @var string
+     */
     private $label;
 
     /**
@@ -316,6 +337,86 @@ class Document
     public function setStructures(array $structures): Document
     {
         $this->structures = $structures;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLicense(): string
+    {
+        return $this->license;
+    }
+
+    /**
+     * @param string $license
+     *
+     * @return Document
+     */
+    public function setLicense(string $license): Document
+    {
+        $this->license = $license;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return Document
+     */
+    public function setDescription(string $description): Document
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getNavDate(): \DateTime
+    {
+        return $this->navDate;
+    }
+
+    /**
+     * @param \DateTime $navDate
+     *
+     * @return Document
+     */
+    public function setNavDate(\DateTime $navDate): Document
+    {
+        $this->navDate = $navDate;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWithin(): string
+    {
+        return $this->within;
+    }
+
+    /**
+     * @param string $within
+     *
+     * @return Document
+     */
+    public function setWithin(string $within): Document
+    {
+        $this->within = $within;
 
         return $this;
     }

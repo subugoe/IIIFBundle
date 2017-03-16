@@ -80,6 +80,11 @@ class Document
     private $type;
 
     /**
+     * @var string
+     */
+    private $description;
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -393,5 +398,25 @@ class Document
     public function addPhysicalStructure(PhysicalStructure $structure)
     {
         $this->physicalStructures[] = $structure;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return Document
+     */
+    public function setDescription(string $description): Document
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }
