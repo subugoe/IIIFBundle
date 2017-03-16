@@ -85,6 +85,17 @@ class SubugoeTranslator implements TranslatorInterface
             $document->addPhysicalStructure($structure);
         }
 
+        $numberOfParentDocuments = count($solrDocument['parentdoc_work']);
+        for ($i = 0; $i < $numberOfParentDocuments; ++$i) {
+            $parent = new Document();
+            $parent
+                ->setId($solrDocument['parentdoc_work'][$i])
+                ->setType($this->getMappedDocumentType($solrDocument['parentdoc_type'][$i]))
+                ->setTitle([$solrDocument['parentdoc_label'][$i]]);
+
+            $document->setParent($parent);
+        }
+
         return $document;
     }
 

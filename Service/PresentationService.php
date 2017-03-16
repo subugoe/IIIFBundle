@@ -92,6 +92,11 @@ class PresentationService
             $manifest->setDescription($document->getDescription());
         }
 
+        /** @var \Subugoe\IIIFBundle\Model\Document $parent */
+        foreach ($document->getParents() as $parent) {
+            $manifest->setWithin($this->router->generate('subugoe_iiif_manifest', ['id' => $parent->getId()], Router::ABSOLUTE_URL));
+        }
+
         return $manifest;
     }
 

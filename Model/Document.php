@@ -85,6 +85,11 @@ class Document
     private $description;
 
     /**
+     * @var array
+     */
+    private $parents = [];
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -418,5 +423,33 @@ class Document
         $this->description = $description;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParents(): array
+    {
+        return $this->parents;
+    }
+
+    /**
+     * @param array $parents
+     *
+     * @return Document
+     */
+    public function setParents(array $parents): Document
+    {
+        $this->parents = $parents;
+
+        return $this;
+    }
+
+    /**
+     * @param Document $document
+     */
+    public function setParent(Document $document)
+    {
+        $this->parents[] = $document;
     }
 }
