@@ -69,7 +69,7 @@ class ImageService
         $this->getRotation($imageEntity->getRotation(), $image);
         $this->getQuality($imageEntity->getQuality(), $image);
 
-        return $image->strip()->get($imageEntity->getFormat());
+        return $image->get($imageEntity->getFormat());
     }
 
     /*
