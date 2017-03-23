@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation as Serializer;
  *
  * @Serializer\ExclusionPolicy("NONE")
  */
-class ImageResource
+class GenericResource
 {
     /**
      * @var string
@@ -62,9 +62,9 @@ class ImageResource
     /**
      * @param string $id
      *
-     * @return ImageResource
+     * @return GenericResource
      */
-    public function setId(string $id): ImageResource
+    public function setId(string $id): GenericResource
     {
         $this->id = $id;
 
@@ -82,9 +82,9 @@ class ImageResource
     /**
      * @param ResourceData $resource
      *
-     * @return ImageResource
+     * @return GenericResource
      */
-    public function setResource(ResourceData $resource): ImageResource
+    public function setResource(ResourceData $resource): GenericResource
     {
         $this->resource = $resource;
 
@@ -102,9 +102,9 @@ class ImageResource
     /**
      * @param int $height
      *
-     * @return ImageResource
+     * @return GenericResource
      */
-    public function setHeight(int $height): ImageResource
+    public function setHeight(int $height): GenericResource
     {
         $this->height = $height;
 
@@ -122,9 +122,9 @@ class ImageResource
     /**
      * @param int $width
      *
-     * @return ImageResource
+     * @return GenericResource
      */
-    public function setWidth(int $width): ImageResource
+    public function setWidth(int $width): GenericResource
     {
         $this->width = $width;
 

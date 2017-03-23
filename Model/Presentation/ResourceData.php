@@ -142,4 +142,24 @@ class ResourceData
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return ResourceData
+     */
+    public function setType(string $type): ResourceData
+    {
+        $this->type = $type;
+
+        return $this;
+    }
 }

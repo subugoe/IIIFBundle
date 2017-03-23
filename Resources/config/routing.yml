@@ -18,6 +18,11 @@ subugoe_iiif_sequence:
     methods:  "GET"
     defaults: {name: "normal", _controller: SubugoeIIIFBundle:Presentation:sequence}
 
+subugoe_iiif_annotation-list:
+    path:     "presentation/{id}/list/{name}"
+    methods:  "GET"
+    defaults: {name: "normal", _controller: SubugoeIIIFBundle:Presentation:annotationList}
+
 subugoe_iiif_collection:
     path:     "presentation/collection/{id}"
     methods:  "GET"

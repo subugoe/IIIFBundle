@@ -83,6 +83,26 @@ class PresentationController extends Controller
     }
 
     /**
+     * @see http://iiif.io/api/presentation/2.1/#annotation-list
+     * @ApiDoc(
+     *  resource=true,
+     *  description="IIIF presentation API annotation list resource",
+     *  requirements={
+     *      {"name"="id", "dataType"="string", "required"=true, "description"="work identifier"},
+     *      {"name"="name", "dataType"="string", "required"=true, "description"="annotation list identifier'"}
+     *  }
+     * )
+     *
+     * @return View
+     */
+    public function annotationListAction(string $id, string $name): View
+    {
+        $document = $this->get('subugoe_iiif.translator')->getDocumentById($id);
+
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getAnnotationList($document, $name), Response::HTTP_OK);
+    }
+
+    /**
      * @Get("/api/{id}/range/{range}", name="_range")
      */
     public function rangeAction(string $id, string $range)

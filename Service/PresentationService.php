@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Subugoe\IIIFBundle\Service;
 
 use Subugoe\IIIFBundle\Model\PhysicalStructure;
+use Subugoe\IIIFBundle\Model\Presentation\AnnotationList;
 use Subugoe\IIIFBundle\Model\Presentation\Canvas;
 use Subugoe\IIIFBundle\Model\Presentation\Document;
 use Subugoe\IIIFBundle\Model\Presentation\Image;
-use Subugoe\IIIFBundle\Model\Presentation\ImageResource;
+use Subugoe\IIIFBundle\Model\Presentation\GenericResource;
 use Subugoe\IIIFBundle\Model\Presentation\Metadata;
 use Subugoe\IIIFBundle\Model\Presentation\ResourceData;
 use Subugoe\IIIFBundle\Model\Presentation\Sequence;
@@ -97,6 +98,28 @@ class PresentationService
         }
 
         return $manifest;
+    }
+
+    /**
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param string                             $name
+     *
+     * @return AnnotationList
+     */
+    public function getAnnotationList(\Subugoe\IIIFBundle\Model\Document $document, string $name): AnnotationList
+    {
+        $annotationList = new AnnotationList();
+        $annotationList->setId($this->router->generate('subugoe_iiif_annotation-list', [
+            'id' => $document->getId(),
+            'name' => $name,
+        ], Router::ABSOLUTE_URL));
+
+        $resources = [];
+
+        $resource[] = new GenericResource();
+        $annotationList->setResources($resources);
+
+        return $annotationList;
     }
 
     /**
@@ -230,7 +253,7 @@ class PresentationService
         $numberOfStructureElements = count($document->getLogicalStructures());
 
         if ($numberOfStructureElements > 0) {
-            $numberOfStructureElements = --$numberOfStructureElements;
+            //$numberOfStructureElements = --$numberOfStructureElements;
 
             $levelOfFirstStructure = $document->getLogicalStructure(0)->getLevel();
 
@@ -241,7 +264,7 @@ class PresentationService
                     $structureEnd = $logicalStructure->getEndPage();
 
                     $canvases = [];
-                    for ($j = $structureStart; $j <= $structureEnd; ++$j) {
+                    for ($j = $structureStart; $j < $structureEnd; ++$j) {
                         $canvases[] = $this->router->generate('subugoe_iiif_canvas', [
                             'id' => $document->getId(),
                             'canvas' => $document->getPhysicalStructure($j - 1)->getIdentifier(),
@@ -361,9 +384,9 @@ class PresentationService
      * @param \Subugoe\IIIFBundle\Model\Document $document
      * @param string                             $imageId
      *
-     * @return ImageResource
+     * @return GenericResource
      */
-    public function getImage(\Subugoe\IIIFBundle\Model\Document $document, string $imageId): ImageResource
+    public function getImage(\Subugoe\IIIFBundle\Model\Document $document, string $imageId): GenericResource
     {
         $imageParameters = [
             'identifier' => $imageId,
@@ -374,7 +397,7 @@ class PresentationService
             'format' => $document->getImageFormat(),
         ];
 
-        $image = new ImageResource();
+        $image = new GenericResource();
         $resource = new ResourceData();
         $mimes = new \Mimey\MimeTypes();
 
