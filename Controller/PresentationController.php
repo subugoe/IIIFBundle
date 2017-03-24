@@ -103,11 +103,21 @@ class PresentationController extends Controller
     }
 
     /**
-     * @Get("/api/{id}/range/{range}", name="_range")
+     * @see http://iiif.io/api/presentation/2.1/#range
+     * @ApiDoc(
+     *  resource=true,
+     *  description="IIIF presentation API range resource",
+     *  requirements={
+     *      {"name"="id", "dataType"="string", "required"=true, "description"="work identifier"},
+     *      {"name"="name", "dataType"="string", "required"=true, "description"="range identifier'"}
+     *  }
+     * )
      */
     public function rangeAction(string $id, string $range)
     {
-        return new Response(sprintf('Range %s for document %s', $range, $id));
+        $document = $this->get('subugoe_iiif.translator')->getDocumentById($id);
+
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getRange($document, $range), Response::HTTP_OK);
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Service;
 
+use Subugoe\IIIFBundle\Model\LogicalStructure;
 use Subugoe\IIIFBundle\Model\PhysicalStructure;
 use Subugoe\IIIFBundle\Model\Presentation\AnnotationList;
 use Subugoe\IIIFBundle\Model\Presentation\Canvas;
@@ -11,6 +12,7 @@ use Subugoe\IIIFBundle\Model\Presentation\Document;
 use Subugoe\IIIFBundle\Model\Presentation\Image;
 use Subugoe\IIIFBundle\Model\Presentation\GenericResource;
 use Subugoe\IIIFBundle\Model\Presentation\Metadata;
+use Subugoe\IIIFBundle\Model\Presentation\Range;
 use Subugoe\IIIFBundle\Model\Presentation\ResourceData;
 use Subugoe\IIIFBundle\Model\Presentation\Sequence;
 use Subugoe\IIIFBundle\Model\Presentation\Service;
@@ -130,6 +132,43 @@ class PresentationService
     public function getCollection(string $id)
     {
         return 'Not implemented yet';
+    }
+
+    public function getRange(\Subugoe\IIIFBundle\Model\Document $document, string $name)
+    {
+        $range = new Range();
+
+        $range
+            ->setId($this->router->generate('subugoe_iiif_range', ['id' => $document->getId(), 'range' => $name], Router::ABSOLUTE_URL))
+            ->setLabel($this->getLabelForRange($document, $name))
+            ->setMembers($this->getMembersForRange($document, $name));
+
+        return $range;
+    }
+
+    /**
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param string                             $range
+     *
+     * @return array
+     */
+    private function getMembersForRange(\Subugoe\IIIFBundle\Model\Document $document, string $range)
+    {
+        $logicalStructures = $document->getLogicalStructures();
+        $numberOflogicalStructures = count($logicalStructures);
+        $i = 0;
+
+        while ($i <= $numberOflogicalStructures) {
+            /** @var LogicalStructure $logicalStructure */
+            $logicalStructure = $logicalStructures[$i];
+
+            if ($logicalStructure->getId() === $range) {
+                return $this->getMembersOfLogicalStructure($document, $logicalStructure);
+            }
+            ++$i;
+        }
+
+        return [];
     }
 
     /**
@@ -253,23 +292,12 @@ class PresentationService
         $numberOfStructureElements = count($document->getLogicalStructures());
 
         if ($numberOfStructureElements > 0) {
-            //$numberOfStructureElements = --$numberOfStructureElements;
-
             $levelOfFirstStructure = $document->getLogicalStructure(0)->getLevel();
-
-            for ($i = 0; $i < $numberOfStructureElements; ++$i) {
-                $logicalStructure = $document->getLogicalStructure($i);
+            $i = $levelOfFirstStructure;
+            while ($i <= $numberOfStructureElements) {
+                $logicalStructure = $document->getLogicalStructure($i - 1);
                 if ($levelOfFirstStructure === $logicalStructure->getLevel()) {
-                    $structureStart = $logicalStructure->getStartPage();
-                    $structureEnd = $logicalStructure->getEndPage();
-
-                    $canvases = [];
-                    for ($j = $structureStart; $j < $structureEnd; ++$j) {
-                        $canvases[] = $this->router->generate('subugoe_iiif_canvas', [
-                            'id' => $document->getId(),
-                            'canvas' => $document->getPhysicalStructure($j - 1)->getIdentifier(),
-                        ], Router::ABSOLUTE_URL);
-                    }
+                    $canvases = $this->getMembersOfLogicalStructure($document, $logicalStructure);
 
                     $structure = new Structure();
                     $structure
@@ -284,10 +312,36 @@ class PresentationService
 
                     $structures[] = $structure;
                 }
+                ++$i;
             }
         }
 
         return $structures;
+    }
+
+    /**
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param LogicalStructure                   $logicalStructure
+     *
+     * @return array
+     */
+    private function getMembersOfLogicalStructure(\Subugoe\IIIFBundle\Model\Document $document, LogicalStructure $logicalStructure)
+    {
+        $structureStart = $logicalStructure->getStartPage();
+        $structureEnd = $logicalStructure->getEndPage();
+
+        $canvases = [];
+        $counter = $structureStart - 1;
+        while ($counter < $structureEnd) {
+            $canvases[] = $this->router->generate('subugoe_iiif_canvas', [
+                'id' => $document->getId(),
+                'canvas' => $document->getPhysicalStructure($counter - 1)->getIdentifier(),
+            ], Router::ABSOLUTE_URL);
+
+            ++$counter;
+        }
+
+        return $canvases;
     }
 
     /**
@@ -363,6 +417,26 @@ class PresentationService
         foreach ($physicalStructures as $physicalStructure) {
             if ($physicalStructure->getIdentifier() === $canvasId) {
                 return $physicalStructure->getLabel();
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param string                             $rangeId
+     *
+     * @return string
+     */
+    private function getLabelForRange(\Subugoe\IIIFBundle\Model\Document $document, string $rangeId)
+    {
+        $logicalStructures = $document->getLogicalStructures();
+
+        /** @var LogicalStructure $logicalStructure */
+        foreach ($logicalStructures as $logicalStructure) {
+            if ($logicalStructure->getId() === $rangeId) {
+                return $logicalStructure->getLabel();
             }
         }
 
