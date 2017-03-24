@@ -80,7 +80,7 @@ class PresentationService
                 [
                     'id' => $document->getId(),
                 ],
-                Router::ABSOLUTE_URL)
+                Router::NETWORK_PATH)
             )
             ->setLabel($document->getTitle()[0])
             ->setNavDate($this->getNavDate($document))
@@ -96,7 +96,7 @@ class PresentationService
         }
 
         foreach ($document->getClassification() as $classification) {
-            $manifest->setWithin($this->router->generate('subugoe_iiif_collection', ['id' => $classification], Router::ABSOLUTE_URL));
+            $manifest->setWithin($this->router->generate('subugoe_iiif_collection', ['id' => $classification], Router::NETWORK_PATH));
         }
 
         return $manifest;
@@ -114,7 +114,7 @@ class PresentationService
         $annotationList->setId($this->router->generate('subugoe_iiif_annotation-list', [
             'id' => $document->getId(),
             'name' => $name,
-        ], Router::ABSOLUTE_URL));
+        ], Router::NETWORK_PATH));
 
         $resources = [];
 
@@ -139,7 +139,7 @@ class PresentationService
         $range = new Range();
 
         $range
-            ->setId($this->router->generate('subugoe_iiif_range', ['id' => $document->getId(), 'range' => $name], Router::ABSOLUTE_URL))
+            ->setId($this->router->generate('subugoe_iiif_range', ['id' => $document->getId(), 'range' => $name], Router::NETWORK_PATH))
             ->setLabel($this->getLabelForRange($document, $name))
             ->setMembers($this->getMembersForRange($document, $name));
 
@@ -212,7 +212,7 @@ class PresentationService
         $thumbnail->setId($this->router->generate(
             'subugoe_iiif_image',
             $thumbnailParameters,
-            Router::ABSOLUTE_URL
+            Router::NETWORK_PATH
             )
         );
         $thumbnail->setService($thumbnailService);
@@ -304,7 +304,7 @@ class PresentationService
                         ->setId($this->router->generate('subugoe_iiif_range', [
                             'id' => $document->getId(),
                             'range' => $logicalStructure->getId(),
-                        ], Router::ABSOLUTE_URL)
+                        ], Router::NETWORK_PATH)
                         )
                         ->setLabel($logicalStructure->getLabel())
                         ->setType('sc:Canvas')
@@ -336,7 +336,7 @@ class PresentationService
             $canvases[] = $this->router->generate('subugoe_iiif_canvas', [
                 'id' => $document->getId(),
                 'canvas' => $document->getPhysicalStructure($counter - 1)->getIdentifier(),
-            ], Router::ABSOLUTE_URL);
+            ], Router::NETWORK_PATH);
 
             ++$counter;
         }
@@ -360,13 +360,13 @@ class PresentationService
                 'id' => $document->getId(),
                 'name' => $name,
             ],
-                Router::ABSOLUTE_URL))
+                Router::NETWORK_PATH))
             ->setCanvases($canvases)
             ->setStartCanvas($this->router->generate('subugoe_iiif_canvas', [
                 'id' => $document->getId(),
                 'canvas' => $document->getPhysicalStructure(0)->getPage(),
             ],
-                Router::ABSOLUTE_URL));
+                Router::NETWORK_PATH));
 
         return $sequences;
     }
@@ -394,7 +394,7 @@ class PresentationService
                 'id' => $document->getId(),
                 'canvas' => $canvasId,
             ],
-                Router::ABSOLUTE_URL))
+                Router::NETWORK_PATH))
             ->setLabel($label)
             ->setHeight(400)
             ->setWidth(300)
@@ -480,17 +480,17 @@ class PresentationService
         $imageService = new Service();
         $imageService
             ->setId($this->router->generate(
-                'subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], Router::ABSOLUTE_URL));
+                'subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], Router::NETWORK_PATH));
 
         $resource
-            ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], Router::ABSOLUTE_URL))
+            ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], Router::NETWORK_PATH))
             ->setFormat($format)
             ->setWidth(300)
             ->setHeight(400)
             ->setService($imageService);
 
         $image
-            ->setId($this->router->generate('subugoe_iiif_imagepresentation', ['id' => $document->getId(), 'name' => $imageId], Router::ABSOLUTE_URL))
+            ->setId($this->router->generate('subugoe_iiif_imagepresentation', ['id' => $document->getId(), 'name' => $imageId], Router::NETWORK_PATH))
             ->setResource($resource);
 
         return $image;
@@ -529,13 +529,13 @@ class PresentationService
                 'id' => $document->getId(),
                 'name' => $name,
             ],
-                Router::ABSOLUTE_URL))
+                Router::NETWORK_PATH))
             ->setCanvases($canvases)
             ->setStartCanvas($this->router->generate('subugoe_iiif_canvas', [
                 'id' => $document->getId(),
                 'canvas' => $document->getPhysicalStructure(0)->getPage(),
             ],
-                Router::ABSOLUTE_URL));
+                Router::NETWORK_PATH));
 
         return $sequence;
     }
