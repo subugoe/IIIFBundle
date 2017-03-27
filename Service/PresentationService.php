@@ -123,9 +123,15 @@ class PresentationService
      */
     public function getCollection(string $id)
     {
-        return 'Not implemented yet';
+        return sprintf('Not implemented yet - Collection ', $id);
     }
 
+    /**
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param string                             $name
+     *
+     * @return Range
+     */
     public function getRange(\Subugoe\IIIFBundle\Model\Document $document, string $name)
     {
         $range = new Range();
@@ -136,6 +142,107 @@ class PresentationService
             ->setMembers($this->getMembersForRange($document, $name));
 
         return $range;
+    }
+
+    /**
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param string                             $canvasId
+     * @param int                                $physicalStructureId
+     *
+     * @return Canvas
+     */
+    public function getCanvas(\Subugoe\IIIFBundle\Model\Document $document, string $canvasId, int $physicalStructureId = -1): Canvas
+    {
+        $images = $this->getImages($document, $canvasId);
+
+        if ($physicalStructureId !== -1) {
+            $label = $document->getPhysicalStructure($physicalStructureId)->getLabel();
+        } else {
+            $label = $this->getLabelForCanvas($document, $canvasId);
+        }
+
+        $canvas = new Canvas();
+        $canvas
+            ->setId($this->router->generate('subugoe_iiif_canvas', [
+                'id' => $document->getId(),
+                'canvas' => $canvasId,
+            ],
+                RouterInterface::NETWORK_PATH))
+            ->setLabel($label)
+            ->setHeight(400)
+            ->setWidth(300)
+            ->setImages($images);
+
+        return $canvas;
+    }
+
+    /**
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param string                             $imageId
+     *
+     * @return GenericResource
+     */
+    public function getImage(\Subugoe\IIIFBundle\Model\Document $document, string $imageId): GenericResource
+    {
+        $imageParameters = [
+            'identifier' => $imageId,
+            'region' => 'full',
+            'size' => 'full',
+            'rotation' => 0,
+            'quality' => 'default',
+            'format' => $document->getImageFormat(),
+        ];
+
+        $image = new GenericResource();
+        $resource = new ResourceData();
+        $mimes = new \Mimey\MimeTypes();
+
+        $format = $mimes->getMimeType($document->getImageFormat()) ?: '';
+
+        $imageService = new Service();
+        $imageService
+            ->setId($this->router->generate(
+                'subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], RouterInterface::NETWORK_PATH));
+
+        $resource
+            ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], RouterInterface::NETWORK_PATH))
+            ->setFormat($format)
+            ->setWidth(300)
+            ->setHeight(400)
+            ->setService($imageService);
+
+        $image
+            ->setId($this->router->generate('subugoe_iiif_imagepresentation', ['id' => $document->getId(), 'name' => $imageId], RouterInterface::NETWORK_PATH))
+            ->setResource($resource);
+
+        return $image;
+    }
+
+    /**
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param string                             $name
+     *
+     * @return Sequence
+     */
+    public function getSequence(\Subugoe\IIIFBundle\Model\Document $document, $name): Sequence
+    {
+        $canvases = $this->getCanvases($document);
+
+        $sequence = new Sequence();
+        $sequence
+            ->setId($this->router->generate('subugoe_iiif_sequence', [
+                'id' => $document->getId(),
+                'name' => $name,
+            ],
+                RouterInterface::NETWORK_PATH))
+            ->setCanvases($canvases)
+            ->setStartCanvas($this->router->generate('subugoe_iiif_canvas', [
+                'id' => $document->getId(),
+                'canvas' => $document->getPhysicalStructure(0)->getPage(),
+            ],
+                RouterInterface::NETWORK_PATH));
+
+        return $sequence;
     }
 
     /**
@@ -390,38 +497,6 @@ class PresentationService
     /**
      * @param \Subugoe\IIIFBundle\Model\Document $document
      * @param string                             $canvasId
-     * @param int                                $physicalStructureId
-     *
-     * @return Canvas
-     */
-    public function getCanvas(\Subugoe\IIIFBundle\Model\Document $document, string $canvasId, int $physicalStructureId = -1): Canvas
-    {
-        $images = $this->getImages($document, $canvasId);
-
-        if ($physicalStructureId !== -1) {
-            $label = $document->getPhysicalStructure($physicalStructureId)->getLabel();
-        } else {
-            $label = $this->getLabelForCanvas($document, $canvasId);
-        }
-
-        $canvas = new Canvas();
-        $canvas
-            ->setId($this->router->generate('subugoe_iiif_canvas', [
-                'id' => $document->getId(),
-                'canvas' => $canvasId,
-            ],
-                RouterInterface::NETWORK_PATH))
-            ->setLabel($label)
-            ->setHeight(400)
-            ->setWidth(300)
-            ->setImages($images);
-
-        return $canvas;
-    }
-
-    /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
-     * @param string                             $canvasId
      *
      * @return string
      */
@@ -472,48 +547,6 @@ class PresentationService
 
     /**
      * @param \Subugoe\IIIFBundle\Model\Document $document
-     * @param string                             $imageId
-     *
-     * @return GenericResource
-     */
-    public function getImage(\Subugoe\IIIFBundle\Model\Document $document, string $imageId): GenericResource
-    {
-        $imageParameters = [
-            'identifier' => $imageId,
-            'region' => 'full',
-            'size' => 'full',
-            'rotation' => 0,
-            'quality' => 'default',
-            'format' => $document->getImageFormat(),
-        ];
-
-        $image = new GenericResource();
-        $resource = new ResourceData();
-        $mimes = new \Mimey\MimeTypes();
-
-        $format = $mimes->getMimeType($document->getImageFormat()) ?: '';
-
-        $imageService = new Service();
-        $imageService
-            ->setId($this->router->generate(
-                'subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], RouterInterface::NETWORK_PATH));
-
-        $resource
-            ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], RouterInterface::NETWORK_PATH))
-            ->setFormat($format)
-            ->setWidth(300)
-            ->setHeight(400)
-            ->setService($imageService);
-
-        $image
-            ->setId($this->router->generate('subugoe_iiif_imagepresentation', ['id' => $document->getId(), 'name' => $imageId], RouterInterface::NETWORK_PATH))
-            ->setResource($resource);
-
-        return $image;
-    }
-
-    /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
      *
      * @return array
      */
@@ -530,32 +563,5 @@ class PresentationService
         }
 
         return $canvases;
-    }
-
-    /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
-     * @param string                             $name
-     *
-     * @return Sequence
-     */
-    public function getSequence(\Subugoe\IIIFBundle\Model\Document $document, $name): Sequence
-    {
-        $canvases = $this->getCanvases($document);
-
-        $sequence = new Sequence();
-        $sequence
-            ->setId($this->router->generate('subugoe_iiif_sequence', [
-                'id' => $document->getId(),
-                'name' => $name,
-            ],
-                RouterInterface::NETWORK_PATH))
-            ->setCanvases($canvases)
-            ->setStartCanvas($this->router->generate('subugoe_iiif_canvas', [
-                'id' => $document->getId(),
-                'canvas' => $document->getPhysicalStructure(0)->getPage(),
-            ],
-                RouterInterface::NETWORK_PATH));
-
-        return $sequence;
     }
 }

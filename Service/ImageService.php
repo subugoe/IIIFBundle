@@ -72,6 +72,80 @@ class ImageService
         return $image->get($imageEntity->getFormat());
     }
 
+    /**
+     * @param string $identifier
+     *
+     * @return ImageInformation
+     */
+    public function getImageJsonInformation(string $identifier, $originalImage): ImageInformation
+    {
+        $imageEntity = new \Subugoe\IIIFBundle\Model\Image\Image();
+        $imageEntity->setIdentifier($identifier);
+
+        try {
+            $image = $this->imagine->load($originalImage);
+        } catch (\Exception $e) {
+            throw new NotFoundHttpException(sprintf('Image with identifier %s not found', $imageEntity->getIdentifier()));
+        }
+
+        $ppi = $image->getImagick()->getImageResolution();
+        $image->strip();
+        $originalSize = $image->getSize();
+        $sizeList = $this->imageConfiguration['zoom_levels'];
+        $sizes = $this->getImageSizes($originalSize);
+
+        $tiles = $this->getTileInformation($sizeList);
+
+        $imageInformation = new ImageInformation();
+        $imageInformation
+           ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $identifier], Router::ABSOLUTE_URL))
+           ->setPpi($ppi)
+           ->setWidth($originalSize->getWidth())
+           ->setHeight($originalSize->getHeight())
+           ->setSizes($sizes)
+           ->setTiles($tiles);
+
+        return $imageInformation;
+    }
+
+    /**
+     * Stores the original image in a cache file.
+     *
+     * @param \Subugoe\IIIFBundle\Model\Image\Image $image
+     *
+     * @return \Psr\Http\Message\StreamInterface|string
+     */
+    public function getOriginalFileContents(\Subugoe\IIIFBundle\Model\Image\Image $image)
+    {
+        $document = $this->translator->getDocumentByImageId($image->getIdentifier());
+        $filename = $this->getFilename($document, $image);
+
+        $sourceAdapterConfiguration = $this->imageConfiguration['adapters']['source']['configuration'];
+        $sourceAdapterClass = $this->imageConfiguration['adapters']['source']['class'];
+        $sourceAdapter = new $sourceAdapterClass($sourceAdapterConfiguration);
+        $sourceFilesystem = new \League\Flysystem\Filesystem($sourceAdapter);
+
+        $cacheAdapterClass = $this->imageConfiguration['adapters']['cache']['class'];
+        $cacheFilesystemAdapter = new $cacheAdapterClass($this->imageConfiguration['adapters']['cache']['configuration']);
+        $cacheFilesystem = new \League\Flysystem\Filesystem($cacheFilesystemAdapter);
+
+        $sourceImage = $sourceFilesystem->read($filename);
+
+        $originalImageCacheFile = sprintf('/originals/%s.%s', $image->getIdentifier(), $document->getImageFormat());
+
+        if (!$cacheFilesystem->has($originalImageCacheFile)) {
+            $cacheFilesystem->write($originalImageCacheFile, $sourceImage);
+        }
+
+        if ($cacheFilesystem->has($originalImageCacheFile)) {
+            $originalImage = $cacheFilesystem->read($originalImageCacheFile);
+        } else {
+            $originalImage = $sourceImage;
+        }
+
+        return $originalImage;
+    }
+
     /*
      * Apply the requested image region as per IIIF-Image API.
      * Region parameters may be:
@@ -299,42 +373,6 @@ class ImageService
     }
 
     /**
-     * @param string $identifier
-     *
-     * @return ImageInformation
-     */
-    public function getImageJsonInformation(string $identifier, $originalImage): ImageInformation
-    {
-        $imageEntity = new \Subugoe\IIIFBundle\Model\Image\Image();
-        $imageEntity->setIdentifier($identifier);
-
-        try {
-            $image = $this->imagine->load($originalImage);
-        } catch (\Exception $e) {
-            throw new NotFoundHttpException(sprintf('Image with identifier %s not found', $imageEntity->getIdentifier()));
-        }
-
-        $ppi = $image->getImagick()->getImageResolution();
-        $image->strip();
-        $originalSize = $image->getSize();
-        $sizeList = $this->imageConfiguration['zoom_levels'];
-        $sizes = $this->getImageSizes($originalSize);
-
-        $tiles = $this->getTileInformation($sizeList);
-
-        $imageInformation = new ImageInformation();
-        $imageInformation
-           ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $identifier], Router::ABSOLUTE_URL))
-           ->setPpi($ppi)
-           ->setWidth($originalSize->getWidth())
-           ->setHeight($originalSize->getHeight())
-           ->setSizes($sizes)
-           ->setTiles($tiles);
-
-        return $imageInformation;
-    }
-
-    /**
      * @param BoxInterface $originalSize
      *
      * @return array
@@ -373,44 +411,6 @@ class ImageService
         $tiles[] = $tile;
 
         return $tiles;
-    }
-
-    /**
-     * Stores the original image in a cache file.
-     *
-     * @param \Subugoe\IIIFBundle\Model\Image\Image $image
-     *
-     * @return \Psr\Http\Message\StreamInterface|string
-     */
-    public function getOriginalFileContents(\Subugoe\IIIFBundle\Model\Image\Image $image)
-    {
-        $document = $this->translator->getDocumentByImageId($image->getIdentifier());
-        $filename = $this->getFilename($document, $image);
-
-        $sourceAdapterConfiguration = $this->imageConfiguration['adapters']['source']['configuration'];
-        $sourceAdapterClass = $this->imageConfiguration['adapters']['source']['class'];
-        $sourceAdapter = new $sourceAdapterClass($sourceAdapterConfiguration);
-        $sourceFilesystem = new \League\Flysystem\Filesystem($sourceAdapter);
-
-        $cacheAdapterClass = $this->imageConfiguration['adapters']['cache']['class'];
-        $cacheFilesystemAdapter = new $cacheAdapterClass($this->imageConfiguration['adapters']['cache']['configuration']);
-        $cacheFilesystem = new \League\Flysystem\Filesystem($cacheFilesystemAdapter);
-
-        $sourceImage = $sourceFilesystem->read($filename);
-
-        $originalImageCacheFile = sprintf('/originals/%s.%s', $image->getIdentifier(), $document->getImageFormat());
-
-        if (!$cacheFilesystem->has($originalImageCacheFile)) {
-            $cacheFilesystem->write($originalImageCacheFile, $sourceImage);
-        }
-
-        if ($cacheFilesystem->has($originalImageCacheFile)) {
-            $originalImage = $cacheFilesystem->read($originalImageCacheFile);
-        } else {
-            $originalImage = $sourceImage;
-        }
-
-        return $originalImage;
     }
 
     private function getFilename(Document $document, \Subugoe\IIIFBundle\Model\Image\Image $image): string

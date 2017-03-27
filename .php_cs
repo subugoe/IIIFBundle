@@ -11,6 +11,8 @@ $config = PhpCsFixer\Config::create();
 $config
     ->setRules([
         '@Symfony' => true,
+        'ordered_class_elements' => ['use_trait', 'constant_public', 'constant_protected', 'constant_private', 'property_public', 'property_protected', 'property_private', 'construct', 'destruct', 'magic', 'phpunit', 'method_public', 'method_protected', 'method_private'],
+        'array_syntax' => ['syntax' => 'short'],
     ])
     ->setFinder($finder);
 

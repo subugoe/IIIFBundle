@@ -15,22 +15,6 @@ class PresentationServiceTest extends TestCase
      */
     private $presentationService;
 
-    public function documentProvider()
-    {
-        return [
-            ['PPN613131266'],
-            ['PPN629651310'],
-        ];
-    }
-
-    public function RangeProvider()
-    {
-        return [
-            ['PPN613131266', 27],
-        ];
-    }
-
-
     /**
      * @var TranslatorInterface
      */
@@ -53,21 +37,19 @@ class PresentationServiceTest extends TestCase
         $this->presentationService = new PresentationService($router, $imageConfiguration, $presentationConfiguration);
     }
 
-    /**
-     * @return \Symfony\Bundle\FrameworkBundle\Routing\Router
-     */
-    protected function getRouterMock()
+    public function documentProvider()
     {
-        $mock = $this->getMockBuilder(Router::class)
-                     ->disableOriginalConstructor()
-                     ->setMethods(['generate', 'supports', 'exists'])
-                     ->getMockForAbstractClass();
+        return [
+            ['PPN613131266'],
+            ['PPN629651310'],
+        ];
+    }
 
-        $mock->expects($this->any())
-             ->method('generate')
-             ->will($this->returnValue('https://gdz.sub.uni-goettingen.de'));
-
-        return $mock;
+    public function RangeProvider()
+    {
+        return [
+            ['PPN613131266', 27],
+        ];
     }
 
     /**
@@ -88,5 +70,22 @@ class PresentationServiceTest extends TestCase
         $ranges = $this->presentationService->getRange($document, 'LOG_0003');
 
         $this->assertSame($count, count($ranges->getMembers()));
+    }
+
+    /**
+     * @return \Symfony\Bundle\FrameworkBundle\Routing\Router
+     */
+    protected function getRouterMock()
+    {
+        $mock = $this->getMockBuilder(Router::class)
+                     ->disableOriginalConstructor()
+                     ->setMethods(['generate', 'supports', 'exists'])
+                     ->getMockForAbstractClass();
+
+        $mock->expects($this->any())
+             ->method('generate')
+             ->will($this->returnValue('https://gdz.sub.uni-goettingen.de'));
+
+        return $mock;
     }
 }

@@ -456,6 +456,11 @@ class TranslatorMock implements TranslatorInterface
         return $document;
     }
 
+    public function getDocumentByImageId(string $imageId): Document
+    {
+        return $this->getDocumentById($this->documents[0]);
+    }
+
     /**
      * @param string $doctype
      *
@@ -479,10 +484,5 @@ class TranslatorMock implements TranslatorInterface
         }
 
         return DocumentTypes::UNKNOWN;
-    }
-
-    public function getDocumentByImageId(string $imageId): Document
-    {
-        return $this->getDocumentById($this->documents[0]);
     }
 }
