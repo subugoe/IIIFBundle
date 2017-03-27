@@ -329,7 +329,6 @@ class PresentationService
         $numberOfElements = ($structureEnd - $structureStart + 1);
 
         $canvases = [];
-        $counterEnd = $structureStart + $numberOfElements - 1;
 
         for ($i = 0; $i < $numberOfElements; ++$i) {
             $canvases[] = $this->router->generate('subugoe_iiif_canvas', [
