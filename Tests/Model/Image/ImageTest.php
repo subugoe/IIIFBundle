@@ -15,28 +15,33 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        parent::setUp();
         $this->fixture = new Image();
     }
 
+    /**
+     * @return array
+     */
     public function identifierProvider()
     {
         return [
             [
-                'PPN341721271',
-                'PPN341721271/00000001',
+                'PPN341721271:00000001',
+                'PPN341721271:00000001',
             ],
             [
                 'PPN341721271:00000001',
-                'PPN341721271/00000001',
+                'PPN341721271:00000001',
             ],
             [
                 '1:1',
-                '1/1',
+                '1:1',
             ],
         ];
     }
 
+    /**
+     * @return array
+     */
     public function rotationProvider()
     {
         return [

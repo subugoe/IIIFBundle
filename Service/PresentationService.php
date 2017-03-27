@@ -17,20 +17,14 @@ use Subugoe\IIIFBundle\Model\Presentation\ResourceData;
 use Subugoe\IIIFBundle\Model\Presentation\Sequence;
 use Subugoe\IIIFBundle\Model\Presentation\Service;
 use Subugoe\IIIFBundle\Model\Presentation\Structure;
-use Subugoe\IIIFBundle\Translator\TranslatorInterface;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class PresentationService
 {
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
 
     /**
      * @var array
@@ -45,15 +39,13 @@ class PresentationService
     /**
      * PresentationService constructor.
      *
-     * @param Router              $router
-     * @param TranslatorInterface $translator
-     * @param array               $imageConfiguration
-     * @param array               $presentationConfiguration
+     * @param RouterInterface $router
+     * @param array           $imageConfiguration
+     * @param array           $presentationConfiguration
      */
-    public function __construct(Router $router, TranslatorInterface $translator, array $imageConfiguration, array $presentationConfiguration)
+    public function __construct(RouterInterface $router, array $imageConfiguration, array $presentationConfiguration)
     {
         $this->router = $router;
-        $this->translator = $translator;
         $this->imageConfiguration = $imageConfiguration;
         $this->presentationConfiguration = $presentationConfiguration;
     }
@@ -80,7 +72,7 @@ class PresentationService
                 [
                     'id' => $document->getId(),
                 ],
-                Router::NETWORK_PATH)
+                RouterInterface::NETWORK_PATH)
             )
             ->setLabel($document->getTitle()[0])
             ->setNavDate($this->getNavDate($document))
@@ -96,7 +88,7 @@ class PresentationService
         }
 
         foreach ($document->getClassification() as $classification) {
-            $manifest->setWithin($this->router->generate('subugoe_iiif_collection', ['id' => $classification], Router::NETWORK_PATH));
+            $manifest->setWithin($this->router->generate('subugoe_iiif_collection', ['id' => $classification], RouterInterface::NETWORK_PATH));
         }
 
         return $manifest;
@@ -114,7 +106,7 @@ class PresentationService
         $annotationList->setId($this->router->generate('subugoe_iiif_annotation-list', [
             'id' => $document->getId(),
             'name' => $name,
-        ], Router::NETWORK_PATH));
+        ], RouterInterface::NETWORK_PATH));
 
         $resources = [];
 
@@ -139,7 +131,7 @@ class PresentationService
         $range = new Range();
 
         $range
-            ->setId($this->router->generate('subugoe_iiif_range', ['id' => $document->getId(), 'range' => $name], Router::NETWORK_PATH))
+            ->setId($this->router->generate('subugoe_iiif_range', ['id' => $document->getId(), 'range' => $name], RouterInterface::NETWORK_PATH))
             ->setLabel($this->getLabelForRange($document, $name))
             ->setMembers($this->getMembersForRange($document, $name));
 
@@ -212,7 +204,7 @@ class PresentationService
         $thumbnail->setId($this->router->generate(
             'subugoe_iiif_image',
             $thumbnailParameters,
-            Router::NETWORK_PATH
+            RouterInterface::NETWORK_PATH
             )
         );
         $thumbnail->setService($thumbnailService);
@@ -291,11 +283,15 @@ class PresentationService
         $structures = [];
         $numberOfStructureElements = count($document->getLogicalStructures());
 
+        $counter = 0;
+        $counterEnd = $numberOfStructureElements - 1;
+
         if ($numberOfStructureElements > 0) {
             $levelOfFirstStructure = $document->getLogicalStructure(0)->getLevel();
             $i = $levelOfFirstStructure;
-            while ($i <= $numberOfStructureElements) {
-                $logicalStructure = $document->getLogicalStructure($i - 1);
+
+            while ($counter <= $counterEnd) {
+                $logicalStructure = $document->getLogicalStructure($counter);
                 if ($levelOfFirstStructure === $logicalStructure->getLevel()) {
                     $canvases = $this->getMembersOfLogicalStructure($document, $logicalStructure);
 
@@ -304,7 +300,7 @@ class PresentationService
                         ->setId($this->router->generate('subugoe_iiif_range', [
                             'id' => $document->getId(),
                             'range' => $logicalStructure->getId(),
-                        ], Router::NETWORK_PATH)
+                        ], RouterInterface::NETWORK_PATH)
                         )
                         ->setLabel($logicalStructure->getLabel())
                         ->setType('sc:Canvas')
@@ -313,6 +309,7 @@ class PresentationService
                     $structures[] = $structure;
                 }
                 ++$i;
+                ++$counter;
             }
         }
 
@@ -327,21 +324,41 @@ class PresentationService
      */
     private function getMembersOfLogicalStructure(\Subugoe\IIIFBundle\Model\Document $document, LogicalStructure $logicalStructure)
     {
-        $structureStart = $logicalStructure->getStartPage();
-        $structureEnd = $logicalStructure->getEndPage();
+        $structureStart = $this->getPositionOfPhysicalPage($document, $logicalStructure->getStartPage());
+        $structureEnd = $this->getPositionOfPhysicalPage($document, $logicalStructure->getEndPage());
+        $numberOfElements = ($structureEnd - $structureStart + 1);
 
         $canvases = [];
-        $counter = $structureStart - 1;
-        while ($counter < $structureEnd) {
+        $counterEnd = $structureStart + $numberOfElements - 1;
+
+        for ($i = 0; $i < $numberOfElements; ++$i) {
             $canvases[] = $this->router->generate('subugoe_iiif_canvas', [
                 'id' => $document->getId(),
-                'canvas' => $document->getPhysicalStructure($counter - 1)->getIdentifier(),
-            ], Router::NETWORK_PATH);
-
-            ++$counter;
+                'canvas' => $document->getPhysicalStructure($structureStart + $i)->getIdentifier(),
+            ], RouterInterface::NETWORK_PATH);
         }
 
         return $canvases;
+    }
+
+    /**
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param int                                $page
+     *
+     * @return int
+     */
+    private function getPositionOfPhysicalPage(\Subugoe\IIIFBundle\Model\Document $document, int $page)
+    {
+        $i = 0;
+        /** @var PhysicalStructure $structure */
+        foreach ($document->getPhysicalStructures() as $structure) {
+            if ($structure->getOrder() === $page) {
+                return $i;
+            }
+            ++$i;
+        }
+
+        return -1;
     }
 
     /**
@@ -360,13 +377,13 @@ class PresentationService
                 'id' => $document->getId(),
                 'name' => $name,
             ],
-                Router::NETWORK_PATH))
+                RouterInterface::NETWORK_PATH))
             ->setCanvases($canvases)
             ->setStartCanvas($this->router->generate('subugoe_iiif_canvas', [
                 'id' => $document->getId(),
                 'canvas' => $document->getPhysicalStructure(0)->getPage(),
             ],
-                Router::NETWORK_PATH));
+                RouterInterface::NETWORK_PATH));
 
         return $sequences;
     }
@@ -394,7 +411,7 @@ class PresentationService
                 'id' => $document->getId(),
                 'canvas' => $canvasId,
             ],
-                Router::NETWORK_PATH))
+                RouterInterface::NETWORK_PATH))
             ->setLabel($label)
             ->setHeight(400)
             ->setWidth(300)
@@ -480,17 +497,17 @@ class PresentationService
         $imageService = new Service();
         $imageService
             ->setId($this->router->generate(
-                'subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], Router::NETWORK_PATH));
+                'subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], RouterInterface::NETWORK_PATH));
 
         $resource
-            ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], Router::NETWORK_PATH))
+            ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], RouterInterface::NETWORK_PATH))
             ->setFormat($format)
             ->setWidth(300)
             ->setHeight(400)
             ->setService($imageService);
 
         $image
-            ->setId($this->router->generate('subugoe_iiif_imagepresentation', ['id' => $document->getId(), 'name' => $imageId], Router::NETWORK_PATH))
+            ->setId($this->router->generate('subugoe_iiif_imagepresentation', ['id' => $document->getId(), 'name' => $imageId], RouterInterface::NETWORK_PATH))
             ->setResource($resource);
 
         return $image;
@@ -506,8 +523,11 @@ class PresentationService
         $canvases = [];
         $numberOfPages = count($document->getPhysicalStructures());
 
-        for ($i = 0; $i < $numberOfPages; ++$i) {
-            $canvases[] = $this->getCanvas($document, $document->getPhysicalStructure($i)->getIdentifier(), $i);
+        $count = 0;
+
+        while ($count < $numberOfPages) {
+            $canvases[] = $this->getCanvas($document, $document->getPhysicalStructure($count)->getIdentifier(), $count);
+            ++$count;
         }
 
         return $canvases;
@@ -529,13 +549,13 @@ class PresentationService
                 'id' => $document->getId(),
                 'name' => $name,
             ],
-                Router::NETWORK_PATH))
+                RouterInterface::NETWORK_PATH))
             ->setCanvases($canvases)
             ->setStartCanvas($this->router->generate('subugoe_iiif_canvas', [
                 'id' => $document->getId(),
                 'canvas' => $document->getPhysicalStructure(0)->getPage(),
             ],
-                Router::NETWORK_PATH));
+                RouterInterface::NETWORK_PATH));
 
         return $sequence;
     }
