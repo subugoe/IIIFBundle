@@ -23,6 +23,14 @@ class PresentationServiceTest extends TestCase
         ];
     }
 
+    public function RangeProvider()
+    {
+        return [
+            ['PPN613131266', 27],
+        ];
+    }
+
+
     /**
      * @var TranslatorInterface
      */
@@ -68,7 +76,17 @@ class PresentationServiceTest extends TestCase
     public function testSequences($id)
     {
         $document = $this->translator->getDocumentById($id);
-
         $this->presentationService->getManifest($document);
+    }
+
+    /**
+     * @dataProvider rangeProvider
+     */
+    public function testRanges($id, $count)
+    {
+        $document = $this->translator->getDocumentById($id);
+        $ranges = $this->presentationService->getRange($document, 'LOG_0003');
+
+        $this->assertSame($count, count($ranges->getMembers()));
     }
 }
