@@ -113,7 +113,7 @@ class PresentationService
         $resourceData
             ->setType('dctypes:Text')
             ->setId($document->getPhysicalStructure($this->getPagePositionByIdentifier($document, $name))->getAnnotation())
-            ->setFormat('application/tei+xml');
+            ->setFormat('text/html');
 
         $resource = new GenericResource();
         $resource
