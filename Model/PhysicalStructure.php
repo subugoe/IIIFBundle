@@ -33,6 +33,11 @@ class PhysicalStructure
     private $filename;
 
     /**
+     * @var string
+     */
+    private $annotation;
+
+    /**
      * @return int
      */
     public function getOrder(): int
@@ -128,6 +133,26 @@ class PhysicalStructure
     public function setFilename(string $filename): PhysicalStructure
     {
         $this->filename = $filename;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAnnotation(): string
+    {
+        return $this->annotation;
+    }
+
+    /**
+     * @param string $annotation
+     *
+     * @return PhysicalStructure
+     */
+    public function setAnnotation(string $annotation): PhysicalStructure
+    {
+        $this->annotation = $annotation;
 
         return $this;
     }

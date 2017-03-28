@@ -74,6 +74,7 @@ class SubugoeTranslator implements TranslatorInterface
                 ->setLabel($solrDocument['phys_orderlabel'][$i])
                 ->setOrder($solrDocument['phys_order'][$i])
                 ->setPage($solrDocument['page'][$i])
+                ->setAnnotation(isset($solrDocument['fulltext_ref'][$i]) ? $solrDocument['fulltext_ref'][$i] : '')
                 ->setFilename(vsprintf(
                     '%s/%s.%s', [
                         $solrDocument['id'],

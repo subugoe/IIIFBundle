@@ -109,8 +109,17 @@ class PresentationService
         ], RouterInterface::NETWORK_PATH));
 
         $resources = [];
+        $resourceData = new ResourceData();
+        $resourceData
+            ->setType('dctypes:Text')
+            ->setId($document->getPhysicalStructure($this->getPagePositionByIdentifier($document, $name))->getAnnotation())
+            ->setFormat('application/tei+xml');
 
-        $resource[] = new GenericResource();
+        $resource = new GenericResource();
+        $resource
+            ->setResource($resourceData);
+
+        $resources[] = $resource;
         $annotationList->setResources($resources);
 
         return $annotationList;
@@ -172,6 +181,15 @@ class PresentationService
             ->setHeight(400)
             ->setWidth(300)
             ->setImages($images);
+
+        if (!empty($document->getPhysicalStructure($physicalStructureId)->getAnnotation())) {
+            $annotationList = new AnnotationList();
+            $annotationList
+                ->setId($this->router->generate('subugoe_iiif_annotation-list', ['id' => $document->getId(), 'name' => $canvasId], RouterInterface::NETWORK_PATH))
+                ->setType('sc:AnnotationList');
+
+            $canvas->setOtherContent([$annotationList]);
+        }
 
         return $canvas;
     }
@@ -243,6 +261,26 @@ class PresentationService
                 RouterInterface::NETWORK_PATH));
 
         return $sequence;
+    }
+
+    /**
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param string                             $identifier
+     *
+     * @return int
+     */
+    private function getPagePositionByIdentifier(\Subugoe\IIIFBundle\Model\Document $document, string $identifier): int
+    {
+        $position = 0;
+        /** @var PhysicalStructure $physicalStructure */
+        foreach ($document->getPhysicalStructures() as $physicalStructure) {
+            if ($physicalStructure->getIdentifier() === $identifier) {
+                return $position;
+            }
+            ++$position;
+        }
+
+        throw new \InvalidArgumentException(sprintf('Page with label %s not found in document %s', $identifier, $document->getId()), 1490689215);
     }
 
     /**

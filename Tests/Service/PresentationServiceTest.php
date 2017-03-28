@@ -37,14 +37,33 @@ class PresentationServiceTest extends TestCase
         $this->presentationService = new PresentationService($router, $imageConfiguration, $presentationConfiguration);
     }
 
+    /**
+     * @return array
+     */
     public function documentProvider()
     {
         return [
             ['PPN613131266'],
             ['PPN629651310'],
+            ['PPN592283860'],
         ];
     }
 
+    /**
+     * @return array
+     */
+    public function annotationProvider()
+    {
+        return [
+            ['PPN613131266', false],
+            ['PPN629651310', false],
+            ['PPN592283860', true],
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public function RangeProvider()
     {
         return [
@@ -73,18 +92,27 @@ class PresentationServiceTest extends TestCase
     }
 
     /**
+     * @dataProvider annotationProvider
+     */
+    public function testAnnotationExistance($id, $expected)
+    {
+        $document = $this->translator->getDocumentById($id);
+        $this->assertSame(!empty($document->getPhysicalStructure(0)->getAnnotation()), $expected);
+    }
+
+    /**
      * @return \Symfony\Bundle\FrameworkBundle\Routing\Router
      */
     protected function getRouterMock()
     {
         $mock = $this->getMockBuilder(Router::class)
-                     ->disableOriginalConstructor()
-                     ->setMethods(['generate', 'supports', 'exists'])
-                     ->getMockForAbstractClass();
+            ->disableOriginalConstructor()
+            ->setMethods(['generate', 'supports', 'exists'])
+            ->getMockForAbstractClass();
 
         $mock->expects($this->any())
-             ->method('generate')
-             ->will($this->returnValue('https://gdz.sub.uni-goettingen.de'));
+            ->method('generate')
+            ->will($this->returnValue('https://gdz.sub.uni-goettingen.de'));
 
         return $mock;
     }
