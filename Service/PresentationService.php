@@ -81,7 +81,9 @@ class PresentationService
             ->setAttribution($attribution)
             ->setLogo($logo)
             ->setSequences([$sequences])
-            ->setStructures($structures);
+            ->setStructures($structures)
+            ->setSeeAlso($document->getSeeAlso())
+            ->setRendering($document->getRenderings());
 
         if (!empty($document->getDescription())) {
             $manifest->setDescription($document->getDescription());

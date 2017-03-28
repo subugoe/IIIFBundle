@@ -115,6 +115,17 @@ class Document
     private $logo;
 
     /**
+     * @var array
+     */
+    private $rendering;
+
+    /**
+     * @var array
+     * @Serializer\SerializedName("seeAlso")
+     */
+    private $seeAlso;
+
+    /**
      * A.k.a Ranges.
      *
      * @var array
@@ -417,6 +428,46 @@ class Document
     public function setWithin(string $within): Document
     {
         $this->within = $within;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRendering(): array
+    {
+        return $this->rendering;
+    }
+
+    /**
+     * @param array $rendering
+     *
+     * @return Document
+     */
+    public function setRendering(array $rendering): Document
+    {
+        $this->rendering = $rendering;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSeeAlso(): array
+    {
+        return $this->seeAlso;
+    }
+
+    /**
+     * @param array $seeAlso
+     *
+     * @return Document
+     */
+    public function setSeeAlso(array $seeAlso): Document
+    {
+        $this->seeAlso = $seeAlso;
 
         return $this;
     }

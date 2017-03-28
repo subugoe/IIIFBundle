@@ -9,6 +9,8 @@ use Subugoe\IIIFBundle\Model\Document;
 use Subugoe\IIIFBundle\Model\DocumentTypes;
 use Subugoe\IIIFBundle\Model\LogicalStructure;
 use Subugoe\IIIFBundle\Model\PhysicalStructure;
+use Subugoe\IIIFBundle\Model\Presentation\Rendering;
+use Subugoe\IIIFBundle\Model\Presentation\SeeAlso;
 use Symfony\Component\Routing\RouterInterface;
 
 class SubugoeTranslator implements TranslatorInterface
@@ -58,6 +60,8 @@ class SubugoeTranslator implements TranslatorInterface
             ->setPublisher($solrDocument['publisher'] ?: [])
             ->setLanguage($solrDocument['lang'] ?: [])
             ->setImageFormat($solrDocument['image_format'])
+            ->setRenderings([$this->getPdfRendering($id)])
+            ->setSeeAlso($this->getSeeAlso($id))
             ->setDescription('');
 
         for ($i = 0; $i < $numberOfLogicalStructures; ++$i) {
@@ -149,5 +153,47 @@ class SubugoeTranslator implements TranslatorInterface
         }
 
         return DocumentTypes::UNKNOWN;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return Rendering
+     */
+    private function getPdfRendering($id): Rendering
+    {
+        $pdfRendering = new Rendering();
+        $pdfRendering
+            ->setFormat('application/pdf')
+            ->setId($this->router->generate('_download_pdf', ['id' => $id],
+                RouterInterface::NETWORK_PATH))
+            ->setLabel('PDF download');
+
+        return $pdfRendering;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return array
+     */
+    private function getSeeAlso($id)
+    {
+        $seeAlsos = [];
+        $formats = [
+              'bib' => 'application/x-bibtex',
+              'ris' => 'application/x-research-info-systems',
+              'enw' => 'application/x-endnote-refer',
+          ];
+
+        foreach ($formats as $extension => $mimeType) {
+            $seeAlso = new SeeAlso();
+            $seeAlso
+                ->setId($this->router->generate('_download_export', ['id' => $id, '_format' => $extension], RouterInterface::NETWORK_PATH))
+                ->setFormat($mimeType);
+            $seeAlsos[] = $seeAlso;
+        }
+
+        return $seeAlsos;
     }
 }

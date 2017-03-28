@@ -90,6 +90,16 @@ class Document
     private $parents = [];
 
     /**
+     * @var array
+     */
+    private $renderings = [];
+
+    /**
+     * @var array
+     */
+    private $seeAlso = [];
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -451,5 +461,45 @@ class Document
     public function setParent(Document $document)
     {
         $this->parents[] = $document;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRenderings(): array
+    {
+        return $this->renderings;
+    }
+
+    /**
+     * @param array $renderings
+     *
+     * @return Document
+     */
+    public function setRenderings(array $renderings): Document
+    {
+        $this->renderings = $renderings;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSeeAlso(): array
+    {
+        return $this->seeAlso;
+    }
+
+    /**
+     * @param array $seeAlso
+     *
+     * @return Document
+     */
+    public function setSeeAlso(array $seeAlso): Document
+    {
+        $this->seeAlso = $seeAlso;
+
+        return $this;
     }
 }
