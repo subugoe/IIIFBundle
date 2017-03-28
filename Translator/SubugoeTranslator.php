@@ -9,6 +9,7 @@ use Subugoe\IIIFBundle\Model\Document;
 use Subugoe\IIIFBundle\Model\DocumentTypes;
 use Subugoe\IIIFBundle\Model\LogicalStructure;
 use Subugoe\IIIFBundle\Model\PhysicalStructure;
+use Symfony\Component\Routing\RouterInterface;
 
 class SubugoeTranslator implements TranslatorInterface
 {
@@ -18,13 +19,19 @@ class SubugoeTranslator implements TranslatorInterface
     private $searchService;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * SubugoeTranslator constructor.
      *
      * @param SearchService $searchService
      */
-    public function __construct(SearchService $searchService)
+    public function __construct(SearchService $searchService, RouterInterface $router)
     {
         $this->searchService = $searchService;
+        $this->router = $router;
     }
 
     /**
@@ -74,7 +81,14 @@ class SubugoeTranslator implements TranslatorInterface
                 ->setLabel($solrDocument['phys_orderlabel'][$i])
                 ->setOrder($solrDocument['phys_order'][$i])
                 ->setPage($solrDocument['page'][$i])
-                ->setAnnotation(isset($solrDocument['fulltext_ref'][$i]) ? $solrDocument['fulltext_ref'][$i] : '')
+                ->setAnnotation(isset($solrDocument['fulltext_ref'][$i]) ?
+                    $this->router->generate('_fulltext',
+                        [
+                            'work' => $solrDocument['id'],
+                            'page' => $solrDocument['page'][$i],
+                        ], RouterInterface::NETWORK_PATH) :
+                    ''
+                )
                 ->setFilename(vsprintf(
                     '%s/%s.%s', [
                         $solrDocument['id'],
