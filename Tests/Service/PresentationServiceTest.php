@@ -46,6 +46,7 @@ class PresentationServiceTest extends TestCase
             ['PPN613131266'],
             ['PPN629651310'],
             ['PPN592283860'],
+            ['PPN599471603_0013'],
         ];
     }
 
@@ -58,6 +59,7 @@ class PresentationServiceTest extends TestCase
             ['PPN613131266', false],
             ['PPN629651310', false],
             ['PPN592283860', true],
+            ['PPN599471603_0013', false],
         ];
     }
 

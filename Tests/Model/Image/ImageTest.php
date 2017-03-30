@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace tests\Subugoe\IIIFBundle\Model\Image;
 
+use PHPUnit\Framework\TestCase;
 use Subugoe\IIIFBundle\Model\Image\Image;
 
-class ImageTest extends \PHPUnit_Framework_TestCase
+class ImageTest extends TestCase
 {
     /**
      * @var Image

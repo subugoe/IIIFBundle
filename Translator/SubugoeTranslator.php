@@ -46,7 +46,7 @@ class SubugoeTranslator implements TranslatorInterface
         $document = new Document();
         $solrDocument = $this->searchService->getDocumentById($id);
         $numberOfLogicalStructures = count($solrDocument['log_id']);
-        $numberOfPhysicalStructures = count($solrDocument['phys_order']);
+        $numberOfPhysicalStructures = count($solrDocument['page_key']);
 
         $document
             ->setId($id)

@@ -2,12 +2,13 @@
 
 namespace tests\Subugoe\IIIFBundle\Model;
 
+use PHPUnit\Framework\TestCase;
 use Subugoe\IIIFBundle\Model\LogicalStructure;
 
 /**
  * Test for logical structure element.
  */
-class LogicalStructureTest extends \PHPUnit_Framework_TestCase
+class LogicalStructureTest extends TestCase
 {
     /**
      * @var LogicalStructure
