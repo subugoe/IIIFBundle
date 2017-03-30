@@ -6,6 +6,7 @@ use Subugoe\IIIFBundle\Model\Document;
 use Subugoe\IIIFBundle\Model\DocumentTypes;
 use Subugoe\IIIFBundle\Model\LogicalStructure;
 use Subugoe\IIIFBundle\Model\PhysicalStructure;
+use Subugoe\IIIFBundle\Model\Presentation\Collection;
 use Subugoe\IIIFBundle\Translator\TranslatorInterface;
 
 /**
@@ -5987,9 +5988,24 @@ class TranslatorMock implements TranslatorInterface
         return $document;
     }
 
+    /**
+     * @param string $imageId
+     *
+     * @return Document
+     */
     public function getDocumentByImageId(string $imageId): Document
     {
         return $this->getDocumentById($this->documents[0]);
+    }
+
+    /**
+     * @param string $collectionId
+     *
+     * @return Collection
+     */
+    public function getCollectionById(string $collectionId)
+    {
+        return new Collection();
     }
 
     /**
