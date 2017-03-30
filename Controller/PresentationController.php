@@ -134,6 +134,24 @@ class PresentationController extends Controller
      */
     public function collectionAction(string $id)
     {
-        return $this->view($this->get('subugoe_iiif.presentation_service')->getCollection($id), Response::HTTP_OK);
+        $collection = $this->get('subugoe_iiif.translator')->getCollectionById($id);
+
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getCollection($collection), Response::HTTP_OK);
+    }
+
+    /**
+     * @see http://iiif.io/api/presentation/2.1/#collection
+     * @ApiDoc(
+     *  resource=true,
+     *  description="IIIF presentation API showing all collections",
+     * )
+     *
+     * @return View
+     */
+    public function collectionsAction()
+    {
+        $collections = $this->get('subugoe_iiif.translator')->getCollections();
+
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getCollections($collections));
     }
 }

@@ -9,6 +9,9 @@ use Subugoe\IIIFBundle\Model\Document;
 use Subugoe\IIIFBundle\Model\DocumentTypes;
 use Subugoe\IIIFBundle\Model\LogicalStructure;
 use Subugoe\IIIFBundle\Model\PhysicalStructure;
+use Subugoe\IIIFBundle\Model\Presentation\Collection;
+use Subugoe\IIIFBundle\Model\Presentation\Collections;
+use Subugoe\IIIFBundle\Model\Presentation\Image;
 use Subugoe\IIIFBundle\Model\Presentation\Rendering;
 use Subugoe\IIIFBundle\Model\Presentation\SeeAlso;
 use Symfony\Component\Routing\RouterInterface;
@@ -26,14 +29,70 @@ class SubugoeTranslator implements TranslatorInterface
     private $router;
 
     /**
+     * @var \Symfony\Component\Translation\TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var string
+     */
+    private $rootDirectory;
+
+    /**
+     * @var array
+     */
+    private $collections;
+
+    /**
      * SubugoeTranslator constructor.
      *
-     * @param SearchService $searchService
+     * @param SearchService                                      $searchService
+     * @param RouterInterface                                    $router
+     * @param \Symfony\Component\Translation\TranslatorInterface $translator
+     * @param string                                             $rootDirectory
      */
-    public function __construct(SearchService $searchService, RouterInterface $router)
+    public function __construct(SearchService $searchService, RouterInterface $router, \Symfony\Component\Translation\TranslatorInterface $translator, string $rootDirectory, array $collections)
     {
         $this->searchService = $searchService;
         $this->router = $router;
+        $this->translator = $translator;
+        $this->rootDirectory = $rootDirectory;
+        $this->collections = $collections;
+    }
+
+    /**
+     * @param string $collectionId
+     *
+     * @return Collection
+     */
+    public function getCollectionById(string $collectionId)
+    {
+        $collection = new Collection();
+        $collection
+            ->setId($this->router->generate('_collection', ['id' => $collectionId], RouterInterface::NETWORK_PATH))
+            ->setLabel($this->translator->trans($collectionId))
+            ->setDescription($this->getCollectionContent($collectionId))
+        ;
+
+        return $collection;
+    }
+
+    /**
+     * @return Collections
+     */
+    public function getCollections()
+    {
+        $collections = new Collections();
+        foreach ($this->collections as $collectionData) {
+            $thumbnail = new Image();
+            $thumbnail->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $collectionData['image']], RouterInterface::NETWORK_PATH));
+
+            $collection = $this->getCollectionById($collectionData['id']);
+            $collection->setThumbnail($thumbnail);
+            $collections->addCollection($collection);
+        }
+
+        return $collections;
     }
 
     /**
@@ -128,6 +187,22 @@ class SubugoeTranslator implements TranslatorInterface
         $solrDocument = $this->searchService->getDocumentBy('page_key', $imageId);
 
         return $this->getDocumentById($solrDocument['id']);
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return string
+     */
+    private function getCollectionContent($id)
+    {
+        $file = sprintf('%s/Resources/content/dc/%s.md', $this->rootDirectory, $id);
+        $content = '';
+        if (file_exists($file)) {
+            $content = file_get_contents($file);
+        }
+
+        return $content;
     }
 
     /**

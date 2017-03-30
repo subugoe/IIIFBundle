@@ -1,0 +1,168 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Subugoe\IIIFBundle\Model\Presentation;
+
+use JMS\Serializer\Annotation as Serializer;
+
+class Collection
+{
+    /**
+     * @var string
+     * @Serializer\SerializedName("@id")
+     */
+    private $id;
+
+    /**
+     * @var string
+     * @Serializer\SerializedName("@context")
+     */
+    private $context = 'http://iiif.io/api/presentation/2/context.json';
+
+    /**
+     * @var string
+     * @Serializer\SerializedName("@type")
+     */
+    private $type = 'sc:Collection';
+
+    /**
+     * @var string
+     */
+    private $label;
+
+    /**
+     * @var array
+     */
+    private $medatata;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @var Image
+     */
+    private $thumbnail;
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return Collection
+     */
+    public function setId(string $id): Collection
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return Collection
+     */
+    public function setType(string $type): Collection
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return Collection
+     */
+    public function setLabel(string $label): Collection
+    {
+        $this->label = $label;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMedatata(): array
+    {
+        return $this->medatata;
+    }
+
+    /**
+     * @param array $medatata
+     *
+     * @return Collection
+     */
+    public function setMedatata(array $medatata): Collection
+    {
+        $this->medatata = $medatata;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return Collection
+     */
+    public function setDescription(string $description): Collection
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Image
+     */
+    public function getThumbnail(): Image
+    {
+        return $this->thumbnail;
+    }
+
+    /**
+     * @param Image $thumbnail
+     *
+     * @return Collection
+     */
+    public function setThumbnail(Image $thumbnail): Collection
+    {
+        $this->thumbnail = $thumbnail;
+
+        return $this;
+    }
+}

@@ -8,6 +8,8 @@ use Subugoe\IIIFBundle\Model\LogicalStructure;
 use Subugoe\IIIFBundle\Model\PhysicalStructure;
 use Subugoe\IIIFBundle\Model\Presentation\AnnotationList;
 use Subugoe\IIIFBundle\Model\Presentation\Canvas;
+use Subugoe\IIIFBundle\Model\Presentation\Collection;
+use Subugoe\IIIFBundle\Model\Presentation\Collections;
 use Subugoe\IIIFBundle\Model\Presentation\Document;
 use Subugoe\IIIFBundle\Model\Presentation\Image;
 use Subugoe\IIIFBundle\Model\Presentation\GenericResource;
@@ -128,13 +130,23 @@ class PresentationService
     }
 
     /**
-     * @param string $id
+     * @param Collection $collection
      *
-     * @return string
+     * @return Collection
      */
-    public function getCollection(string $id)
+    public function getCollection(Collection $collection)
     {
-        return sprintf('Not implemented yet - Collection ', $id);
+        return $collection;
+    }
+
+    /**
+     * @param Collections $collections
+     *
+     * @return Collections
+     */
+    public function getCollections(Collections $collections)
+    {
+        return $collections;
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Subugoe\IIIFBundle\Translator;
 
 use Subugoe\IIIFBundle\Model\Document;
+use Subugoe\IIIFBundle\Model\Presentation\Collection;
 
 interface TranslatorInterface
 {
@@ -21,4 +22,11 @@ interface TranslatorInterface
      * @return Document
      */
     public function getDocumentByImageId(string $imageId): Document;
+
+    /**
+     * @param string $collectionId
+     *
+     * @return Collection
+     */
+    public function getCollectionById(string $collectionId);
 }
