@@ -286,6 +286,8 @@ class SubugoeTranslator implements TranslatorInterface
             ->setFormat('text/xml')
             ->setProfile('http://www.loc.gov/standards/mets/profile_docs/mets.profile.v2-0.xsd');
 
+        $seeAlsos[] = $mets;
+
         return $seeAlsos;
     }
 }
