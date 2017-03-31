@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Translator;
 
+use Solarium\QueryType\Select\Result\DocumentInterface;
 use Subugoe\FindBundle\Service\SearchService;
 use Subugoe\IIIFBundle\Model\Document;
 use Subugoe\IIIFBundle\Model\DocumentTypes;
@@ -105,7 +106,7 @@ class SubugoeTranslator implements TranslatorInterface
         $document = new Document();
         $solrDocument = $this->searchService->getDocumentById($id);
         $numberOfLogicalStructures = count($solrDocument['log_id']);
-        $numberOfPhysicalStructures = count($solrDocument['page_key']);
+        $numberOfPhysicalStructures = count($solrDocument['page']);
 
         $document
             ->setId($id)
@@ -120,7 +121,7 @@ class SubugoeTranslator implements TranslatorInterface
             ->setLanguage($solrDocument['lang'] ?: [])
             ->setImageFormat($solrDocument['image_format'])
             ->setRenderings([$this->getPdfRendering($id)])
-            ->setSeeAlso($this->getSeeAlso($id))
+            ->setSeeAlso($this->getSeeAlso($solrDocument))
             ->setDescription('');
 
         for ($i = 0; $i < $numberOfLogicalStructures; ++$i) {
@@ -248,11 +249,11 @@ class SubugoeTranslator implements TranslatorInterface
     }
 
     /**
-     * @param string $id
+     * @param DocumentInterface $document
      *
      * @return array
      */
-    private function getSeeAlso($id)
+    private function getSeeAlso(DocumentInterface $document)
     {
         $seeAlsos = [];
         $formats = [
@@ -264,9 +265,19 @@ class SubugoeTranslator implements TranslatorInterface
         foreach ($formats as $extension => $mimeType) {
             $seeAlso = new SeeAlso();
             $seeAlso
-                ->setId($this->router->generate('_download_export', ['id' => $id, '_format' => $extension], RouterInterface::NETWORK_PATH))
+                ->setId($this->router->generate('_download_export', ['id' => $document['id'], '_format' => $extension], RouterInterface::NETWORK_PATH))
                 ->setFormat($mimeType);
             $seeAlsos[] = $seeAlso;
+        }
+
+        if (isset($document['summary_ref'])) {
+            foreach ($document['summary_ref'] as $summaryReference) {
+                $seeAlso = new SeeAlso();
+                $seeAlso
+                    ->setId($summaryReference)
+                    ->setFormat('text/html');
+                $seeAlsos[] = $seeAlso;
+            }
         }
 
         return $seeAlsos;

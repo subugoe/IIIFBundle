@@ -46,7 +46,6 @@ class PresentationServiceTest extends TestCase
             ['PPN613131266'],
             ['PPN629651310'],
             ['PPN592283860'],
-            ['PPN599471603_0013'],
         ];
     }
 
@@ -60,6 +59,13 @@ class PresentationServiceTest extends TestCase
             ['PPN629651310', false],
             ['PPN592283860', true],
             ['PPN599471603_0013', false],
+        ];
+    }
+
+    public function malformedDocumentProvider()
+    {
+        return [
+            ['PPN599471603_0013'],
         ];
     }
 
@@ -100,6 +106,16 @@ class PresentationServiceTest extends TestCase
     {
         $document = $this->translator->getDocumentById($id);
         $this->assertSame(!empty($document->getPhysicalStructure(0)->getAnnotation()), $expected);
+    }
+
+    /**
+     * @dataProvider malformedDocumentProvider
+     * @expectedException \Subugoe\IIIFBundle\Exception\MalformedDocumentException
+     */
+    public function testMalformedDocument($id)
+    {
+        $document = $this->translator->getDocumentById($id);
+        $this->presentationService->getManifest($document);
     }
 
     /**

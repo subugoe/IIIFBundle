@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Service;
 
+use Subugoe\IIIFBundle\Exception\MalformedDocumentException;
 use Subugoe\IIIFBundle\Model\LogicalStructure;
 use Subugoe\IIIFBundle\Model\PhysicalStructure;
 use Subugoe\IIIFBundle\Model\Presentation\AnnotationList;
@@ -503,6 +504,8 @@ class PresentationService
      * @param \Subugoe\IIIFBundle\Model\Document $document
      * @param int                                $page
      *
+     * @throws MalformedDocumentException
+     *
      * @return int
      */
     private function getPositionOfPhysicalPage(\Subugoe\IIIFBundle\Model\Document $document, int $page)
@@ -515,8 +518,12 @@ class PresentationService
             }
             ++$i;
         }
-
-        return -1;
+        // PPN617021074
+        throw new MalformedDocumentException(vsprintf('Document %s may contain an invalid or inconsistent structure. Page %d not found in %d iterations.', [
+            $document->getId(),
+            $page,
+            $i,
+        ]));
     }
 
     /**
