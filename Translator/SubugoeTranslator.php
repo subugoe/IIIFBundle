@@ -257,16 +257,25 @@ class SubugoeTranslator implements TranslatorInterface
     {
         $seeAlsos = [];
         $formats = [
-              'bib' => 'application/x-bibtex',
-              'ris' => 'application/x-research-info-systems',
-              'enw' => 'application/x-endnote-refer',
+              'bib' => [
+                  'mimeType' => 'application/x-bibtex',
+                  'profile' => 'http://www.bibtex.org/Format/',
+              ],
+              'ris' => [
+                  'mimeType' => 'application/x-research-info-systems',
+                  'profile' => 'http://referencemanager.com/sites/rm/files/m/direct_export_ris.pdf', ],
+              'enw' => [
+                  'mimeType' => 'application/x-endnote-refer',
+                  'profile' => 'http://endnote.com/',
+              ],
           ];
 
-        foreach ($formats as $extension => $mimeType) {
+        foreach ($formats as $extension => $data) {
             $seeAlso = new SeeAlso();
             $seeAlso
                 ->setId($this->router->generate('_download_export', ['id' => $document['id'], '_format' => $extension], RouterInterface::NETWORK_PATH))
-                ->setFormat($mimeType);
+                ->setFormat($data['mimeType'])
+                ->setProfile($data['profile']);
             $seeAlsos[] = $seeAlso;
         }
 
