@@ -280,6 +280,12 @@ class SubugoeTranslator implements TranslatorInterface
             }
         }
 
+        $mets = new SeeAlso();
+        $mets
+            ->setId($this->router->generate('_mets', ['id' => $document['id']], RouterInterface::NETWORK_PATH))
+            ->setFormat('text/xml')
+            ->setProfile('http://www.loc.gov/standards/mets/profile_docs/mets.profile.v2-0.xsd');
+
         return $seeAlsos;
     }
 }
