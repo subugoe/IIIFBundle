@@ -14,6 +14,7 @@ class AnnotationList
     /**
      * @var string
      * @Serializer\SerializedName("@context")
+     * @Serializer\Since("2.0")
      */
     private $context = 'http://iiif.io/api/presentation/2/context.json';
 
