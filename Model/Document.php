@@ -32,6 +32,11 @@ class Document
     /**
      * @var array
      */
+    private $metadata;
+
+    /**
+     * @var array
+     */
     private $authors;
 
     /**
@@ -499,6 +504,26 @@ class Document
     public function setSeeAlso(array $seeAlso): Document
     {
         $this->seeAlso = $seeAlso;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMetadata(): array
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * @param array $metadata
+     *
+     * @return Document
+     */
+    public function setMetadata(array $metadata): Document
+    {
+        $this->metadata = $metadata;
 
         return $this;
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Translator;
 
+use GuzzleHttp\Client;
 use Solarium\QueryType\Select\Result\DocumentInterface;
 use Subugoe\FindBundle\Service\SearchService;
 use Subugoe\IIIFBundle\Model\Document;
@@ -113,6 +114,7 @@ class SubugoeTranslator implements TranslatorInterface
             ->setType($this->getMappedDocumentType($solrDocument['doctype']))
             ->setRightsOwner($solrDocument['rights_owner'] ?: [])
             ->setTitle($solrDocument['title'])
+            ->setMetadata($this->getMetadata($solrDocument))
             ->setAuthors($solrDocument['creator'] ?: [])
             ->setPublishingPlaces($solrDocument['place_publish'] ?: [])
             ->setClassification($solrDocument['dc'])
@@ -176,6 +178,23 @@ class SubugoeTranslator implements TranslatorInterface
         }
 
         return $document;
+    }
+
+    /**
+     * @param DocumentInterface $solrDocument
+     *
+     * @return array
+     */
+    private function getMetadata(DocumentInterface $solrDocument): array
+    {
+        if (isset($solrDocument['summary_ref'])) {
+            $client = new Client();
+            $summary = $client->get($solrDocument['summary_ref'][0])->getBody()->getContents();
+
+            return ['summary' => $summary];
+        }
+
+        return [];
     }
 
     /**
@@ -277,16 +296,6 @@ class SubugoeTranslator implements TranslatorInterface
                 ->setFormat($data['mimeType'])
                 ->setProfile($data['profile']);
             $seeAlsos[] = $seeAlso;
-        }
-
-        if (isset($document['summary_ref'])) {
-            foreach ($document['summary_ref'] as $summaryReference) {
-                $seeAlso = new SeeAlso();
-                $seeAlso
-                    ->setId($summaryReference)
-                    ->setFormat('text/html');
-                $seeAlsos[] = $seeAlso;
-            }
         }
 
         $mets = new SeeAlso();

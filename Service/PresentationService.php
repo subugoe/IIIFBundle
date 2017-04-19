@@ -405,6 +405,8 @@ class PresentationService
             'subtitle' => $document->getSubtitle(),
         ];
 
+        $metadata = array_merge($metadata, $document->getMetadata());
+
         $md = [];
         foreach ($metadata as $key => $value) {
             if (!empty($value)) {
