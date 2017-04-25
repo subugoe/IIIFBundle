@@ -15,6 +15,7 @@ class Image
 {
     /**
      * @var string
+     * @Serializer\SerializedName("@id")
      */
     private $id;
 
