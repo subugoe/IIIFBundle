@@ -51,6 +51,11 @@ class Structure
     private $canvases;
 
     /**
+     * @var string
+     */
+    private $within;
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -186,6 +191,26 @@ class Structure
     public function setCanvases(array $canvases): Structure
     {
         $this->canvases = $canvases;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWithin(): string
+    {
+        return $this->within;
+    }
+
+    /**
+     * @param string $within
+     *
+     * @return Structure
+     */
+    public function setWithin(string $within): Structure
+    {
+        $this->within = $within;
 
         return $this;
     }

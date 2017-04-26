@@ -450,27 +450,31 @@ class PresentationService
 
         if ($numberOfStructureElements > 0) {
             $levelOfFirstStructure = $document->getLogicalStructure(0)->getLevel();
-            $i = $levelOfFirstStructure;
 
             while ($counter <= $counterEnd) {
                 $logicalStructure = $document->getLogicalStructure($counter);
-                if ($levelOfFirstStructure === $logicalStructure->getLevel()) {
-                    $canvases = $this->getMembersOfLogicalStructure($document, $logicalStructure);
+                $canvases = $this->getMembersOfLogicalStructure($document, $logicalStructure);
 
-                    $structure = new Structure();
-                    $structure
-                        ->setId($this->router->generate('subugoe_iiif_range', [
-                            'id' => $document->getId(),
-                            'range' => $logicalStructure->getId(),
-                        ], RouterInterface::NETWORK_PATH)
-                        )
-                        ->setLabel($logicalStructure->getLabel())
-                        ->setType('sc:Canvas')
-                        ->setCanvases($canvases);
+                $structure = new Structure();
+                $structure
+                    ->setId($this->router->generate('subugoe_iiif_range', [
+                        'id' => $document->getId(),
+                        'range' => $logicalStructure->getId(),
+                    ], RouterInterface::NETWORK_PATH)
+                    )
+                    ->setLabel($logicalStructure->getLabel())
+                    ->setType('sc:Canvas')
+                    ->setCanvases($canvases);
 
-                    $structures[] = $structure;
+                if ($levelOfFirstStructure !== $logicalStructure->getLevel()) {
+                    $parentStructure = $document->getLogicalStructure($counter - 1);
+                    $structure->setWithin($this->router->generate('subugoe_iiif_range', [
+                        'id' => $document->getId(),
+                        'range' => $parentStructure->getId(),
+                    ], RouterInterface::NETWORK_PATH));
                 }
-                ++$i;
+                $structures[] = $structure;
+
                 ++$counter;
             }
         }

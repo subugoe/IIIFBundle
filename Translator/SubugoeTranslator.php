@@ -181,6 +181,18 @@ class SubugoeTranslator implements TranslatorInterface
     }
 
     /**
+     * @param string $imageId
+     *
+     * @return Document
+     */
+    public function getDocumentByImageId(string $imageId): Document
+    {
+        $solrDocument = $this->searchService->getDocumentBy('page_key', $imageId);
+
+        return $this->getDocumentById($solrDocument['id']);
+    }
+
+    /**
      * @param DocumentInterface $solrDocument
      *
      * @return array
@@ -195,18 +207,6 @@ class SubugoeTranslator implements TranslatorInterface
         }
 
         return [];
-    }
-
-    /**
-     * @param string $imageId
-     *
-     * @return Document
-     */
-    public function getDocumentByImageId(string $imageId): Document
-    {
-        $solrDocument = $this->searchService->getDocumentBy('page_key', $imageId);
-
-        return $this->getDocumentById($solrDocument['id']);
     }
 
     /**
