@@ -98,7 +98,7 @@ class ImageService
 
         $imageInformation = new ImageInformation();
         $imageInformation
-           ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $identifier], Router::ABSOLUTE_URL))
+           ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $identifier], Router::NETWORK_PATH))
            ->setPpi($ppi)
            ->setWidth($originalSize->getWidth())
            ->setHeight($originalSize->getHeight())
