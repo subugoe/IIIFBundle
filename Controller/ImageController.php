@@ -106,16 +106,6 @@ class ImageController extends Controller
     }
 
     /**
-     * @Route("/image/view/{identifier}", name="_iiifview", methods={"GET"})
-     */
-    public function viewAction(string $identifier): Response
-    {
-        return $this->render('images/view.html.twig', [
-            'identifier' => $identifier,
-        ]);
-    }
-
-    /**
      * @return Filesystem
      */
     private function getCacheFilesystem(): Filesystem
