@@ -129,9 +129,11 @@ class SubugoeTranslator implements TranslatorInterface
         for ($i = 0; $i < $numberOfLogicalStructures; ++$i) {
             $structure = new LogicalStructure();
 
+            $label = (!empty(trim($solrDocument['log_label'][$i]))) ? $solrDocument['log_label'][$i] : $this->translator->trans($solrDocument['log_type'][$i]);
+
             $structure
                 ->setId($solrDocument['log_id'][$i])
-                ->setLabel($solrDocument['log_label'][$i])
+                ->setLabel($label)
                 ->setType($solrDocument['log_type'][$i])
                 ->setLevel((int) $solrDocument['log_level'][$i])
                 ->setStartPage($solrDocument['log_start_page_index'][$i])
