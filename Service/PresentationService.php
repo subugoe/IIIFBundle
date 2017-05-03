@@ -449,8 +449,7 @@ class PresentationService
         $counterEnd = $numberOfStructureElements - 1;
 
         if ($numberOfStructureElements > 0) {
-            $levelOfFirstStructure = $document->getLogicalStructure(0)->getLevel();
-
+            $firstLevel = $document->getLogicalStructure(0)->getLevel();
             while ($counter <= $counterEnd) {
                 $logicalStructure = $document->getLogicalStructure($counter);
                 $canvases = $this->getMembersOfLogicalStructure($document, $logicalStructure);
@@ -466,8 +465,8 @@ class PresentationService
                     ->setType('sc:Canvas')
                     ->setCanvases($canvases);
 
-                if ($levelOfFirstStructure !== $logicalStructure->getLevel()) {
-                    $parentStructure = $document->getLogicalStructure($counter - 1);
+                if ($firstLevel !== $logicalStructure->getLevel()) {
+                    $parentStructure = $this->getPreviousHierarchyStructure($document, $logicalStructure, $counter);
                     $structure->setWithin($this->router->generate('subugoe_iiif_range', [
                         'id' => $document->getId(),
                         'range' => $parentStructure->getId(),
@@ -480,6 +479,29 @@ class PresentationService
         }
 
         return $structures;
+    }
+
+    /**
+     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param LogicalStructure                   $structure
+     * @param int                                $position
+     *
+     * @throws \Exception
+     *
+     * @return LogicalStructure
+     */
+    private function getPreviousHierarchyStructure(\Subugoe\IIIFBundle\Model\Document $document, LogicalStructure $structure, int $position): LogicalStructure
+    {
+        $level = $structure->getLevel();
+        $parentLevel = $level - 1;
+
+        for ($i = $position; $i >= 1; --$i) {
+            if ($document->getLogicalStructure($i)->getLevel() === $parentLevel) {
+                return $document->getLogicalStructure($i);
+            }
+        }
+
+        throw new \Exception('Parent structure not defined');
     }
 
     /**
