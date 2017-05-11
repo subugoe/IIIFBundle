@@ -496,7 +496,7 @@ class PresentationService
         $level = $structure->getLevel();
         $parentLevel = $level - 1;
 
-        for ($i = $position; $i >= 1; --$i) {
+        for ($i = $position; $i >= 0; --$i) {
             if ($document->getLogicalStructure($i)->getLevel() === $parentLevel) {
                 return $document->getLogicalStructure($i);
             }
@@ -552,7 +552,8 @@ class PresentationService
             ++$i;
         }
         // PPN617021074
-        throw new MalformedDocumentException(vsprintf('Document %s may contain an invalid or inconsistent structure. Page %d not found in %d iterations.', [
+        throw new MalformedDocumentException(vsprintf(
+            'Document %s may contain an invalid or inconsistent structure. Page %d not found in %d iterations.', [
             $document->getId(),
             $page,
             $i,
