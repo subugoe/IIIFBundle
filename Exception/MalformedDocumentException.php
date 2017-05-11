@@ -2,6 +2,6 @@
 
 namespace Subugoe\IIIFBundle\Exception;
 
-class MalformedDocumentException extends \Exception
+class MalformedDocumentException extends IIIFException
 {
 }

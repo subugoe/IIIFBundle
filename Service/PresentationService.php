@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Service;
 
+use Subugoe\IIIFBundle\Exception\DataException;
 use Subugoe\IIIFBundle\Exception\MalformedDocumentException;
 use Subugoe\IIIFBundle\Model\LogicalStructure;
 use Subugoe\IIIFBundle\Model\PhysicalStructure;
@@ -501,7 +502,11 @@ class PresentationService
             }
         }
 
-        throw new \Exception('Parent structure not defined');
+        throw new DataException(vsprintf(
+            'Parent structure at position %d with level %d and parent level %d not defined', [
+                $position, $level, $parentLevel,
+            ]
+        ), 1494506264);
     }
 
     /**
