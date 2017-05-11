@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Subugoe\IIIFBundle\Controller;
 
 use FOS\RestBundle\View\View;
+use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
 use Subugoe\IIIFBundle\Model\Image\Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -111,11 +112,13 @@ class ImageController extends Controller
     private function getCacheFilesystem(): Filesystem
     {
         $imageParameters = $this->getParameter('image');
+        $config = new Config();
+        $config->set('disable_asserts', true);
 
         $cacheAdapterConfiguration = $imageParameters['adapters']['cache']['configuration'];
         $cacheAdapterClass = $imageParameters['adapters']['cache']['class'];
         $cacheFilesystemAdapter = new $cacheAdapterClass($cacheAdapterConfiguration);
-        $cacheFilesystem = new Filesystem($cacheFilesystemAdapter);
+        $cacheFilesystem = new Filesystem($cacheFilesystemAdapter, $config);
 
         return $cacheFilesystem;
     }
