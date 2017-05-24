@@ -71,7 +71,7 @@ class SubugoeTranslator implements TranslatorInterface
     {
         $collection = new Collection();
         $collection
-            ->setId($this->router->generate('_collection', ['id' => $collectionId], RouterInterface::NETWORK_PATH))
+            ->setId($this->router->generate('_collection', ['id' => $collectionId], RouterInterface::ABSOLUTE_URL))
             ->setLabel($this->translator->trans($collectionId))
             ->setDescription($this->getCollectionContent($collectionId))
         ;
@@ -87,7 +87,7 @@ class SubugoeTranslator implements TranslatorInterface
         $collections = new Collections();
         foreach ($this->collections as $collectionData) {
             $thumbnail = new Image();
-            $thumbnail->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $collectionData['image']], RouterInterface::NETWORK_PATH));
+            $thumbnail->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $collectionData['image']], RouterInterface::ABSOLUTE_URL));
 
             $collection = $this->getCollectionById($collectionData['id']);
             $collection->setThumbnail($thumbnail);
@@ -154,7 +154,7 @@ class SubugoeTranslator implements TranslatorInterface
                         [
                             'work' => $solrDocument['id'],
                             'page' => $solrDocument['page'][$i],
-                        ], RouterInterface::NETWORK_PATH) :
+                        ], RouterInterface::ABSOLUTE_URL) :
                     ''
                 )
                 ->setFilename(vsprintf(
@@ -263,7 +263,7 @@ class SubugoeTranslator implements TranslatorInterface
         $pdfRendering
             ->setFormat('application/pdf')
             ->setId($this->router->generate('_download_pdf', ['id' => $id],
-                RouterInterface::NETWORK_PATH))
+                RouterInterface::ABSOLUTE_URL))
             ->setLabel('PDF download');
 
         return $pdfRendering;
@@ -294,7 +294,7 @@ class SubugoeTranslator implements TranslatorInterface
         foreach ($formats as $extension => $data) {
             $seeAlso = new SeeAlso();
             $seeAlso
-                ->setId($this->router->generate('_download_export', ['id' => $document['id'], '_format' => $extension], RouterInterface::NETWORK_PATH))
+                ->setId($this->router->generate('_download_export', ['id' => $document['id'], '_format' => $extension], RouterInterface::ABSOLUTE_URL))
                 ->setFormat($data['mimeType'])
                 ->setProfile($data['profile']);
             $seeAlsos[] = $seeAlso;
@@ -302,7 +302,7 @@ class SubugoeTranslator implements TranslatorInterface
 
         $mets = new SeeAlso();
         $mets
-            ->setId($this->router->generate('_mets', ['id' => $document['id']], RouterInterface::NETWORK_PATH))
+            ->setId($this->router->generate('_mets', ['id' => $document['id']], RouterInterface::ABSOLUTE_URL))
             ->setFormat('text/xml')
             ->setProfile('http://www.loc.gov/standards/mets/profile_docs/mets.profile.v2-0.xsd');
 
