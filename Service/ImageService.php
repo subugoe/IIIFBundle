@@ -9,6 +9,7 @@ use Imagine\Image\BoxInterface;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
+use League\Flysystem\Config;
 use Subugoe\IIIFBundle\Model\Document;
 use Subugoe\IIIFBundle\Model\Image\Dimension;
 use Subugoe\IIIFBundle\Model\Image\ImageInformation;
@@ -144,6 +145,22 @@ class ImageService
         }
 
         return $originalImage;
+    }
+
+    /**
+     * @return \League\Flysystem\Filesystem
+     */
+    public function getCacheFilesystem(): \League\Flysystem\Filesystem
+    {
+        $config = new Config();
+        $config->set('disable_asserts', true);
+
+        $cacheAdapterConfiguration = $this->imageConfiguration['adapters']['cache']['configuration'];
+        $cacheAdapterClass = $this->imageConfiguration['adapters']['cache']['class'];
+        $cacheFilesystemAdapter = new $cacheAdapterClass($cacheAdapterConfiguration);
+        $cacheFilesystem = new \League\Flysystem\Filesystem($cacheFilesystemAdapter, $config);
+
+        return $cacheFilesystem;
     }
 
     /*

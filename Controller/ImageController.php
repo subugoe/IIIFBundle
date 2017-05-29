@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Subugoe\IIIFBundle\Controller;
 
 use FOS\RestBundle\View\View;
-use League\Flysystem\Config;
-use League\Flysystem\Filesystem;
 use Subugoe\IIIFBundle\Model\Image\Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,7 +60,7 @@ class ImageController extends Controller
             ->setQuality($quality)
             ->setFormat($format);
 
-        $hash = sha1(serialize(func_get_args()));
+        $hash = sha1(serialize($imageEntity));
         $cachedFile = vsprintf(
             '%s/%s.%s',
             [
@@ -72,7 +70,7 @@ class ImageController extends Controller
             ]
         );
 
-        $cacheFilesystem = $this->getCacheFilesystem();
+        $cacheFilesystem = $this->get('subugoe_iiif.image_service')->getCacheFilesystem();
 
         $response = new Response();
         if ($cacheFilesystem->has($cachedFile)) {
@@ -104,22 +102,5 @@ class ImageController extends Controller
         $image = $imageService->getImageJsonInformation($identifier, $imageService->getOriginalFileContents($imageEntity));
 
         return $this->view($image, Response::HTTP_OK);
-    }
-
-    /**
-     * @return Filesystem
-     */
-    private function getCacheFilesystem(): Filesystem
-    {
-        $imageParameters = $this->getParameter('image');
-        $config = new Config();
-        $config->set('disable_asserts', true);
-
-        $cacheAdapterConfiguration = $imageParameters['adapters']['cache']['configuration'];
-        $cacheAdapterClass = $imageParameters['adapters']['cache']['class'];
-        $cacheFilesystemAdapter = new $cacheAdapterClass($cacheAdapterConfiguration);
-        $cacheFilesystem = new Filesystem($cacheFilesystemAdapter, $config);
-
-        return $cacheFilesystem;
     }
 }
