@@ -60,7 +60,8 @@ class ImageController extends Controller
             ->setQuality($quality)
             ->setFormat($format);
 
-        $hash = sha1(serialize($imageEntity));
+        $hash = hash('sha256', serialize($imageEntity));
+
         $cachedFile = vsprintf(
             '%s/%s.%s',
             [
