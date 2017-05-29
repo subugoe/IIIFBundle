@@ -121,7 +121,7 @@ class SubugoeTranslator implements TranslatorInterface
             ->setPublishingYear((int) $solrDocument['year_publish'] ?: 0)
             ->setPublisher($solrDocument['publisher'] ?: [])
             ->setLanguage($solrDocument['lang'] ?: [])
-            ->setImageFormat($solrDocument['image_format'])
+            ->setImageFormat(isset($solrDocument['image_format']) ? $solrDocument['image_format'] : 'jpg')
             ->setRenderings([$this->getPdfRendering($id)])
             ->setSeeAlso($this->getSeeAlso($solrDocument))
             ->setDescription('');
@@ -189,7 +189,7 @@ class SubugoeTranslator implements TranslatorInterface
      */
     public function getDocumentByImageId(string $imageId): Document
     {
-        $solrDocument = $this->searchService->getDocumentBy('page_key', $imageId);
+        $solrDocument = $this->searchService->getDocumentBy('page_key', $imageId, ['id']);
 
         return $this->getDocumentById($solrDocument['id']);
     }
