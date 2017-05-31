@@ -13,13 +13,14 @@ use JMS\Serializer\Annotation as Serializer;
  *
  * @Serializer\ExclusionPolicy("NONE")
  */
-class Sequence
+final class Sequence
 {
     /**
      * @var string
      * @Serializer\SerializedName("@context")
+     * @Serializer\Exclude(if="object.context === ''")
      */
-    private $context = 'http://iiif.io/api/presentation/2/context.json';
+    public $context = 'http://iiif.io/api/presentation/2/context.json';
 
     /**
      * @var string
@@ -117,6 +118,26 @@ class Sequence
     public function setCanvases(array $canvases): Sequence
     {
         $this->canvases = $canvases;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContext(): string
+    {
+        return $this->context;
+    }
+
+    /**
+     * @param string $context
+     *
+     * @return Sequence
+     */
+    public function setContext(string $context): Sequence
+    {
+        $this->context = $context;
 
         return $this;
     }

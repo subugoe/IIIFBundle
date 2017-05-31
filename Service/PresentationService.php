@@ -577,6 +577,7 @@ class PresentationService
                 'name' => $name,
             ],
                 RouterInterface::ABSOLUTE_URL))
+            ->setContext('')
             ->setCanvases($canvases)
             ->setStartCanvas($this->router->generate('subugoe_iiif_canvas', [
                 'id' => $document->getId(),
