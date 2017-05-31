@@ -122,7 +122,7 @@ class SubugoeTranslator implements TranslatorInterface
             ->setPublisher($solrDocument['publisher'] ?: [])
             ->setLanguage($solrDocument['lang'] ?: [])
             ->setImageFormat(isset($solrDocument['image_format']) ? $solrDocument['image_format'] : 'jpg')
-            ->setRenderings([$this->getPdfRendering($id)])
+            ->setRenderings($this->getRenderings($id))
             ->setSeeAlso($this->getSeeAlso($solrDocument))
             ->setDescription('');
 
@@ -255,10 +255,12 @@ class SubugoeTranslator implements TranslatorInterface
     /**
      * @param string $id
      *
-     * @return Rendering
+     * @return array
      */
-    private function getPdfRendering($id): Rendering
+    private function getRenderings(string $id): array
     {
+        $renderings = [];
+
         $pdfRendering = new Rendering();
         $pdfRendering
             ->setFormat('application/pdf')
@@ -266,7 +268,19 @@ class SubugoeTranslator implements TranslatorInterface
                 RouterInterface::ABSOLUTE_URL))
             ->setLabel('PDF download');
 
-        return $pdfRendering;
+        $renderings[] = $pdfRendering;
+
+        $mets = $this->router->generate('_mets', ['id' => $id], RouterInterface::ABSOLUTE_URL);
+
+        $dfgViewer = new Rendering();
+        $dfgViewer
+            ->setId(sprintf('https://dfg-viewer.de/show/?set[mets]=%s', $mets))
+            ->setFormat('text/html')
+            ->setLabel('DFG-Viewer');
+
+        $renderings[] = $dfgViewer;
+
+        return $renderings;
     }
 
     /**
@@ -307,14 +321,6 @@ class SubugoeTranslator implements TranslatorInterface
             ->setProfile('http://www.loc.gov/standards/mets/profile_docs/mets.profile.v2-0.xsd');
 
         $seeAlsos[] = $mets;
-
-        $dfgViewer = new SeeAlso();
-        $dfgViewer
-            ->setId(sprintf('https://dfg-viewer.de/show/?set[mets]=%s', $mets->getId()))
-            ->setFormat('text/html')
-            ->setProfile('http://dfg-viewer.de/strukturdatenset/');
-
-        $seeAlsos[] = $dfgViewer;
 
         return $seeAlsos;
     }
