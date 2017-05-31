@@ -308,6 +308,14 @@ class SubugoeTranslator implements TranslatorInterface
 
         $seeAlsos[] = $mets;
 
+        $dfgViewer = new SeeAlso();
+        $dfgViewer
+            ->setId(sprintf('https://dfg-viewer.de/show/?set[mets]=%s', $mets->getId()))
+            ->setFormat('text/html')
+            ->setProfile('http://dfg-viewer.de/strukturdatenset/');
+
+        $seeAlsos[] = $dfgViewer;
+
         return $seeAlsos;
     }
 }
