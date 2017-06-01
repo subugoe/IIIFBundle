@@ -18,9 +18,9 @@ final class Sequence
     /**
      * @var string
      * @Serializer\SerializedName("@context")
-     * @Serializer\Exclude(if="object.context === ''")
+     * @Serializer\Exclude(if="object.getContext() === ''")
      */
-    public $context = 'http://iiif.io/api/presentation/2/context.json';
+    private $context = 'http://iiif.io/api/presentation/2/context.json';
 
     /**
      * @var string
