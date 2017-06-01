@@ -272,7 +272,7 @@ class PresentationService
             ->setCanvases($canvases)
             ->setStartCanvas($this->router->generate('subugoe_iiif_canvas', [
                 'id' => $document->getId(),
-                'canvas' => $document->getPhysicalStructure(0)->getPage(),
+                'canvas' => $document->getPhysicalStructure(0)->getIdentifier(),
             ],
                 RouterInterface::ABSOLUTE_URL));
 
@@ -581,7 +581,7 @@ class PresentationService
             ->setCanvases($canvases)
             ->setStartCanvas($this->router->generate('subugoe_iiif_canvas', [
                 'id' => $document->getId(),
-                'canvas' => $document->getPhysicalStructure(0)->getPage(),
+                'canvas' => $document->getPhysicalStructure(0)->getIdentifier(),
             ],
                 RouterInterface::ABSOLUTE_URL));
 
