@@ -247,7 +247,8 @@ class PresentationService
 
         $image
             ->setId($this->router->generate('subugoe_iiif_imagepresentation', ['id' => $document->getId(), 'name' => $imageId], RouterInterface::ABSOLUTE_URL))
-            ->setResource($resource);
+            ->setResource($resource)
+            ->setOn($this->router->generate('subugoe_iiif_canvas', ['id' => $document->getId(), 'canvas' => $imageId], RouterInterface::ABSOLUTE_URL));
 
         return $image;
     }

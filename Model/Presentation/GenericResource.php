@@ -52,6 +52,11 @@ class GenericResource
     private $width;
 
     /**
+     * @var string
+     */
+    private $on;
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -127,6 +132,26 @@ class GenericResource
     public function setWidth(int $width): GenericResource
     {
         $this->width = $width;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOn(): string
+    {
+        return $this->on;
+    }
+
+    /**
+     * @param string $on
+     *
+     * @return GenericResource
+     */
+    public function setOn(string $on): GenericResource
+    {
+        $this->on = $on;
 
         return $this;
     }
