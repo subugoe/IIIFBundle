@@ -653,7 +653,10 @@ class PresentationService
         $count = 0;
 
         while ($count < $numberOfPages) {
-            $canvases[] = $this->getCanvas($document, $document->getPhysicalStructure($count)->getIdentifier(), $count);
+            $canvas = $this->getCanvas($document, $document->getPhysicalStructure($count)->getIdentifier(), $count);
+            // Embedded canvases do not have a context field
+            $canvas->setContext('');
+            $canvases[] = $canvas;
             ++$count;
         }
 

@@ -18,6 +18,7 @@ class Canvas
     /**
      * @var string
      * @Serializer\SerializedName("@context")
+     * @Serializer\Exclude(if="object.getContext() === ''")
      */
     private $context = 'http://iiif.io/api/presentation/2/context.json';
 
@@ -175,6 +176,26 @@ class Canvas
     public function setOtherContent(array $otherContent): Canvas
     {
         $this->otherContent = $otherContent;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContext(): string
+    {
+        return $this->context;
+    }
+
+    /**
+     * @param string $context
+     *
+     * @return Canvas
+     */
+    public function setContext(string $context): Canvas
+    {
+        $this->context = $context;
 
         return $this;
     }
