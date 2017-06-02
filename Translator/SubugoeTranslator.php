@@ -201,14 +201,25 @@ class SubugoeTranslator implements TranslatorInterface
      */
     private function getMetadata(DocumentInterface $solrDocument): array
     {
+        $metadata = [];
+
         if (isset($solrDocument['summary_ref'])) {
             $client = new Client();
             $summary = $client->get($solrDocument['summary_ref'][0])->getBody()->getContents();
 
-            return ['summary' => $summary];
+            $metadata['summary'] = $summary;
         }
 
-        return [];
+        if (is_array($solrDocument['lang'])) {
+            $languages = [];
+            foreach ($solrDocument['lang'] as $language) {
+                $language = $this->translator->trans($language);
+                $languages[] = $language;
+            }
+            $metadata['language'] = $languages;
+        }
+
+        return $metadata;
     }
 
     /**

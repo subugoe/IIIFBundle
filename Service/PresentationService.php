@@ -403,7 +403,6 @@ class PresentationService
             'classification' => $document->getClassification(),
             'publishing_year' => (string) $document->getPublishingYear(),
             'publisher' => $document->getPublisher(),
-            'language' => $document->getLanguage(),
             'subtitle' => $document->getSubtitle(),
         ];
 
