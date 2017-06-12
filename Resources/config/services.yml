@@ -1,7 +1,7 @@
 services:
   subugoe_iiif.image_service:
     class:      Subugoe\IIIFBundle\Service\ImageService
-    arguments:  ["@liip_imagine", "@router", "%image%", "@subugoe_iiif.translator"]
+    arguments:  ["@liip_imagine", "@router", "%image%", "@subugoe_iiif.translator","@cache_filesystem"]
 
   subugoe_iiif.presentation_service:
     class:      Subugoe\IIIFBundle\Service\PresentationService

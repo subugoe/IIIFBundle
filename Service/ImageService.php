@@ -9,7 +9,7 @@ use Imagine\Image\BoxInterface;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
-use League\Flysystem\Config;
+use League\Flysystem\FilesystemInterface;
 use Subugoe\IIIFBundle\Model\Document;
 use Subugoe\IIIFBundle\Model\Image\Dimension;
 use Subugoe\IIIFBundle\Model\Image\ImageInformation;
@@ -41,19 +41,26 @@ class ImageService
     private $translator;
 
     /**
+     * @var FilesystemInterface
+     */
+    private $cacheFilesystem;
+
+    /**
      * ImageService constructor.
      *
      * @param ImagineInterface    $imagine
      * @param Router              $router
      * @param array               $imageConfiguration
      * @param TranslatorInterface $translator
+     * @param FilesystemInterface $cacheFilesystem
      */
-    public function __construct(ImagineInterface $imagine, Router $router, array $imageConfiguration, TranslatorInterface $translator)
+    public function __construct(ImagineInterface $imagine, Router $router, array $imageConfiguration, TranslatorInterface $translator, FilesystemInterface $cacheFilesystem)
     {
         $this->imagine = $imagine;
         $this->router = $router;
         $this->imageConfiguration = $imageConfiguration;
         $this->translator = $translator;
+        $this->cacheFilesystem = $cacheFilesystem;
     }
 
     /**
@@ -125,10 +132,7 @@ class ImageService
         $sourceAdapterClass = $this->imageConfiguration['adapters']['source']['class'];
         $sourceAdapter = new $sourceAdapterClass($sourceAdapterConfiguration);
         $sourceFilesystem = new \League\Flysystem\Filesystem($sourceAdapter);
-
-        $cacheAdapterClass = $this->imageConfiguration['adapters']['cache']['class'];
-        $cacheFilesystemAdapter = new $cacheAdapterClass($this->imageConfiguration['adapters']['cache']['configuration']);
-        $cacheFilesystem = new \League\Flysystem\Filesystem($cacheFilesystemAdapter);
+        $cacheFilesystem = $this->getCacheFilesystem();
 
         $sourceImage = $sourceFilesystem->read($filename);
 
@@ -148,19 +152,11 @@ class ImageService
     }
 
     /**
-     * @return \League\Flysystem\Filesystem
+     * @return FilesystemInterface
      */
-    public function getCacheFilesystem(): \League\Flysystem\Filesystem
+    public function getCacheFilesystem(): FilesystemInterface
     {
-        $config = new Config();
-        $config->set('disable_asserts', true);
-
-        $cacheAdapterConfiguration = $this->imageConfiguration['adapters']['cache']['configuration'];
-        $cacheAdapterClass = $this->imageConfiguration['adapters']['cache']['class'];
-        $cacheFilesystemAdapter = new $cacheAdapterClass($cacheAdapterConfiguration);
-        $cacheFilesystem = new \League\Flysystem\Filesystem($cacheFilesystemAdapter, $config);
-
-        return $cacheFilesystem;
+        return $this->cacheFilesystem;
     }
 
     /*
