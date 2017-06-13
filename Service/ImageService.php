@@ -128,10 +128,7 @@ class ImageService
         $document = $this->translator->getDocumentByImageId($image->getIdentifier());
         $filename = $this->getFilename($document, $image);
 
-        $sourceAdapterConfiguration = $this->imageConfiguration['adapters']['source']['configuration'];
-        $sourceAdapterClass = $this->imageConfiguration['adapters']['source']['class'];
-        $sourceAdapter = new $sourceAdapterClass($sourceAdapterConfiguration);
-        $sourceFilesystem = new \League\Flysystem\Filesystem($sourceAdapter);
+        $sourceFilesystem = $this->getSourceFilesystem();
         $cacheFilesystem = $this->getCacheFilesystem();
 
         $sourceImage = $sourceFilesystem->read($filename);
@@ -157,6 +154,18 @@ class ImageService
     public function getCacheFilesystem(): FilesystemInterface
     {
         return $this->cacheFilesystem;
+    }
+
+    /**
+     * @return FilesystemInterface
+     */
+    private function getSourceFilesystem(): FilesystemInterface
+    {
+        $sourceAdapterConfiguration = $this->imageConfiguration['adapters']['source']['configuration'];
+        $sourceAdapterClass = $this->imageConfiguration['adapters']['source']['class'];
+        $sourceAdapter = new $sourceAdapterClass($sourceAdapterConfiguration);
+
+        return new \League\Flysystem\Filesystem($sourceAdapter);
     }
 
     /*
