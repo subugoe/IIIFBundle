@@ -38,3 +38,28 @@ It is also necessary to define a so-called translator-service with the name ```s
 
 The translator has to implement the ```Subugoe\IIIFBundle\Translator\TranslatorInterface```. An example translator is bundled,
 see the SubugoeTranslator class.
+
+## File systems
+
+This bundle uses [Flysystem](http://flysystem.thephpleague.com/), for retrieving and storing (a.k.a. caching) the tiles and thumbnails.
+If caching should not be enabled the `Null Adapter` should be used. The [FlysystemBundle](https://github.com/1up-lab/OneupFlysystemBundle) is already required in the composer manifest.
+Please have a look at the FlysystemBundle documentation for the configuration options and available bundles.
+
+For caching, a flysystem configuration has to be enabled like that:
+
+```
+oneup_flysystem:
+    adapters:
+        cache_adapter:
+            awss3v3:
+                client: foo.s3_client
+                bucket: 'foo'
+                prefix: 'cache'
+
+    filesystems:
+        subugoe_iiif_cache:
+            adapter: cache_adapter
+            alias: cache_filesystem
+```
+
+Please note, that it has to be named `cache_filesystem` to be used.
