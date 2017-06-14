@@ -44,6 +44,7 @@ see the SubugoeTranslator class.
 This bundle uses [Flysystem](http://flysystem.thephpleague.com/), for retrieving and storing (a.k.a. caching) the tiles and thumbnails.
 If caching should not be enabled the `Null Adapter` should be used. The [FlysystemBundle](https://github.com/1up-lab/OneupFlysystemBundle) is already required in the composer manifest.
 Please have a look at the FlysystemBundle documentation for the configuration options and available bundles.
+The adapter that fits to your needs has to be required in the main composer manifest of your application.
 
 For caching, a flysystem configuration has to be enabled like that:
 
