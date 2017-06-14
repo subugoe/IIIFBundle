@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Subugoe\IIIFBundle\Service;
 
 use Subugoe\IIIFBundle\Exception\DataException;
+use Subugoe\IIIFBundle\Exception\IIIFException;
 use Subugoe\IIIFBundle\Exception\MalformedDocumentException;
 use Subugoe\IIIFBundle\Model\LogicalStructure;
 use Subugoe\IIIFBundle\Model\PhysicalStructure;
@@ -21,10 +22,14 @@ use Subugoe\IIIFBundle\Model\Presentation\ResourceData;
 use Subugoe\IIIFBundle\Model\Presentation\Sequence;
 use Subugoe\IIIFBundle\Model\Presentation\Service;
 use Subugoe\IIIFBundle\Model\Presentation\Structure;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 
 class PresentationService
 {
+    const CONTEXT_IMAGE = 'images';
+    const CONTEXT_MANIFESTS = 'manifests';
+
     /**
      * @var RouterInterface
      */
@@ -61,6 +66,8 @@ class PresentationService
      */
     public function getManifest(\Subugoe\IIIFBundle\Model\Document $document): Document
     {
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
+
         $manifest = new Document();
 
         $metadata = $this->getMetadata($document);
@@ -69,7 +76,6 @@ class PresentationService
         $sequences = $this->getSequences($document, 'normal');
         $structures = $this->getStructures($document);
         $attribution = $this->getAttribution($document);
-
         $manifest
             ->setId($this->router->generate(
                 '_detail',
@@ -108,6 +114,8 @@ class PresentationService
      */
     public function getAnnotationList(\Subugoe\IIIFBundle\Model\Document $document, string $name): AnnotationList
     {
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
+
         $annotationList = new AnnotationList();
         $annotationList->setId($this->router->generate('subugoe_iiif_annotation-list', [
             'id' => $document->getId(),
@@ -159,6 +167,8 @@ class PresentationService
      */
     public function getRange(\Subugoe\IIIFBundle\Model\Document $document, string $name)
     {
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
+
         $range = new Range();
 
         $range
@@ -178,6 +188,8 @@ class PresentationService
      */
     public function getCanvas(\Subugoe\IIIFBundle\Model\Document $document, string $canvasId, int $physicalStructureId = -1): Canvas
     {
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
+
         $images = $this->getImages($document, $canvasId);
 
         if ($physicalStructureId !== -1) {
@@ -233,10 +245,13 @@ class PresentationService
 
         $format = $mimes->getMimeType($document->getImageFormat()) ?: '';
 
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_IMAGE));
+
         $imageService = new Service();
         $imageService
             ->setId($this->router->generate(
                 'subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], RouterInterface::ABSOLUTE_URL));
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
 
         $resource
             ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], RouterInterface::ABSOLUTE_URL))
@@ -261,6 +276,8 @@ class PresentationService
      */
     public function getSequence(\Subugoe\IIIFBundle\Model\Document $document, $name): Sequence
     {
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
+
         $canvases = $this->getCanvases($document);
 
         $sequence = new Sequence();
@@ -278,6 +295,29 @@ class PresentationService
                 RouterInterface::ABSOLUTE_URL));
 
         return $sequence;
+    }
+
+    private function setRoutingContext(string $type): RequestContext
+    {
+        if ($type !== static::CONTEXT_MANIFESTS && $type !== static::CONTEXT_IMAGE) {
+            throw new IIIFException(sprintf('Request type %s not defined', $type), 1497438291);
+        }
+
+        if (array_key_exists('host', $this->imageConfiguration['http']) && $type === static::CONTEXT_IMAGE) {
+            $context = new RequestContext();
+            $context->setHost($this->imageConfiguration['http']['host']);
+            $context->setScheme($this->imageConfiguration['http']['scheme']);
+
+            return $context;
+        } elseif (array_key_exists('host', $this->presentationConfiguration['http']) && $type === static::CONTEXT_MANIFESTS) {
+            $context = new RequestContext();
+            $context->setHost($this->presentationConfiguration['http']['host']);
+            $context->setScheme($this->presentationConfiguration['http']['scheme']);
+
+            return $context;
+        } else {
+            return $this->router->getContext();
+        }
     }
 
     /**
@@ -351,6 +391,8 @@ class PresentationService
      */
     private function getThumbnail(\Subugoe\IIIFBundle\Model\Document $document): Image
     {
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_IMAGE));
+
         $thumbnail = new Image();
         $thumbnailService = new Service();
 
@@ -443,6 +485,8 @@ class PresentationService
      */
     private function getStructures(\Subugoe\IIIFBundle\Model\Document $document): array
     {
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
+
         $structures = [];
         $numberOfStructureElements = count($document->getLogicalStructures());
 
@@ -517,6 +561,8 @@ class PresentationService
      */
     private function getMembersOfLogicalStructure(\Subugoe\IIIFBundle\Model\Document $document, LogicalStructure $logicalStructure)
     {
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
+
         $structureStart = $this->getPositionOfPhysicalPage($document, $logicalStructure->getStartPage());
         $structureEnd = $this->getPositionOfPhysicalPage($document, $logicalStructure->getEndPage());
         $numberOfElements = ($structureEnd - $structureStart + 1);
@@ -568,6 +614,8 @@ class PresentationService
      */
     private function getSequences(\Subugoe\IIIFBundle\Model\Document $document, string $name): Sequence
     {
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
+
         $canvases = $this->getCanvases($document);
 
         $sequences = new Sequence();

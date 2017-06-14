@@ -7,20 +7,24 @@ This is a Symfony 3.x Bundle to get an IIIF Representation out of arbitrary data
 ```
 subugoe_iiif:
   image:
+    http:
+        scheme:           "https"
+        host:             "images.example.com"
     tile_width:           512
     tile_width:           512
-    thumbnail_size:       "92,"
+    thumbnail_size:       "96,"
+    zoom_levels:          [1, 2, 4, 8, 16]
     adapters:
       source:
         class:            Ipf\Flysystem\Httpget\HttpGetAdapter
         configuration:
           base_uri:       "http://gdz.sub.uni-goettingen.de/tiff/"
-      cache:
-        class:            League\Flysystem\Adapter\Local
-        configuration:    "%kernel.root_dir%/../var/images"
   presentation:
     logo:                 "http://gdz.sub.uni-goettingen.de/fileadmin/gdz/layout/head_logo.jpg"
     service_id:           "http://gdzdev.sub.uni-goettingen.de/"
+    http:
+        scheme:           "https"
+        host:             "images.example.com"
 ```
 
 ## Format translator

@@ -104,6 +104,12 @@ class ImageService
 
         $tiles = $this->getTileInformation($sizeList);
 
+        if (array_key_exists('host', $this->imageConfiguration['http'])) {
+            $context = $this->router->getContext();
+            $context->setHost($this->imageConfiguration['http']['host']);
+            $context->setScheme($this->imageConfiguration['http']['scheme']);
+        }
+
         $imageInformation = new ImageInformation();
         $imageInformation
            ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $identifier], Router::ABSOLUTE_URL))
