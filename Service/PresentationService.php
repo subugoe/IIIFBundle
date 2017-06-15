@@ -297,6 +297,13 @@ class PresentationService
         return $sequence;
     }
 
+    /**
+     * @param string $type
+     *
+     * @return RequestContext
+     *
+     * @throws IIIFException
+     */
     private function setRoutingContext(string $type): RequestContext
     {
         if ($type !== static::CONTEXT_MANIFESTS && $type !== static::CONTEXT_IMAGE) {

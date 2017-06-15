@@ -71,7 +71,7 @@ class ImageController extends Controller
             ]
         );
 
-        $cacheFilesystem = $this->get('subugoe_iiif.image_service')->getCacheFilesystem();
+        $cacheFilesystem = $this->get('subugoe_iiif.file_service')->getCacheFilesystem();
 
         $response = new Response();
         if ($cacheFilesystem->has($cachedFile)) {
