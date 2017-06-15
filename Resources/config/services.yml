@@ -5,7 +5,7 @@ services:
 
   subugoe_iiif.file_service:
     class:      Subugoe\IIIFBundle\Service\FileService
-    arguments:  ["@cache_filesystem", "%image%"]
+    arguments:  ["@cache_filesystem", "@source_filesystem"]
 
   subugoe_iiif.presentation_service:
     class:      Subugoe\IIIFBundle\Service\PresentationService

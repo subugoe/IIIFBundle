@@ -63,4 +63,4 @@ oneup_flysystem:
             alias: cache_filesystem
 ```
 
-Please note, that it has to be named `cache_filesystem` to be used.
+Please note, that it has to be named `cache_filesystem` to be used. The source filesystem (where the original scans reside) has to be aliased or named `source_filesystem`.

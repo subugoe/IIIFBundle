@@ -2,7 +2,6 @@
 
 namespace Subugoe\IIIFBundle\Service;
 
-use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 
 /**
@@ -16,14 +15,14 @@ class FileService
     private $cacheFilesystem;
 
     /**
-     * @var array
+     * @var FilesystemInterface
      */
-    private $imageConfiguration;
+    private $sourceFilesystem;
 
-    public function __construct(FilesystemInterface $cacheFilesystem, array $imageConfiguration)
+    public function __construct(FilesystemInterface $cacheFilesystem, FilesystemInterface $sourceFilesystem)
     {
         $this->cacheFilesystem = $cacheFilesystem;
-        $this->imageConfiguration = $imageConfiguration;
+        $this->sourceFilesystem = $sourceFilesystem;
     }
 
     /**
@@ -39,10 +38,6 @@ class FileService
      */
     public function getSourceFilesystem(): FilesystemInterface
     {
-        $sourceAdapterConfiguration = $this->imageConfiguration['adapters']['source']['configuration'];
-        $sourceAdapterClass = $this->imageConfiguration['adapters']['source']['class'];
-        $sourceAdapter = new $sourceAdapterClass($sourceAdapterConfiguration);
-
-        return new Filesystem($sourceAdapter);
+        return $this->sourceFilesystem;
     }
 }
