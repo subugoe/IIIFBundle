@@ -38,6 +38,7 @@ class Configuration implements ConfigurationInterface
                         ->integerNode('tile_height')->defaultValue(512)->end()
                         ->scalarNode('thumbnail_size')->defaultValue('92,')->end()
                         ->scalarNode('scheme')->end()
+                        ->booleanNode('originals_caching')->defaultFalse()->end()
                         ->arrayNode('zoom_levels')
                             ->prototype('scalar')->end()
                             ->defaultValue([1, 2, 4, 8, 16])
