@@ -16,7 +16,9 @@
        "psr-4": { "Subugoe\\IIIFBundle\\": "" }
     },
     "require": {
-        "jms/serializer-bundle": "^1.2",
+        "ext-gd": "*",
+        "ext-imagick": "*",
+        "jms/serializer-bundle": "^2.0",
         "liip/imagine-bundle": "^1.7",
         "ralouphie/mimey": "^1.0",
         "oneup/flysystem-bundle": "^1.10",

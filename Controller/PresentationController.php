@@ -2,7 +2,6 @@
 
 namespace Subugoe\IIIFBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\FOSRestController as Controller;
 use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
