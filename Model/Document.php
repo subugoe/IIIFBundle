@@ -105,6 +105,11 @@ class Document
     private $seeAlso = [];
 
     /**
+     * @var array
+     */
+    private $additionalIdentifiers = [];
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -524,6 +529,26 @@ class Document
     public function setMetadata(array $metadata): Document
     {
         $this->metadata = $metadata;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdditionalIdentifiers(): array
+    {
+        return $this->additionalIdentifiers;
+    }
+
+    /**
+     * @param array $additionalIdentifiers
+     *
+     * @return Document
+     */
+    public function setAdditionalIdentifiers(array $additionalIdentifiers): Document
+    {
+        $this->additionalIdentifiers = $additionalIdentifiers;
 
         return $this;
     }

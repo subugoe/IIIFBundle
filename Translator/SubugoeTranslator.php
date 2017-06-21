@@ -111,7 +111,7 @@ class SubugoeTranslator implements TranslatorInterface
 
         $document
             ->setId($id)
-            ->setType($this->getMappedDocumentType($solrDocument['doctype']))
+            ->setType($this->getMappedDocumentType($solrDocument['docstrct']))
             ->setRightsOwner($solrDocument['rights_owner'] ?: [])
             ->setTitle($solrDocument['title'])
             ->setMetadata($this->getMetadata($solrDocument))
@@ -124,6 +124,7 @@ class SubugoeTranslator implements TranslatorInterface
             ->setImageFormat(isset($solrDocument['image_format']) ? $solrDocument['image_format'] : 'jpg')
             ->setRenderings($this->getRenderings($id))
             ->setSeeAlso($this->getSeeAlso($solrDocument))
+            ->setAdditionalIdentifiers($this->getAdditionalIdentifiers($solrDocument))
             ->setDescription('');
 
         for ($i = 0; $i < $numberOfLogicalStructures; ++$i) {
@@ -192,6 +193,21 @@ class SubugoeTranslator implements TranslatorInterface
         $solrDocument = $this->searchService->getDocumentBy('page_key', $imageId, ['id']);
 
         return $this->getDocumentById($solrDocument['id']);
+    }
+
+    private function getAdditionalIdentifiers(DocumentInterface $solrDocument): array
+    {
+        $ids = [];
+        foreach ($solrDocument['identifier'] as $identifier) {
+            $parts = explode(' ', $identifier);
+
+            $id = [];
+            $id[$parts[0]] = $parts[1];
+
+            $ids[] = $id;
+        }
+
+        return $ids;
     }
 
     /**
