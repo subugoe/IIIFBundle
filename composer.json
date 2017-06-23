@@ -19,7 +19,7 @@
         "ext-gd": "*",
         "ext-imagick": "*",
         "jms/serializer-bundle": "^2.0",
-        "liip/imagine-bundle": "^1.7",
+        "liip/imagine-bundle": "^1.8",
         "ralouphie/mimey": "^1.0",
         "oneup/flysystem-bundle": "^1.10",
         "myclabs/php-enum": "^1.5"
