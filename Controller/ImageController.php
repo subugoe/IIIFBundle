@@ -66,11 +66,12 @@ class ImageController extends Controller
         $cachedFile = $imageService->getCachedFileIdentifier($imageEntity);
 
         $response = (new Response())
-            ->setSharedMaxAge(3600);
+            ->setSharedMaxAge(86400);
 
         if ($cacheFilesystem->has($cachedFile)) {
             $response->headers->add(['content-type' => $cacheFilesystem->getMimetype($cachedFile)]);
             $response->setContent($cacheFilesystem->read($cachedFile));
+            $response->setEtag(md5($response->getContent()));
 
             return $response;
         }
@@ -80,6 +81,7 @@ class ImageController extends Controller
         $cacheFilesystem->write($cachedFile, $image);
 
         $response->setContent($image);
+        $response->setEtag(md5($response->getContent()));
         $response->headers->add(['content-type' => $cacheFilesystem->getMimetype($cachedFile)]);
 
         return $response;
