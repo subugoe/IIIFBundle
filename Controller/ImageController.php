@@ -65,7 +65,9 @@ class ImageController extends Controller
 
         $cachedFile = $imageService->getCachedFileIdentifier($imageEntity);
 
-        $response = new Response();
+        $response = (new Response())
+            ->setSharedMaxAge(3600);
+
         if ($cacheFilesystem->has($cachedFile)) {
             $response->headers->add(['content-type' => $cacheFilesystem->getMimetype($cachedFile)]);
             $response->setContent($cacheFilesystem->read($cachedFile));
