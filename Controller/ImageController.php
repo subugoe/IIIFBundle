@@ -51,6 +51,9 @@ class ImageController extends Controller
      */
     public function indexAction(string $identifier, string $region, string $size, string $rotation, string $quality, string $format): Response
     {
+        $imageService = $this->get('subugoe_iiif.image_service');
+        $cacheFilesystem = $this->get('subugoe_iiif.file_service')->getCacheFilesystem();
+
         $imageEntity = new Image();
         $imageEntity
             ->setIdentifier($identifier)
@@ -60,18 +63,7 @@ class ImageController extends Controller
             ->setQuality($quality)
             ->setFormat($format);
 
-        $hash = hash('sha256', serialize($imageEntity));
-
-        $cachedFile = vsprintf(
-            '%s/%s.%s',
-            [
-                $identifier,
-                $hash,
-                $imageEntity->getFormat(),
-            ]
-        );
-
-        $cacheFilesystem = $this->get('subugoe_iiif.file_service')->getCacheFilesystem();
+        $cachedFile = $imageService->getCachedFileIdentifier($imageEntity);
 
         $response = new Response();
         if ($cacheFilesystem->has($cachedFile)) {
@@ -81,7 +73,6 @@ class ImageController extends Controller
             return $response;
         }
 
-        $imageService = $this->get('subugoe_iiif.image_service');
         $image = $imageService->process($imageEntity);
 
         $cacheFilesystem->write($cachedFile, $image);

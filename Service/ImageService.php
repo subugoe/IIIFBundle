@@ -11,6 +11,7 @@ use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
 use Subugoe\IIIFBundle\Model\Document;
 use Subugoe\IIIFBundle\Model\Image\Dimension;
+use Subugoe\IIIFBundle\Model\Image\Image;
 use Subugoe\IIIFBundle\Model\Image\ImageInformation;
 use Subugoe\IIIFBundle\Model\Image\Tile;
 use Subugoe\IIIFBundle\Model\PhysicalStructure;
@@ -53,8 +54,13 @@ class ImageService
      * @param TranslatorInterface $translator
      * @param FileService         $fileService
      */
-    public function __construct(ImagineInterface $imagine, Router $router, array $imageConfiguration, TranslatorInterface $translator, FileService $fileService)
-    {
+    public function __construct(
+        ImagineInterface $imagine,
+        Router $router,
+        array $imageConfiguration,
+        TranslatorInterface $translator,
+        FileService $fileService
+    ) {
         $this->imagine = $imagine;
         $this->router = $router;
         $this->imageConfiguration = $imageConfiguration;
@@ -92,7 +98,8 @@ class ImageService
         try {
             $image = $this->imagine->load($originalImage);
         } catch (\Exception $e) {
-            throw new NotFoundHttpException(sprintf('Image with identifier %s not found', $imageEntity->getIdentifier()));
+            throw new NotFoundHttpException(sprintf('Image with identifier %s not found',
+                $imageEntity->getIdentifier()));
         }
 
         $ppi = $image->getImagick()->getImageResolution();
@@ -111,12 +118,13 @@ class ImageService
 
         $imageInformation = new ImageInformation();
         $imageInformation
-           ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $identifier], Router::ABSOLUTE_URL))
-           ->setPpi($ppi)
-           ->setWidth($originalSize->getWidth())
-           ->setHeight($originalSize->getHeight())
-           ->setSizes($sizes)
-           ->setTiles($tiles);
+            ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $identifier],
+                Router::ABSOLUTE_URL))
+            ->setPpi($ppi)
+            ->setWidth($originalSize->getWidth())
+            ->setHeight($originalSize->getHeight())
+            ->setSizes($sizes)
+            ->setTiles($tiles);
 
         return $imageInformation;
     }
@@ -155,6 +163,25 @@ class ImageService
         }
 
         return $originalImage;
+    }
+
+    public function getCachedFileIdentifier(Image $image): string
+    {
+        $cachedFile = vsprintf(
+            '%s/%s.%s',
+            [
+                $image->getIdentifier(),
+                $this->getImageHash($image),
+                $image->getFormat(),
+            ]
+        );
+
+        return $cachedFile;
+    }
+
+    private function getImageHash(Image $image): string
+    {
+        return hash('sha256', serialize($image));
     }
 
     /*
