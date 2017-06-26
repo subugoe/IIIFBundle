@@ -143,26 +143,21 @@ class ImageService
 
         $sourceFilesystem = $this->fileService->getSourceFilesystem();
         $cacheFilesystem = $this->fileService->getCacheFilesystem();
+        $originalImageCacheFile = sprintf('/orig/%s.%s', $image->getIdentifier(), $document->getImageFormat());
 
         if ($this->imageConfiguration['originals_caching']) {
-            $originalImageCacheFile = sprintf('/orig/%s.%s', $image->getIdentifier(), $document->getImageFormat());
-
             if (!$cacheFilesystem->has($originalImageCacheFile)) {
                 $sourceImage = $sourceFilesystem->read($filename);
 
                 $cacheFilesystem->write($originalImageCacheFile, $sourceImage);
             }
-
-            if ($cacheFilesystem->has($originalImageCacheFile)) {
-                $originalImage = $cacheFilesystem->read($originalImageCacheFile);
-            } else {
-                $originalImage = $sourceFilesystem->read($filename);
-            }
-        } else {
-            return $sourceFilesystem->read($filename);
         }
 
-        return $originalImage;
+        if ($cacheFilesystem->has($originalImageCacheFile)) {
+            return $cacheFilesystem->read($originalImageCacheFile);
+        }
+
+        return $sourceFilesystem->read($filename);
     }
 
     public function getCachedFileIdentifier(Image $image): string
