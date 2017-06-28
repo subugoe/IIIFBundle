@@ -93,10 +93,19 @@ class ImageController extends Controller
      */
     public function infoJsonAction(string $identifier): View
     {
-        $imageService = $this->get('subugoe_iiif.image_service');
-        $imageEntity = new Image();
-        $imageEntity->setIdentifier($identifier);
-        $image = $imageService->getImageJsonInformation($identifier, $imageService->getOriginalFileContents($imageEntity));
+        $cacheIdentifier = sprintf('infojson-%s', hash('sha256', $identifier));
+        $cachedInfoJson = $this->get('cache.app')->getItem($cacheIdentifier);
+        if (!$cachedInfoJson->isHit()) {
+            $imageService = $this->get('subugoe_iiif.image_service');
+            $imageEntity = new Image();
+            $imageEntity->setIdentifier($identifier);
+            $image = $imageService->getImageJsonInformation($identifier, $imageService->getOriginalFileContents($imageEntity));
+
+            $cachedInfoJson->set($image);
+            $this->get('cache.app')->save($cachedInfoJson);
+        } else {
+            $image = $cachedInfoJson->get();
+        }
 
         return $this->view($image, Response::HTTP_OK);
     }
