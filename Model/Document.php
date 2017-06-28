@@ -552,4 +552,13 @@ class Document
 
         return $this;
     }
+
+    /**
+     * @param string $key
+     * @param string $value
+     */
+    public function addMetadata(string $key, string $value)
+    {
+        $this->metadata[$key] = $value;
+    }
 }
