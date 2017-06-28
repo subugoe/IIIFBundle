@@ -107,6 +107,10 @@ class ImageController extends Controller
             $image = $cachedInfoJson->get();
         }
 
-        return $this->view($image, Response::HTTP_OK);
+        $view = $this->view($image, Response::HTTP_OK);
+        $view->setHeader('Cache-Control', 's-maxage=86400');
+        $view->setHeader('ETag', md5(serialize($image)));
+
+        return $view;
     }
 }
