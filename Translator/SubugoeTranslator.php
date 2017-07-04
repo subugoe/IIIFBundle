@@ -144,11 +144,14 @@ class SubugoeTranslator implements TranslatorInterface
         }
 
         for ($i = 0; $i < $numberOfPhysicalStructures; ++$i) {
+            $label = isset($solrDocument['phys_orderlabel'][$i]) ? $solrDocument['phys_orderlabel'][$i] : '';
+            $physicalOrder = isset($solrDocument['phys_order'][$i]) ? $solrDocument['phys_order'][$i] : 0;
+
             $structure = new PhysicalStructure();
             $structure
                 ->setIdentifier($solrDocument['page_key'][$i])
-                ->setLabel($solrDocument['phys_orderlabel'][$i])
-                ->setOrder($solrDocument['phys_order'][$i])
+                ->setLabel($label)
+                ->setOrder($physicalOrder)
                 ->setPage($solrDocument['page'][$i])
                 ->setAnnotation(isset($solrDocument['fulltext_ref'][$i]) ?
                     $this->router->generate('_fulltext',
