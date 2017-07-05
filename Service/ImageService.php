@@ -139,7 +139,7 @@ class ImageService
     public function getOriginalFileContents(\Subugoe\IIIFBundle\Model\Image\Image $image)
     {
         $document = $this->translator->getDocumentByImageId($image->getIdentifier());
-        $filename = sprintf('tiff/%s', $this->getFilename($document, $image));
+        $filename = $this->getFilename($document, $image);
 
         $sourceFilesystem = $this->fileService->getSourceFilesystem();
         $cacheFilesystem = $this->fileService->getCacheFilesystem();
