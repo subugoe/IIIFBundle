@@ -229,6 +229,11 @@ class SubugoeTranslator implements TranslatorInterface
             $metadata['summary'] = $summary;
         }
 
+        $metadata['author'] = $solrDocument['creator'];
+        $metadata['place'] = $solrDocument['place_publish'] ?: [];
+        $metadata['year'] = (string) $solrDocument['year_publish'] ?: '0';
+        $metadata['publisher'] = $solrDocument['publisher'] ?: [];
+
         if (is_array($solrDocument['lang'])) {
             $languages = [];
             foreach ($solrDocument['lang'] as $language) {

@@ -446,19 +446,8 @@ class PresentationService
      */
     private function getMetadata(\Subugoe\IIIFBundle\Model\Document $document): array
     {
-        $metadata = [
-            'author' => $document->getAuthors(),
-            'publishing_place' => $document->getPublishingPlaces(),
-            'classification' => $document->getClassification(),
-            'publishing_year' => (string) $document->getPublishingYear(),
-            'publisher' => $document->getPublisher(),
-            'subtitle' => $document->getSubtitle(),
-        ];
-
-        $metadata = array_merge($metadata, $document->getMetadata());
-
         $md = [];
-        foreach ($metadata as $key => $value) {
+        foreach ($document->getMetadata() as $key => $value) {
             if (!empty($value)) {
                 $data = new Metadata();
                 $data
