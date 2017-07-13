@@ -99,17 +99,26 @@ class ImageController extends Controller
             $imageService = $this->get('subugoe_iiif.image_service');
             $imageEntity = new Image();
             $imageEntity->setIdentifier($identifier);
-            $image = $imageService->getImageJsonInformation($identifier, $imageService->getOriginalFileContents($imageEntity));
 
-            $cachedInfoJson->set($image);
-            $this->get('cache.app')->save($cachedInfoJson);
+            if (!$imageService->getOriginalFileContents($imageEntity)) {
+                $image = null;
+            } else {
+                $image = $imageService->getImageJsonInformation($identifier, $imageService->getOriginalFileContents($imageEntity));
+                $cachedInfoJson->set($image);
+                $this->get('cache.app')->save($cachedInfoJson);
+            }
         } else {
             $image = $cachedInfoJson->get();
         }
 
-        $view = $this->view($image, Response::HTTP_OK);
-        $view->setHeader('Cache-Control', 's-maxage=86400');
-        $view->setHeader('ETag', md5(serialize($image)));
+        if ($image === null) {
+            $error = json_encode(['error' => 'Image not found.']);
+            $view = $this->view($error, Response::HTTP_NOT_FOUND);
+        } else {
+            $view = $this->view($image, Response::HTTP_OK);
+            $view->setHeader('Cache-Control', 's-maxage=86400');
+            $view->setHeader('ETag', md5(serialize($image)));
+        }
 
         return $view;
     }
