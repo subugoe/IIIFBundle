@@ -112,7 +112,7 @@ class ImageController extends Controller
         }
 
         if ($image === null) {
-            $error = json_encode(['error' => 'Image not found.']);
+            $error = ['error' => 'Image not found.'];
             $view = $this->view($error, Response::HTTP_NOT_FOUND);
         } else {
             $view = $this->view($image, Response::HTTP_OK);
