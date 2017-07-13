@@ -148,13 +148,16 @@ class ImageService
         if ($this->imageConfiguration['originals_caching']) {
             if (!$cacheFilesystem->has($originalImageCacheFile)) {
                 $sourceImage = $sourceFilesystem->read($filename);
-
                 $cacheFilesystem->write($originalImageCacheFile, $sourceImage);
             }
         }
 
         if ($cacheFilesystem->has($originalImageCacheFile)) {
             return $cacheFilesystem->read($originalImageCacheFile);
+        }
+
+        if (!$sourceFilesystem->has($filename)) {
+            return false;
         }
 
         return $sourceFilesystem->read($filename);
