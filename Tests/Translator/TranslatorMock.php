@@ -8204,6 +8204,7 @@ class TranslatorMock implements TranslatorInterface
         $document
             ->setId($id)
             ->setType($this->getMappedDocumentType($solrDocument['doctype']))
+            ->setMetadata($this->getMetadata())
             ->setRightsOwner($solrDocument['rights_owner'] ?: [])
             ->setTitle($solrDocument['title'])
             ->setAuthors(isset($solrDocument['creator']) ? $solrDocument['creator'] : [])
@@ -8307,5 +8308,13 @@ class TranslatorMock implements TranslatorInterface
         }
 
         return DocumentTypes::UNKNOWN;
+    }
+
+    private function getMetadata(): array
+    {
+        $metadata = [];
+        $metadata['author'] = 'foo';
+
+        return $metadata;
     }
 }

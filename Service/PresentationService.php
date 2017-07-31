@@ -446,18 +446,18 @@ class PresentationService
      */
     private function getMetadata(\Subugoe\IIIFBundle\Model\Document $document): array
     {
-        $md = [];
+        $metadata = [];
         foreach ($document->getMetadata() as $key => $value) {
             if (!empty($value)) {
                 $data = new Metadata();
                 $data
                     ->setLabel($key)
                     ->setValue($value);
-                $md[] = $data;
+                $metadata[] = $data;
             }
         }
 
-        return $md;
+        return $metadata;
     }
 
     /**

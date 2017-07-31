@@ -2,11 +2,11 @@
 
 namespace Subugoe\IIIFBundle\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Subugoe\IIIFBundle\Service\PresentationService;
 use Subugoe\IIIFBundle\Tests\Translator\TranslatorMock;
 use Subugoe\IIIFBundle\Translator\TranslatorInterface;
 use Symfony\Component\Routing\Router;
-use PHPUnit\Framework\TestCase;
 
 class PresentationServiceTest extends TestCase
 {
@@ -27,11 +27,19 @@ class PresentationServiceTest extends TestCase
 
         $imageConfiguration = [
             'thumbnail_size' => '556',
+            'http' => [
+                'scheme' => 'https',
+                'host' => 'example.com',
+            ],
         ];
 
         $presentationConfiguration = [
             'service_id' => 'gdz',
             'logo' => 'gdz',
+            'http' => [
+                'scheme' => 'https',
+                'host' => 'example.com',
+            ],
         ];
 
         $this->presentationService = new PresentationService($router, $imageConfiguration, $presentationConfiguration);
