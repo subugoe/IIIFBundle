@@ -229,16 +229,33 @@ class SubugoeTranslator implements TranslatorInterface
             $metadata['summary'] = $summary;
         }
 
-        $metadata['author'] = $solrDocument['creator'];
-        $metadata['place'] = $solrDocument['place_publish'] ?: [];
+        $author = $this->getLinkedMetadata($solrDocument['creator'], true, 'facet_creator_personal');
+
+        if ($author !== []) {
+            $metadata['author'] = $author;
+        }
+
+        $place = $this->getLinkedMetadata($solrDocument['place_publish'], false);
+
+        if ($place !== []) {
+            $metadata['place'] = $place;
+        }
+
         $metadata['year'] = (string) $solrDocument['year_publish'] ?: '0';
-        $metadata['publisher'] = $solrDocument['publisher'] ?: [];
+
+        $publisher = $this->getLinkedMetadata($solrDocument['publisher'], true, 'facet_publisher');
+
+        if ($publisher !== []) {
+            $metadata['publisher'] = $publisher;
+        }
 
         if (is_array($solrDocument['lang'])) {
             $languages = [];
             foreach ($solrDocument['lang'] as $language) {
-                $language = $this->translator->trans($language);
-                $languages[] = $language;
+                if (!empty($language)) {
+                    $language = $this->translator->trans($language);
+                    $languages[] = $language;
+                }
             }
             $metadata['language'] = $languages;
         }
@@ -246,12 +263,7 @@ class SubugoeTranslator implements TranslatorInterface
         return $metadata;
     }
 
-    /**
-     * @param string $id
-     *
-     * @return string
-     */
-    private function getCollectionContent($id)
+    private function getCollectionContent(string $id): string
     {
         $file = sprintf('%s/Resources/content/dc/%s.md', $this->rootDirectory, $id);
         $content = '';
@@ -262,12 +274,7 @@ class SubugoeTranslator implements TranslatorInterface
         return $content;
     }
 
-    /**
-     * @param string $doctype
-     *
-     * @return string
-     */
-    private function getMappedDocumentType(string $doctype)
+    private function getMappedDocumentType(string $doctype): string
     {
         $typeMapping = [
             'monograph' => DocumentTypes::MONOGRAPH,
@@ -287,11 +294,6 @@ class SubugoeTranslator implements TranslatorInterface
         return DocumentTypes::UNKNOWN;
     }
 
-    /**
-     * @param string $id
-     *
-     * @return array
-     */
     private function getRenderings(string $id): array
     {
         $renderings = [];
@@ -318,12 +320,7 @@ class SubugoeTranslator implements TranslatorInterface
         return $renderings;
     }
 
-    /**
-     * @param DocumentInterface $document
-     *
-     * @return array
-     */
-    private function getSeeAlso(DocumentInterface $document)
+    private function getSeeAlso(DocumentInterface $document): array
     {
         $seeAlsos = [];
         $formats = [
@@ -358,5 +355,24 @@ class SubugoeTranslator implements TranslatorInterface
         $seeAlsos[] = $mets;
 
         return $seeAlsos;
+    }
+
+    private function getLinkedMetadata(array $metadata, bool $link, string $facet = ''): array
+    {
+        $metadataArr = [];
+
+        if (is_array($metadata) && $metadata !== []) {
+            foreach ($metadata as $key => $value) {
+                if (!empty($value) && !empty($facet) && $link) {
+                    $url = $this->router->generate('_homepage', ["filter[${key}][${facet}]" => $value], RouterInterface::ABSOLUTE_URL);
+                    $href = sprintf('<a href="%s">%s</a>', $url, $value);
+                    $metadataArr[] = $href;
+                } elseif (!empty($value)) {
+                    $metadataArr[] = $value;
+                }
+            }
+        }
+
+        return $metadataArr;
     }
 }
