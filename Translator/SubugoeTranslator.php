@@ -247,10 +247,12 @@ class SubugoeTranslator implements TranslatorInterface
 
         $metadata['year'] = (string) $solrDocument['year_publish'] ?: '0';
 
-        $publisher = $this->getLinkedMetadata($solrDocument['publisher'], true, 'facet_publisher');
+        if (isset($solrDocument['publisher'])) {
+            $publisher = $this->getLinkedMetadata($solrDocument['publisher'], true, 'facet_publisher');
 
-        if ($publisher !== []) {
-            $metadata['publisher'] = $publisher;
+            if ($publisher !== []) {
+                $metadata['publisher'] = $publisher;
+            }
         }
 
         if (is_array($solrDocument['lang'])) {
