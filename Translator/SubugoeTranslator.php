@@ -229,16 +229,20 @@ class SubugoeTranslator implements TranslatorInterface
             $metadata['summary'] = $summary;
         }
 
-        $author = $this->getLinkedMetadata($solrDocument['creator'], true, 'facet_creator_personal');
+        if (isset($solrDocument['creator'])) {
+            $author = $this->getLinkedMetadata($solrDocument['creator'], true, 'facet_creator_personal');
 
-        if ($author !== []) {
-            $metadata['author'] = $author;
+            if ($author !== []) {
+                $metadata['author'] = $author;
+            }
         }
 
-        $place = $this->getLinkedMetadata($solrDocument['place_publish'], false);
+        if (isset($solrDocument['place_publish'])) {
+            $place = $this->getLinkedMetadata($solrDocument['place_publish'], false);
 
-        if ($place !== []) {
-            $metadata['place'] = $place;
+            if ($place !== []) {
+                $metadata['place'] = $place;
+            }
         }
 
         $metadata['year'] = (string) $solrDocument['year_publish'] ?: '0';
