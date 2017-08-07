@@ -114,7 +114,6 @@ class SubugoeTranslator implements TranslatorInterface
             ->setType($this->getMappedDocumentType($solrDocument['docstrct']))
             ->setRightsOwner($solrDocument['rights_owner'] ?: [])
             ->setTitle($solrDocument['title'])
-            ->setMetadata($this->getMetadata($solrDocument))
             ->setAuthors($solrDocument['creator'] ?: [])
             ->setPublishingPlaces($solrDocument['place_publish'] ?: [])
             ->setClassification($solrDocument['dc'])
@@ -183,6 +182,8 @@ class SubugoeTranslator implements TranslatorInterface
             $document->setParent($parent);
         }
 
+        $document->setMetadata($this->getMetadata($solrDocument, $document));
+
         return $document;
     }
 
@@ -213,12 +214,12 @@ class SubugoeTranslator implements TranslatorInterface
         return $ids;
     }
 
-    /**
-     * @param DocumentInterface $solrDocument
-     *
-     * @return array
-     */
-    private function getMetadata(DocumentInterface $solrDocument): array
+    private function translateLabel(string $label, int $counter = 1): string
+    {
+        return $this->translator->transChoice($label, $counter);
+    }
+
+    private function getMetadata(DocumentInterface $solrDocument, Document $document): array
     {
         $metadata = [];
 
@@ -226,14 +227,14 @@ class SubugoeTranslator implements TranslatorInterface
             $client = new Client();
             $summary = $client->get($solrDocument['summary_ref'][0])->getBody()->getContents();
 
-            $metadata['summary'] = $summary;
+            $metadata[$this->translateLabel('summary')] = $summary;
         }
 
         if (isset($solrDocument['creator'])) {
             $author = $this->getLinkedMetadata($solrDocument['creator'], true, 'facet_creator_personal');
 
             if ($author !== []) {
-                $metadata['author'] = $author;
+                $metadata[$this->translateLabel('author', count($author))] = $author;
             }
         }
 
@@ -241,17 +242,23 @@ class SubugoeTranslator implements TranslatorInterface
             $place = $this->getLinkedMetadata($solrDocument['place_publish'], false);
 
             if ($place !== []) {
-                $metadata['place'] = $place;
+                $metadata[$this->translateLabel('place', count($place))] = $place;
             }
         }
 
-        $metadata['year'] = (string) $solrDocument['year_publish'] ?: '0';
+        if (count($document->getParents()) > 0) {
+            $metadata[$this->translateLabel('parent_work')] = sprintf('<a href="%s">%s</a>',
+                $this->router->generate('_detail', ['id' => $document->getParents()[0]->getId()], RouterInterface::ABSOLUTE_URL),
+                $document->getParents()[0]->getTitle()[0]);
+        }
+
+        $metadata[$this->translateLabel('year')] = (string) $solrDocument['year_publish'] ?: '0';
 
         if (isset($solrDocument['publisher'])) {
             $publisher = $this->getLinkedMetadata($solrDocument['publisher'], true, 'facet_publisher');
 
             if ($publisher !== []) {
-                $metadata['publisher'] = $publisher;
+                $metadata[$this->translateLabel('publisher')] = $publisher;
             }
         }
 
@@ -263,7 +270,7 @@ class SubugoeTranslator implements TranslatorInterface
                     $languages[] = $language;
                 }
             }
-            $metadata['language'] = $languages;
+            $metadata[$this->translateLabel('language', count($languages))] = $languages;
         }
 
         return $metadata;
