@@ -98,9 +98,9 @@ class PresentationService
         if (!empty($document->getDescription())) {
             $manifest->setDescription($document->getDescription());
         }
-
-        foreach ($document->getClassification() as $classification) {
-            $manifest->setWithin($this->router->generate('subugoe_iiif_collection', ['id' => $classification], RouterInterface::ABSOLUTE_URL));
+        /** @var Document $parent */
+        foreach ($document->getParents() as $parent) {
+            $manifest->setWithin($this->router->generate('subugoe_iiif_manifest', ['id' => $parent->getId()], RouterInterface::ABSOLUTE_URL));
         }
 
         return $manifest;
