@@ -249,7 +249,7 @@ class SubugoeTranslator implements TranslatorInterface
 
         if (count($document->getParents()) > 0) {
             $metadata[$this->translateLabel('parent_work')] = sprintf('<a href="%s">%s</a>',
-                $this->router->generate('_detail', ['id' => $document->getParents()[0]->getId()], RouterInterface::ABSOLUTE_URL),
+                $this->router->generate('_volumes', ['id' => $document->getParents()[0]->getId()], RouterInterface::ABSOLUTE_URL),
                 $document->getParents()[0]->getTitle()[0]);
         }
 
