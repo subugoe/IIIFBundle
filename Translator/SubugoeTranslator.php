@@ -267,7 +267,7 @@ class SubugoeTranslator implements TranslatorInterface
             $languages = [];
             foreach ($solrDocument['lang'] as $language) {
                 if (!empty($language)) {
-                    $language = $this->translator->trans($language);
+                    $language = $this->translator->trans(sprintf('languages.%s', $language));
                     $languages[] = $language;
                 }
             }
