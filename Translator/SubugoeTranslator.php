@@ -177,7 +177,7 @@ class SubugoeTranslator implements TranslatorInterface
             $parent
                 ->setId($solrDocument['parentdoc_work'][$i])
                 ->setType($this->getMappedDocumentType($solrDocument['parentdoc_type'][$i]))
-                ->setTitle($solrDocument['parentdoc_label'][$i]);
+                ->setTitle([$solrDocument['parentdoc_label'][$i]]);
 
             $document->setParent($parent);
         }
