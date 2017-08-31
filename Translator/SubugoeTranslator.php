@@ -14,6 +14,7 @@ use Subugoe\IIIFBundle\Model\PhysicalStructure;
 use Subugoe\IIIFBundle\Model\Presentation\Collection;
 use Subugoe\IIIFBundle\Model\Presentation\Collections;
 use Subugoe\IIIFBundle\Model\Presentation\Image;
+use Subugoe\IIIFBundle\Model\Presentation\Related;
 use Subugoe\IIIFBundle\Model\Presentation\Rendering;
 use Subugoe\IIIFBundle\Model\Presentation\SeeAlso;
 use Symfony\Component\Routing\RouterInterface;
@@ -124,7 +125,8 @@ class SubugoeTranslator implements TranslatorInterface
             ->setRenderings($this->getRenderings($id))
             ->setSeeAlso($this->getSeeAlso($solrDocument))
             ->setAdditionalIdentifiers($this->getAdditionalIdentifiers($solrDocument))
-            ->setDescription('');
+            ->setDescription('')
+            ->setRelated($this->getRelated($solrDocument['catalogue'] ?: []));
 
         for ($i = 0; $i < $numberOfLogicalStructures; ++$i) {
             $structure = new LogicalStructure();
@@ -387,5 +389,26 @@ class SubugoeTranslator implements TranslatorInterface
         }
 
         return $metadataArr;
+    }
+
+    private function getRelated(array $catalogue): array
+    {
+        $relatedArr = [];
+        if (is_array($catalogue) && $catalogue !== []) {
+            foreach ($catalogue as $value) {
+                $catalogueArr = explode(' ', trim($value));
+                $related = new Related();
+                $id = $catalogueArr[1];
+                $label = $catalogueArr[0];
+                if (!empty($id) && !empty($label)) {
+                    $related->setId($id);
+                    $related->setLabel($label);
+                    $related->setFormat('text/html');
+                    $relatedArr[] = $related;
+                }
+            }
+        }
+
+        return $relatedArr;
     }
 }

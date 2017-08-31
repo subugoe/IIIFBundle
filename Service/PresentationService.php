@@ -93,7 +93,8 @@ class PresentationService
             ->setSequences([$sequences])
             ->setStructures($structures)
             ->setSeeAlso($document->getSeeAlso())
-            ->setRendering($document->getRenderings());
+            ->setRendering($document->getRenderings())
+            ->setRelated($document->getRelated());
 
         if (!empty($document->getDescription())) {
             $manifest->setDescription($document->getDescription());

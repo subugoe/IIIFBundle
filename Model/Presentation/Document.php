@@ -133,6 +133,12 @@ class Document
     private $structures;
 
     /**
+     * @var array
+     * @Serializer\SerializedName("related")
+     */
+    private $related;
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -468,6 +474,26 @@ class Document
     public function setSeeAlso(array $seeAlso): Document
     {
         $this->seeAlso = $seeAlso;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRelated(): array
+    {
+        return $this->related;
+    }
+
+    /**
+     * @param array $related
+     *
+     * @return Document
+     */
+    public function setRelated(array $related): Document
+    {
+        $this->related = $related;
 
         return $this;
     }

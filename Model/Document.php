@@ -110,6 +110,11 @@ class Document
     private $additionalIdentifiers = [];
 
     /**
+     * @var array
+     */
+    private $related = [];
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -560,5 +565,25 @@ class Document
     public function addMetadata(string $key, string $value)
     {
         $this->metadata[$key] = $value;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRelated(): array
+    {
+        return $this->related;
+    }
+
+    /**
+     * @param array $related
+     *
+     * @return Document
+     */
+    public function setRelated(array $related): Document
+    {
+        $this->related = $related;
+
+        return $this;
     }
 }
