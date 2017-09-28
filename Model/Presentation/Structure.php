@@ -25,6 +25,11 @@ class Structure
     private $type = 'sc:Range';
 
     /**
+     * @var array
+     */
+    private $metadata;
+
+    /**
      * @var string
      */
     private $label;
@@ -211,6 +216,26 @@ class Structure
     public function setWithin(string $within): Structure
     {
         $this->within = $within;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMetadata(): array
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * @param array $metadata
+     *
+     * @return Structure
+     */
+    public function setMetadata(array $metadata): Structure
+    {
+        $this->metadata = $metadata;
 
         return $this;
     }

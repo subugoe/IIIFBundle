@@ -202,14 +202,14 @@ class ImageService
     {
         $region = trim($region);
 
-        if ($region === 'full') {
+        if ('full' === $region) {
             return $image;
         }
 
         $sourceImageWidth = $image->getSize()->getWidth();
         $sourceImageHeight = $image->getSize()->getHeight();
 
-        if ($region === 'square') {
+        if ('square' === $region) {
             $regionSort = 'squareBased';
         } elseif (strstr($region, 'pct')) {
             $regionSort = 'percentageBased';
@@ -284,7 +284,7 @@ class ImageService
      */
     private function getSize(string $size, ImageInterface $image): ImageInterface
     {
-        if ($size === 'full' || $size === 'max') {
+        if ('full' === $size || 'max' === $size) {
             return $image;
         }
 
@@ -296,7 +296,7 @@ class ImageService
         $regionHeight = $image->getSize()->getHeight();
         if (!strstr($size, 'pct')) {
             $requestedSize = explode(',', $size);
-            if (count($requestedSize) != 2) {
+            if (2 != count($requestedSize)) {
                 throw new BadRequestHttpException(sprintf('Bad Request: Size syntax %s is not valid.', $size));
             }
             $width = $requestedSize[0];
@@ -348,7 +348,7 @@ class ImageService
      */
     private function getRotation(string $rotation, ImageInterface $image): ImageInterface
     {
-        if ((int) $rotation === 0) {
+        if (0 === (int) $rotation) {
             return $image;
         }
 
@@ -387,7 +387,7 @@ class ImageService
      */
     private function getQuality(string $quality, ImageInterface $image): ImageInterface
     {
-        if ($quality === 'default' || $quality === 'color') {
+        if ('default' === $quality || 'color' === $quality) {
             return $image;
         }
 

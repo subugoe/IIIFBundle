@@ -111,7 +111,7 @@ class ImageController extends Controller
             $image = $cachedInfoJson->get();
         }
 
-        if ($image === null) {
+        if (null === $image) {
             $error = ['error' => 'Image not found.'];
             $view = $this->view($error, Response::HTTP_NOT_FOUND);
         } else {
