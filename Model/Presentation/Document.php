@@ -106,6 +106,7 @@ class Document
 
     /**
      * @var string
+     * @Serializer\SkipWhenEmpty()
      */
     private $attribution;
 
@@ -116,6 +117,7 @@ class Document
 
     /**
      * @var array
+     * @Serializer\SkipWhenEmpty()
      */
     private $rendering;
 
@@ -134,7 +136,7 @@ class Document
 
     /**
      * @var array
-     * @Serializer\SerializedName("related")
+     * @Serializer\SkipWhenEmpty()
      */
     private $related;
 
