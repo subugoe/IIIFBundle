@@ -505,6 +505,7 @@ class PresentationService
                     )
                     ->setLabel($logicalStructure->getLabel())
                     ->setType('sc:Canvas')
+                    ->setRendering($logicalStructure->getRenderings())
                     ->setCanvases($canvases);
 
                 if ($firstLevel !== $logicalStructure->getLevel()) {
