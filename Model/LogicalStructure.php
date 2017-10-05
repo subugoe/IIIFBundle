@@ -40,6 +40,11 @@ class LogicalStructure
     private $level;
 
     /**
+     * @var array
+     */
+    private $renderings;
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -155,6 +160,26 @@ class LogicalStructure
     public function setLevel(int $level): LogicalStructure
     {
         $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRenderings(): array
+    {
+        return $this->renderings;
+    }
+
+    /**
+     * @param array $renderings
+     *
+     * @return LogicalStructure
+     */
+    public function setRenderings(array $renderings): LogicalStructure
+    {
+        $this->renderings = $renderings;
 
         return $this;
     }
