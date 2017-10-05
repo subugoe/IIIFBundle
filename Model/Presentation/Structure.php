@@ -36,7 +36,7 @@ class Structure
 
     /**
      * @var string
-     * @Serializer\SerializedName("viewingHing")
+     * @Serializer\SerializedName("viewingHint")
      */
     private $viewingHint;
 
@@ -59,6 +59,12 @@ class Structure
      * @var string
      */
     private $within;
+
+    /**
+     * @var array
+     * @Serializer\SkipWhenEmpty()
+     */
+    private $rendering;
 
     /**
      * @return string
@@ -236,6 +242,26 @@ class Structure
     public function setMetadata(array $metadata): Structure
     {
         $this->metadata = $metadata;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRendering(): array
+    {
+        return $this->rendering;
+    }
+
+    /**
+     * @param array $rendering
+     *
+     * @return Structure
+     */
+    public function setRendering(array $rendering): Structure
+    {
+        $this->rendering = $rendering;
 
         return $this;
     }
