@@ -55,6 +55,16 @@ class Document
     private $publishingYear;
 
     /**
+     * @var \DateTimeImmutable
+     */
+    private $indexingDate;
+
+    /**
+     * @var string
+     */
+    private $titlePage;
+
+    /**
      * @var array
      */
     private $publisher;
@@ -585,5 +595,37 @@ class Document
         $this->related = $related;
 
         return $this;
+    }
+
+    /**
+     * @return \DateTimeImmutable
+     */
+    public function getIndexingDate(): \DateTimeImmutable
+    {
+        return $this->indexingDate;
+    }
+
+    /**
+     * @param \DateTimeImmutable $indexingDate
+     */
+    public function setIndexingDate(\DateTimeImmutable $indexingDate)
+    {
+        $this->indexingDate = $indexingDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitlePage(): string
+    {
+        return $this->titlePage;
+    }
+
+    /**
+     * @param string $titlePage
+     */
+    public function setTitlePage(string $titlePage)
+    {
+        $this->titlePage = $titlePage;
     }
 }
