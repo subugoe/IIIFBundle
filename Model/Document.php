@@ -607,10 +607,14 @@ class Document
 
     /**
      * @param \DateTimeImmutable $indexingDate
+     *
+     * @return Document
      */
-    public function setIndexingDate(\DateTimeImmutable $indexingDate)
+    public function setIndexingDate(\DateTimeImmutable $indexingDate): Document
     {
         $this->indexingDate = $indexingDate;
+
+        return $this;
     }
 
     /**
@@ -623,9 +627,13 @@ class Document
 
     /**
      * @param string $titlePage
+     *
+     * @return Document
      */
-    public function setTitlePage(string $titlePage)
+    public function setTitlePage(string $titlePage): Document
     {
         $this->titlePage = $titlePage;
+
+        return $this;
     }
 }
