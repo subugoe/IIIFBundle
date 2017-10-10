@@ -120,6 +120,11 @@ class Document
     private $additionalIdentifiers = [];
 
     /**
+     * @var string
+     */
+    private $issue;
+
+    /**
      * @var array
      */
     private $related = [];
@@ -633,6 +638,26 @@ class Document
     public function setTitlePage(string $titlePage): Document
     {
         $this->titlePage = $titlePage;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIssue(): string
+    {
+        return $this->issue;
+    }
+
+    /**
+     * @param string $issue
+     *
+     * @return Document
+     */
+    public function setIssue(string $issue): Document
+    {
+        $this->issue = $issue;
 
         return $this;
     }
