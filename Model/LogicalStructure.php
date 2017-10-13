@@ -45,6 +45,11 @@ class LogicalStructure
     private $renderings;
 
     /**
+     * @var array
+     */
+    private $metadata;
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -180,6 +185,26 @@ class LogicalStructure
     public function setRenderings(array $renderings): LogicalStructure
     {
         $this->renderings = $renderings;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMetadata(): array
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * @param array $metadata
+     *
+     * @return LogicalStructure
+     */
+    public function setMetadata(array $metadata): LogicalStructure
+    {
+        $this->metadata = $metadata;
 
         return $this;
     }
