@@ -62,7 +62,7 @@ class LogicalStructure
      *
      * @return LogicalStructure
      */
-    public function setId(string $id): LogicalStructure
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -82,7 +82,7 @@ class LogicalStructure
      *
      * @return LogicalStructure
      */
-    public function setLabel(string $label): LogicalStructure
+    public function setLabel(string $label): self
     {
         $this->label = $label;
 
@@ -102,7 +102,7 @@ class LogicalStructure
      *
      * @return LogicalStructure
      */
-    public function setType(string $type): LogicalStructure
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -122,7 +122,7 @@ class LogicalStructure
      *
      * @return LogicalStructure
      */
-    public function setStartPage(int $startPage): LogicalStructure
+    public function setStartPage(int $startPage): self
     {
         $this->startPage = $startPage;
 
@@ -142,7 +142,7 @@ class LogicalStructure
      *
      * @return LogicalStructure
      */
-    public function setEndPage(int $endPage): LogicalStructure
+    public function setEndPage(int $endPage): self
     {
         $this->endPage = $endPage;
 
@@ -162,7 +162,7 @@ class LogicalStructure
      *
      * @return LogicalStructure
      */
-    public function setLevel(int $level): LogicalStructure
+    public function setLevel(int $level): self
     {
         $this->level = $level;
 
@@ -182,7 +182,7 @@ class LogicalStructure
      *
      * @return LogicalStructure
      */
-    public function setRenderings(array $renderings): LogicalStructure
+    public function setRenderings(array $renderings): self
     {
         $this->renderings = $renderings;
 
@@ -202,7 +202,7 @@ class LogicalStructure
      *
      * @return LogicalStructure
      */
-    public function setMetadata(array $metadata): LogicalStructure
+    public function setMetadata(array $metadata): self
     {
         $this->metadata = $metadata;
 

@@ -142,7 +142,7 @@ class Document
      *
      * @return Document
      */
-    public function setId(string $id): Document
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -162,7 +162,7 @@ class Document
      *
      * @return Document
      */
-    public function setTitle(array $title): Document
+    public function setTitle(array $title): self
     {
         $this->title = $title;
 
@@ -182,7 +182,7 @@ class Document
      *
      * @return Document
      */
-    public function setRightsOwner(array $rightsOwner): Document
+    public function setRightsOwner(array $rightsOwner): self
     {
         $this->rightsOwner = $rightsOwner;
 
@@ -202,7 +202,7 @@ class Document
      *
      * @return Document
      */
-    public function setAuthors(array $authors): Document
+    public function setAuthors(array $authors): self
     {
         $this->authors = $authors;
 
@@ -222,7 +222,7 @@ class Document
      *
      * @return Document
      */
-    public function setPublishingPlaces(array $publishingPlaces): Document
+    public function setPublishingPlaces(array $publishingPlaces): self
     {
         $this->publishingPlaces = $publishingPlaces;
 
@@ -242,7 +242,7 @@ class Document
      *
      * @return Document
      */
-    public function setClassification(array $classification): Document
+    public function setClassification(array $classification): self
     {
         $this->classification = $classification;
 
@@ -262,7 +262,7 @@ class Document
      *
      * @return Document
      */
-    public function setPublishingYear(int $publishingYear): Document
+    public function setPublishingYear(int $publishingYear): self
     {
         $this->publishingYear = $publishingYear;
 
@@ -282,7 +282,7 @@ class Document
      *
      * @return Document
      */
-    public function setPublisher(array $publisher): Document
+    public function setPublisher(array $publisher): self
     {
         $this->publisher = $publisher;
 
@@ -302,7 +302,7 @@ class Document
      *
      * @return Document
      */
-    public function setLanguage(array $language): Document
+    public function setLanguage(array $language): self
     {
         $this->language = $language;
 
@@ -322,7 +322,7 @@ class Document
      *
      * @return Document
      */
-    public function setSubtitle(array $subtitle): Document
+    public function setSubtitle(array $subtitle): self
     {
         $this->subtitle = $subtitle;
 
@@ -342,7 +342,7 @@ class Document
      *
      * @return Document
      */
-    public function setImageFormat(string $imageFormat): Document
+    public function setImageFormat(string $imageFormat): self
     {
         $this->imageFormat = $imageFormat;
 
@@ -362,7 +362,7 @@ class Document
      *
      * @return Document
      */
-    public function setLogicalStructures(array $logicalStructures): Document
+    public function setLogicalStructures(array $logicalStructures): self
     {
         $this->logicalStructures = $logicalStructures;
 
@@ -400,7 +400,7 @@ class Document
      *
      * @return Document
      */
-    public function setType(string $type): Document
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -430,7 +430,7 @@ class Document
      *
      * @return Document
      */
-    public function setPhysicalStructures(array $physicalStructures): Document
+    public function setPhysicalStructures(array $physicalStructures): self
     {
         $this->physicalStructures = $physicalStructures;
 
@@ -458,7 +458,7 @@ class Document
      *
      * @return Document
      */
-    public function setDescription(string $description): Document
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
@@ -478,7 +478,7 @@ class Document
      *
      * @return Document
      */
-    public function setParents(array $parents): Document
+    public function setParents(array $parents): self
     {
         $this->parents = $parents;
 
@@ -488,7 +488,7 @@ class Document
     /**
      * @param Document $document
      */
-    public function setParent(Document $document)
+    public function setParent(self $document)
     {
         $this->parents[] = $document;
     }
@@ -506,7 +506,7 @@ class Document
      *
      * @return Document
      */
-    public function setRenderings(array $renderings): Document
+    public function setRenderings(array $renderings): self
     {
         $this->renderings = $renderings;
 
@@ -526,7 +526,7 @@ class Document
      *
      * @return Document
      */
-    public function setSeeAlso(array $seeAlso): Document
+    public function setSeeAlso(array $seeAlso): self
     {
         $this->seeAlso = $seeAlso;
 
@@ -546,7 +546,7 @@ class Document
      *
      * @return Document
      */
-    public function setMetadata(array $metadata): Document
+    public function setMetadata(array $metadata): self
     {
         $this->metadata = $metadata;
 
@@ -566,7 +566,7 @@ class Document
      *
      * @return Document
      */
-    public function setAdditionalIdentifiers(array $additionalIdentifiers): Document
+    public function setAdditionalIdentifiers(array $additionalIdentifiers): self
     {
         $this->additionalIdentifiers = $additionalIdentifiers;
 
@@ -595,7 +595,7 @@ class Document
      *
      * @return Document
      */
-    public function setRelated(array $related): Document
+    public function setRelated(array $related): self
     {
         $this->related = $related;
 
@@ -615,7 +615,7 @@ class Document
      *
      * @return Document
      */
-    public function setIndexingDate(\DateTimeImmutable $indexingDate): Document
+    public function setIndexingDate(\DateTimeImmutable $indexingDate): self
     {
         $this->indexingDate = $indexingDate;
 
@@ -635,7 +635,7 @@ class Document
      *
      * @return Document
      */
-    public function setTitlePage(string $titlePage): Document
+    public function setTitlePage(string $titlePage): self
     {
         $this->titlePage = $titlePage;
 
@@ -655,7 +655,7 @@ class Document
      *
      * @return Document
      */
-    public function setIssue(string $issue): Document
+    public function setIssue(string $issue): self
     {
         $this->issue = $issue;
 

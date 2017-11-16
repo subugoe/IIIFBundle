@@ -48,7 +48,7 @@ class AnnotationList
      *
      * @return AnnotationList
      */
-    public function setContext(string $context): AnnotationList
+    public function setContext(string $context): self
     {
         $this->context = $context;
 
@@ -68,7 +68,7 @@ class AnnotationList
      *
      * @return AnnotationList
      */
-    public function setId(string $id): AnnotationList
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -88,7 +88,7 @@ class AnnotationList
      *
      * @return AnnotationList
      */
-    public function setType(string $type): AnnotationList
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -108,7 +108,7 @@ class AnnotationList
      *
      * @return AnnotationList
      */
-    public function setResources(array $resources): AnnotationList
+    public function setResources(array $resources): self
     {
         $this->resources = $resources;
 

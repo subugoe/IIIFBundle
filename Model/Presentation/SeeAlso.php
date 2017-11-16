@@ -40,7 +40,7 @@ class SeeAlso
      *
      * @return SeeAlso
      */
-    public function setId(string $id): SeeAlso
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -60,7 +60,7 @@ class SeeAlso
      *
      * @return SeeAlso
      */
-    public function setFormat(string $format): SeeAlso
+    public function setFormat(string $format): self
     {
         $this->format = $format;
 
@@ -80,7 +80,7 @@ class SeeAlso
      *
      * @return SeeAlso
      */
-    public function setProfile(string $profile): SeeAlso
+    public function setProfile(string $profile): self
     {
         $this->profile = $profile;
 

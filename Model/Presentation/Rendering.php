@@ -40,7 +40,7 @@ class Rendering
      *
      * @return Rendering
      */
-    public function setId(string $id): Rendering
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -60,7 +60,7 @@ class Rendering
      *
      * @return Rendering
      */
-    public function setLabel(string $label): Rendering
+    public function setLabel(string $label): self
     {
         $this->label = $label;
 
@@ -80,7 +80,7 @@ class Rendering
      *
      * @return Rendering
      */
-    public function setFormat(string $format): Rendering
+    public function setFormat(string $format): self
     {
         $this->format = $format;
 

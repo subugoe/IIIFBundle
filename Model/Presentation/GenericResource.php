@@ -69,7 +69,7 @@ class GenericResource
      *
      * @return GenericResource
      */
-    public function setId(string $id): GenericResource
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -89,7 +89,7 @@ class GenericResource
      *
      * @return GenericResource
      */
-    public function setResource(ResourceData $resource): GenericResource
+    public function setResource(ResourceData $resource): self
     {
         $this->resource = $resource;
 
@@ -109,7 +109,7 @@ class GenericResource
      *
      * @return GenericResource
      */
-    public function setHeight(int $height): GenericResource
+    public function setHeight(int $height): self
     {
         $this->height = $height;
 
@@ -129,7 +129,7 @@ class GenericResource
      *
      * @return GenericResource
      */
-    public function setWidth(int $width): GenericResource
+    public function setWidth(int $width): self
     {
         $this->width = $width;
 
@@ -149,7 +149,7 @@ class GenericResource
      *
      * @return GenericResource
      */
-    public function setOn(string $on): GenericResource
+    public function setOn(string $on): self
     {
         $this->on = $on;
 

@@ -36,7 +36,7 @@ class Dimension
      *
      * @return Dimension
      */
-    public function setHeight(float $height): Dimension
+    public function setHeight(float $height): self
     {
         $this->height = $height;
 
@@ -56,7 +56,7 @@ class Dimension
      *
      * @return Dimension
      */
-    public function setWidth(float $width): Dimension
+    public function setWidth(float $width): self
     {
         $this->width = $width;
 

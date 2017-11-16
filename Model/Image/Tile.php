@@ -42,7 +42,7 @@ class Tile
      *
      * @return Tile
      */
-    public function setWidth(int $width): Tile
+    public function setWidth(int $width): self
     {
         $this->width = $width;
 
@@ -62,7 +62,7 @@ class Tile
      *
      * @return Tile
      */
-    public function setHeight(int $height): Tile
+    public function setHeight(int $height): self
     {
         $this->height = $height;
 
@@ -82,7 +82,7 @@ class Tile
      *
      * @return Tile
      */
-    public function setScaleFactors(array $scaleFactors): Tile
+    public function setScaleFactors(array $scaleFactors): self
     {
         $this->scaleFactors = $scaleFactors;
 

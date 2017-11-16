@@ -153,7 +153,7 @@ class Document
      *
      * @return Document
      */
-    public function setId(string $id): Document
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -173,7 +173,7 @@ class Document
      *
      * @return Document
      */
-    public function setDocstrct(string $docstrct): Document
+    public function setDocstrct(string $docstrct): self
     {
         $this->docstrct = $docstrct;
 
@@ -193,7 +193,7 @@ class Document
      *
      * @return Document
      */
-    public function setTitles(array $titles): Document
+    public function setTitles(array $titles): self
     {
         $this->titles = $titles;
 
@@ -213,7 +213,7 @@ class Document
      *
      * @return Document
      */
-    public function setPublishingPlaces(array $publishingPlaces): Document
+    public function setPublishingPlaces(array $publishingPlaces): self
     {
         $this->publishingPlaces = $publishingPlaces;
 
@@ -233,7 +233,7 @@ class Document
      *
      * @return Document
      */
-    public function setLabel(string $label): Document
+    public function setLabel(string $label): self
     {
         $this->label = $label;
 
@@ -253,7 +253,7 @@ class Document
      *
      * @return Document
      */
-    public function setThumbnail(Image $thumbnail): Document
+    public function setThumbnail(Image $thumbnail): self
     {
         $this->thumbnail = $thumbnail;
 
@@ -273,7 +273,7 @@ class Document
      *
      * @return Document
      */
-    public function setSequences(array $sequences): Document
+    public function setSequences(array $sequences): self
     {
         $this->sequences = $sequences;
 
@@ -293,7 +293,7 @@ class Document
      *
      * @return Document
      */
-    public function setMetadata(array $metadata): Document
+    public function setMetadata(array $metadata): self
     {
         $this->metadata = $metadata;
 
@@ -313,7 +313,7 @@ class Document
      *
      * @return Document
      */
-    public function setAttribution(string $attribution): Document
+    public function setAttribution(string $attribution): self
     {
         $this->attribution = $attribution;
 
@@ -333,7 +333,7 @@ class Document
      *
      * @return Document
      */
-    public function setLogo(Image $logo): Document
+    public function setLogo(Image $logo): self
     {
         $this->logo = $logo;
 
@@ -353,7 +353,7 @@ class Document
      *
      * @return Document
      */
-    public function setStructures(array $structures): Document
+    public function setStructures(array $structures): self
     {
         $this->structures = $structures;
 
@@ -373,7 +373,7 @@ class Document
      *
      * @return Document
      */
-    public function setLicense(string $license): Document
+    public function setLicense(string $license): self
     {
         $this->license = $license;
 
@@ -393,7 +393,7 @@ class Document
      *
      * @return Document
      */
-    public function setDescription(string $description): Document
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
@@ -413,7 +413,7 @@ class Document
      *
      * @return Document
      */
-    public function setNavDate(\DateTime $navDate): Document
+    public function setNavDate(\DateTime $navDate): self
     {
         $this->navDate = $navDate;
 
@@ -433,7 +433,7 @@ class Document
      *
      * @return Document
      */
-    public function setWithin(string $within): Document
+    public function setWithin(string $within): self
     {
         $this->within = $within;
 
@@ -453,7 +453,7 @@ class Document
      *
      * @return Document
      */
-    public function setRendering(array $rendering): Document
+    public function setRendering(array $rendering): self
     {
         $this->rendering = $rendering;
 
@@ -473,7 +473,7 @@ class Document
      *
      * @return Document
      */
-    public function setSeeAlso(array $seeAlso): Document
+    public function setSeeAlso(array $seeAlso): self
     {
         $this->seeAlso = $seeAlso;
 
@@ -493,7 +493,7 @@ class Document
      *
      * @return Document
      */
-    public function setRelated(array $related): Document
+    public function setRelated(array $related): self
     {
         $this->related = $related;
 

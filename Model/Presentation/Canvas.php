@@ -73,7 +73,7 @@ class Canvas
      *
      * @return Canvas
      */
-    public function setId(string $id): Canvas
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -93,7 +93,7 @@ class Canvas
      *
      * @return Canvas
      */
-    public function setLabel(string $label): Canvas
+    public function setLabel(string $label): self
     {
         $this->label = $label;
 
@@ -113,7 +113,7 @@ class Canvas
      *
      * @return Canvas
      */
-    public function setHeight(int $height): Canvas
+    public function setHeight(int $height): self
     {
         $this->height = $height;
 
@@ -133,7 +133,7 @@ class Canvas
      *
      * @return Canvas
      */
-    public function setWidth(int $width): Canvas
+    public function setWidth(int $width): self
     {
         $this->width = $width;
 
@@ -153,7 +153,7 @@ class Canvas
      *
      * @return Canvas
      */
-    public function setImages(array $images): Canvas
+    public function setImages(array $images): self
     {
         $this->images = $images;
 
@@ -173,7 +173,7 @@ class Canvas
      *
      * @return Canvas
      */
-    public function setOtherContent(array $otherContent): Canvas
+    public function setOtherContent(array $otherContent): self
     {
         $this->otherContent = $otherContent;
 
@@ -193,7 +193,7 @@ class Canvas
      *
      * @return Canvas
      */
-    public function setContext(string $context): Canvas
+    public function setContext(string $context): self
     {
         $this->context = $context;
 

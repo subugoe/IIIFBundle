@@ -50,7 +50,7 @@ class PhysicalStructure
      *
      * @return PhysicalStructure
      */
-    public function setOrder(int $order): PhysicalStructure
+    public function setOrder(int $order): self
     {
         $this->order = $order;
 
@@ -70,7 +70,7 @@ class PhysicalStructure
      *
      * @return PhysicalStructure
      */
-    public function setLabel(string $label): PhysicalStructure
+    public function setLabel(string $label): self
     {
         $this->label = $label;
 
@@ -90,7 +90,7 @@ class PhysicalStructure
      *
      * @return PhysicalStructure
      */
-    public function setIdentifier(string $identifier): PhysicalStructure
+    public function setIdentifier(string $identifier): self
     {
         $this->identifier = $identifier;
 
@@ -110,7 +110,7 @@ class PhysicalStructure
      *
      * @return PhysicalStructure
      */
-    public function setPage(string $page): PhysicalStructure
+    public function setPage(string $page): self
     {
         $this->page = $page;
 
@@ -130,7 +130,7 @@ class PhysicalStructure
      *
      * @return PhysicalStructure
      */
-    public function setFilename(string $filename): PhysicalStructure
+    public function setFilename(string $filename): self
     {
         $this->filename = $filename;
 
@@ -150,7 +150,7 @@ class PhysicalStructure
      *
      * @return PhysicalStructure
      */
-    public function setAnnotation(string $annotation): PhysicalStructure
+    public function setAnnotation(string $annotation): self
     {
         $this->annotation = $annotation;
 

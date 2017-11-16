@@ -55,7 +55,7 @@ class Range
      *
      * @return Range
      */
-    public function setId(string $id): Range
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -75,7 +75,7 @@ class Range
      *
      * @return Range
      */
-    public function setLabel(string $label): Range
+    public function setLabel(string $label): self
     {
         $this->label = $label;
 
@@ -95,7 +95,7 @@ class Range
      *
      * @return Range
      */
-    public function setViewingHint(string $viewingHint): Range
+    public function setViewingHint(string $viewingHint): self
     {
         $this->viewingHint = $viewingHint;
 
@@ -115,7 +115,7 @@ class Range
      *
      * @return Range
      */
-    public function setMembers(array $members): Range
+    public function setMembers(array $members): self
     {
         $this->members = $members;
 

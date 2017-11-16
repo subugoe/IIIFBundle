@@ -36,7 +36,7 @@ class Metadata
      *
      * @return Metadata
      */
-    public function setLabel(string $label): Metadata
+    public function setLabel(string $label): self
     {
         $this->label = $label;
 
@@ -56,7 +56,7 @@ class Metadata
      *
      * @return Metadata
      */
-    public function setValue($value): Metadata
+    public function setValue($value): self
     {
         $this->value = $value;
 

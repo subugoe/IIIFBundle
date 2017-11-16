@@ -76,7 +76,7 @@ class ResourceData
      *
      * @return ResourceData
      */
-    public function setFormat(string $format): ResourceData
+    public function setFormat(string $format): self
     {
         $this->format = $format;
 
@@ -96,7 +96,7 @@ class ResourceData
      *
      * @return ResourceData
      */
-    public function setService(Service $service): ResourceData
+    public function setService(Service $service): self
     {
         $this->service = $service;
 
@@ -116,7 +116,7 @@ class ResourceData
      *
      * @return ResourceData
      */
-    public function setHeight(int $height): ResourceData
+    public function setHeight(int $height): self
     {
         $this->height = $height;
 
@@ -136,7 +136,7 @@ class ResourceData
      *
      * @return ResourceData
      */
-    public function setWidth(int $width): ResourceData
+    public function setWidth(int $width): self
     {
         $this->width = $width;
 
@@ -156,7 +156,7 @@ class ResourceData
      *
      * @return ResourceData
      */
-    public function setType(string $type): ResourceData
+    public function setType(string $type): self
     {
         $this->type = $type;
 

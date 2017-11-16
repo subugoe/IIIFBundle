@@ -75,7 +75,7 @@ final class Sequence
      *
      * @return Sequence
      */
-    public function setId(string $id): Sequence
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -95,7 +95,7 @@ final class Sequence
      *
      * @return Sequence
      */
-    public function setStartCanvas(string $startCanvas): Sequence
+    public function setStartCanvas(string $startCanvas): self
     {
         $this->startCanvas = $startCanvas;
 
@@ -115,7 +115,7 @@ final class Sequence
      *
      * @return Sequence
      */
-    public function setCanvases(array $canvases): Sequence
+    public function setCanvases(array $canvases): self
     {
         $this->canvases = $canvases;
 
@@ -135,7 +135,7 @@ final class Sequence
      *
      * @return Sequence
      */
-    public function setContext(string $context): Sequence
+    public function setContext(string $context): self
     {
         $this->context = $context;
 

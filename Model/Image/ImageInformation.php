@@ -73,7 +73,7 @@ class ImageInformation
      *
      * @return ImageInformation
      */
-    public function setId(string $id): ImageInformation
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -93,7 +93,7 @@ class ImageInformation
      *
      * @return ImageInformation
      */
-    public function setWidth(int $width): ImageInformation
+    public function setWidth(int $width): self
     {
         $this->width = $width;
 
@@ -113,7 +113,7 @@ class ImageInformation
      *
      * @return ImageInformation
      */
-    public function setHeight(int $height): ImageInformation
+    public function setHeight(int $height): self
     {
         $this->height = $height;
 
@@ -133,7 +133,7 @@ class ImageInformation
      *
      * @return ImageInformation
      */
-    public function setPpi(array $ppi): ImageInformation
+    public function setPpi(array $ppi): self
     {
         $this->ppi = $ppi;
 
@@ -153,7 +153,7 @@ class ImageInformation
      *
      * @return ImageInformation
      */
-    public function setSizes(array $sizes): ImageInformation
+    public function setSizes(array $sizes): self
     {
         $this->sizes = $sizes;
 
@@ -173,7 +173,7 @@ class ImageInformation
      *
      * @return ImageInformation
      */
-    public function setTiles(array $tiles): ImageInformation
+    public function setTiles(array $tiles): self
     {
         $this->tiles = $tiles;
 

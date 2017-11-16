@@ -40,7 +40,7 @@ class Related
      *
      * @return Related
      */
-    public function setId(string $id): Related
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -60,7 +60,7 @@ class Related
      *
      * @return Related
      */
-    public function setLabel(string $label): Related
+    public function setLabel(string $label): self
     {
         $this->label = $label;
 
@@ -80,7 +80,7 @@ class Related
      *
      * @return Related
      */
-    public function setFormat(string $format): Related
+    public function setFormat(string $format): self
     {
         $this->format = $format;
 

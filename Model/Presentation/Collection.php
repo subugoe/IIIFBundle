@@ -59,7 +59,7 @@ class Collection
      *
      * @return Collection
      */
-    public function setId(string $id): Collection
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -79,7 +79,7 @@ class Collection
      *
      * @return Collection
      */
-    public function setType(string $type): Collection
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -99,7 +99,7 @@ class Collection
      *
      * @return Collection
      */
-    public function setLabel(string $label): Collection
+    public function setLabel(string $label): self
     {
         $this->label = $label;
 
@@ -119,7 +119,7 @@ class Collection
      *
      * @return Collection
      */
-    public function setMedatata(array $medatata): Collection
+    public function setMedatata(array $medatata): self
     {
         $this->medatata = $medatata;
 
@@ -139,7 +139,7 @@ class Collection
      *
      * @return Collection
      */
-    public function setDescription(string $description): Collection
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
@@ -159,7 +159,7 @@ class Collection
      *
      * @return Collection
      */
-    public function setThumbnail(Image $thumbnail): Collection
+    public function setThumbnail(Image $thumbnail): self
     {
         $this->thumbnail = $thumbnail;
 

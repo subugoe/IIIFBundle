@@ -68,7 +68,7 @@ class Collections
      *
      * @return Collections
      */
-    public function setId(string $id): Collections
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -88,7 +88,7 @@ class Collections
      *
      * @return Collections
      */
-    public function setLabel(string $label): Collections
+    public function setLabel(string $label): self
     {
         $this->label = $label;
 
@@ -108,7 +108,7 @@ class Collections
      *
      * @return Collections
      */
-    public function setDescription(string $description): Collections
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
@@ -128,7 +128,7 @@ class Collections
      *
      * @return Collections
      */
-    public function setAttribution(string $attribution): Collections
+    public function setAttribution(string $attribution): self
     {
         $this->attribution = $attribution;
 
@@ -148,7 +148,7 @@ class Collections
      *
      * @return Collections
      */
-    public function setCollections(array $collections): Collections
+    public function setCollections(array $collections): self
     {
         $this->collections = $collections;
 

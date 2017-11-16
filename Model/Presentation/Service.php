@@ -43,7 +43,7 @@ class Service
      *
      * @return Service
      */
-    public function setId(string $id): Service
+    public function setId(string $id): self
     {
         $this->id = $id;
 

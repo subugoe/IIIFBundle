@@ -79,7 +79,7 @@ class Structure
      *
      * @return Structure
      */
-    public function setId(string $id): Structure
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -99,7 +99,7 @@ class Structure
      *
      * @return Structure
      */
-    public function setType(string $type): Structure
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -119,7 +119,7 @@ class Structure
      *
      * @return Structure
      */
-    public function setLabel(string $label): Structure
+    public function setLabel(string $label): self
     {
         $this->label = $label;
 
@@ -139,7 +139,7 @@ class Structure
      *
      * @return Structure
      */
-    public function setViewingHint(string $viewingHint): Structure
+    public function setViewingHint(string $viewingHint): self
     {
         $this->viewingHint = $viewingHint;
 
@@ -159,7 +159,7 @@ class Structure
      *
      * @return Structure
      */
-    public function setMembers(array $members): Structure
+    public function setMembers(array $members): self
     {
         $this->members = $members;
 
@@ -179,7 +179,7 @@ class Structure
      *
      * @return Structure
      */
-    public function setRanges(array $ranges): Structure
+    public function setRanges(array $ranges): self
     {
         $this->ranges = $ranges;
 
@@ -199,7 +199,7 @@ class Structure
      *
      * @return Structure
      */
-    public function setCanvases(array $canvases): Structure
+    public function setCanvases(array $canvases): self
     {
         $this->canvases = $canvases;
 
@@ -219,7 +219,7 @@ class Structure
      *
      * @return Structure
      */
-    public function setWithin(string $within): Structure
+    public function setWithin(string $within): self
     {
         $this->within = $within;
 
@@ -239,7 +239,7 @@ class Structure
      *
      * @return Structure
      */
-    public function setMetadata(array $metadata): Structure
+    public function setMetadata(array $metadata): self
     {
         $this->metadata = $metadata;
 
@@ -259,7 +259,7 @@ class Structure
      *
      * @return Structure
      */
-    public function setRendering(array $rendering): Structure
+    public function setRendering(array $rendering): self
     {
         $this->rendering = $rendering;
 

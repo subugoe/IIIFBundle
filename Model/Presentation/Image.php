@@ -37,7 +37,7 @@ class Image
      *
      * @return Image
      */
-    public function setId(string $id): Image
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -57,7 +57,7 @@ class Image
      *
      * @return Image
      */
-    public function setService(Service $service): Image
+    public function setService(Service $service): self
     {
         $this->service = $service;
 
