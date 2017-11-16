@@ -507,7 +507,7 @@ class PresentationService
                     ->setType('sc:Canvas')
                     ->setRendering($logicalStructure->getRenderings())
                     ->setCanvases($canvases)
-                    ->setMetadata($document->getMetadata());
+                    ->setMetadata($this->getMetadata($document));
 
                 if ($firstLevel !== $logicalStructure->getLevel()) {
                     $parentStructure = $this->getPreviousHierarchyStructure($document, $logicalStructure, $counter);
