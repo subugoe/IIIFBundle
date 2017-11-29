@@ -7,12 +7,30 @@ namespace Subugoe\IIIFBundle\Controller;
 use FOS\RestBundle\View\View;
 use Subugoe\IIIFBundle\Model\Image\Image;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Subugoe\IIIFBundle\Service\FileService;
+use Subugoe\IIIFBundle\Service\ImageService;
 use Symfony\Component\HttpFoundation\Response;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\FOSRestController as Controller;
 
 class ImageController extends Controller
 {
+    /**
+     * @var ImageService
+     */
+    private $imageService;
+
+    /**
+     * @var FileService
+     */
+    private $fileService;
+
+    public function __construct(ImageService $imageService, FileService $fileService)
+    {
+        $this->imageService = $imageService;
+        $this->fileService = $fileService;
+    }
+
     /**
      * {scheme}://{server}{/prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}.
      *
@@ -51,8 +69,7 @@ class ImageController extends Controller
      */
     public function indexAction(string $identifier, string $region, string $size, string $rotation, string $quality, string $format): Response
     {
-        $imageService = $this->get('subugoe_iiif.image_service');
-        $cacheFilesystem = $this->get('subugoe_iiif.file_service')->getCacheFilesystem();
+        $cacheFilesystem = $this->fileService->getCacheFilesystem();
 
         $imageEntity = new Image();
         $imageEntity
@@ -63,7 +80,7 @@ class ImageController extends Controller
             ->setQuality($quality)
             ->setFormat($format);
 
-        $cachedFile = $imageService->getCachedFileIdentifier($imageEntity);
+        $cachedFile = $this->imageService->getCachedFileIdentifier($imageEntity);
 
         $response = (new Response())
             ->setPublic()
@@ -77,7 +94,7 @@ class ImageController extends Controller
             return $response;
         }
 
-        $image = $imageService->process($imageEntity);
+        $image = $this->imageService->process($imageEntity);
 
         $cacheFilesystem->write($cachedFile, $image);
 
@@ -96,14 +113,13 @@ class ImageController extends Controller
         $cacheIdentifier = sprintf('infojson-%s', hash('sha256', $identifier));
         $cachedInfoJson = $this->get('cache.app')->getItem($cacheIdentifier);
         if (!$cachedInfoJson->isHit()) {
-            $imageService = $this->get('subugoe_iiif.image_service');
             $imageEntity = new Image();
             $imageEntity->setIdentifier($identifier);
 
-            if (!$imageService->getOriginalFileContents($imageEntity)) {
+            if (!$this->imageService->getOriginalFileContents($imageEntity)) {
                 $image = null;
             } else {
-                $image = $imageService->getImageJsonInformation($identifier, $imageService->getOriginalFileContents($imageEntity));
+                $image = $this->imageService->getImageJsonInformation($identifier, $this->imageService->getOriginalFileContents($imageEntity));
                 $cachedInfoJson->set($image);
                 $this->get('cache.app')->save($cachedInfoJson);
             }
