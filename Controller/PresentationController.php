@@ -5,28 +5,10 @@ namespace Subugoe\IIIFBundle\Controller;
 use FOS\RestBundle\Controller\FOSRestController as Controller;
 use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Subugoe\IIIFBundle\Service\PresentationService;
-use Subugoe\IIIFBundle\Translator\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class PresentationController extends Controller
 {
-    /**
-     * @var PresentationService
-     */
-    private $presentationService;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    public function __construct(PresentationService $presentationService, TranslatorInterface $translator)
-    {
-        $this->presentationService = $presentationService;
-        $this->translator = $translator;
-    }
-
     /**
      * @ApiDoc(
      *  resource=true,
@@ -38,9 +20,9 @@ class PresentationController extends Controller
      */
     public function manifestAction(string $id)
     {
-        $document = $this->translator->getDocumentById($id);
+        $document = $this->get('subugoe_iiif.translator')->getDocumentById($id);
 
-        return $this->view($this->presentationService->getManifest($document), Response::HTTP_OK);
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getManifest($document), Response::HTTP_OK);
     }
 
     /**
@@ -56,9 +38,9 @@ class PresentationController extends Controller
      */
     public function canvasAction(string $id, string $canvas): View
     {
-        $document = $this->translator->getDocumentById($id);
+        $document = $this->get('subugoe_iiif.translator')->getDocumentById($id);
 
-        return $this->view($this->presentationService->getCanvas($document, $canvas), Response::HTTP_OK);
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getCanvas($document, $canvas), Response::HTTP_OK);
     }
 
     /**
@@ -74,9 +56,9 @@ class PresentationController extends Controller
      */
     public function imageAction(string $id, string $name): View
     {
-        $document = $this->translator->getDocumentById($id);
+        $document = $this->get('subugoe_iiif.translator')->getDocumentById($id);
 
-        return $this->view($this->presentationService->getImage($document, $name), Response::HTTP_OK);
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getImage($document, $name), Response::HTTP_OK);
     }
 
     /**
@@ -94,9 +76,9 @@ class PresentationController extends Controller
      */
     public function sequenceAction(string $id, string $name): View
     {
-        $document = $this->translator->getDocumentById($id);
+        $document = $this->get('subugoe_iiif.translator')->getDocumentById($id);
 
-        return $this->view($this->presentationService->getSequence($document, $name), Response::HTTP_OK);
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getSequence($document, $name), Response::HTTP_OK);
     }
 
     /**
@@ -114,9 +96,9 @@ class PresentationController extends Controller
      */
     public function annotationListAction(string $id, string $name): View
     {
-        $document = $this->translator->getDocumentById($id);
+        $document = $this->get('subugoe_iiif.translator')->getDocumentById($id);
 
-        return $this->view($this->presentationService->getAnnotationList($document, $name), Response::HTTP_OK);
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getAnnotationList($document, $name), Response::HTTP_OK);
     }
 
     /**
@@ -132,9 +114,9 @@ class PresentationController extends Controller
      */
     public function rangeAction(string $id, string $range)
     {
-        $document = $this->translator->getDocumentById($id);
+        $document = $this->get('subugoe_iiif.translator')->getDocumentById($id);
 
-        return $this->view($this->presentationService->getRange($document, $range), Response::HTTP_OK);
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getRange($document, $range), Response::HTTP_OK);
     }
 
     /**
@@ -151,9 +133,9 @@ class PresentationController extends Controller
      */
     public function collectionAction(string $id)
     {
-        $collection = $this->translator->getCollectionById($id);
+        $collection = $this->get('subugoe_iiif.translator')->getCollectionById($id);
 
-        return $this->view($this->presentationService->getCollection($collection), Response::HTTP_OK);
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getCollection($collection), Response::HTTP_OK);
     }
 
     /**
@@ -167,8 +149,8 @@ class PresentationController extends Controller
      */
     public function collectionsAction()
     {
-        $collections = $this->translator->getCollections();
+        $collections = $this->get('subugoe_iiif.translator')->getCollections();
 
-        return $this->view($this->presentationService->getCollections($collections));
+        return $this->view($this->get('subugoe_iiif.presentation_service')->getCollections($collections));
     }
 }
