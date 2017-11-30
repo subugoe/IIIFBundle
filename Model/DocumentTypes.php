@@ -33,6 +33,6 @@ class DocumentTypes extends Enum
     const PREFACE = 'preface';
     const DEDICATION = 'dedication';
     const FOLDER = 'folder';
-    
+
     const UNKNOWN = 'unknown';
 }

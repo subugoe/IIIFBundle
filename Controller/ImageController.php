@@ -40,7 +40,7 @@ class ImageController extends Controller
      *  }
      * )
      *
-     * @var string $identifier
+     * @var string
      * @var string $region
      * @var string $size
      * @var string $rotation

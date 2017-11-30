@@ -461,6 +461,22 @@ class PresentationService
         return $metadata;
     }
 
+    private function getStructureMetadata(LogicalStructure $structure): array
+    {
+        $metadata = [];
+        foreach ($structure->getMetadata() as $key => $value) {
+            if (!empty($value)) {
+                $data = new Metadata();
+                $data
+                    ->setLabel($key)
+                    ->setValue($value);
+                $metadata[] = $data;
+            }
+        }
+
+        return $metadata;
+    }
+
     /**
      * @param \Subugoe\IIIFBundle\Model\Document $document
      *
@@ -507,7 +523,7 @@ class PresentationService
                     ->setType('sc:Canvas')
                     ->setRendering($logicalStructure->getRenderings())
                     ->setCanvases($canvases)
-                    ->setMetadata($this->getMetadata($document));
+                    ->setMetadata($this->getStructureMetadata($logicalStructure));
 
                 if ($firstLevel !== $logicalStructure->getLevel()) {
                     $parentStructure = $this->getPreviousHierarchyStructure($document, $logicalStructure, $counter);
