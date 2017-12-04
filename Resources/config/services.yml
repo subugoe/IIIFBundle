@@ -3,19 +3,31 @@ services:
     class:      Subugoe\IIIFBundle\Service\ImageService
     arguments:  ["@liip_imagine", "@router", "%image%", "@subugoe_iiif.translator","@subugoe_iiif.file_service"]
 
+  Subugoe\IIIFBundle\Service\ImageService:
+    alias: subugoe_iiif.image_service
+
   subugoe_iiif.file_service:
     class:      Subugoe\IIIFBundle\Service\FileService
     arguments:  ["@cache_filesystem", "@source_filesystem"]
 
+  Subugoe\IIIFBundle\Service\FileService:
+    alias: subugoe_iiif.file_service
+
   subugoe_iiif.presentation_service:
     class:      Subugoe\IIIFBundle\Service\PresentationService
     arguments:  ["@router", "%image%", "%presentation%"]
+
+  Subugoe\IIIFBundle\Service\PresentationService:
+    alias: subugoe_iiif.presentation_service
 
   app.tokens.action_listener:
       class: Subugoe\IIIFBundle\EventListener\UrlManipulatorListener
       arguments: ['%image%', '%presentation%', '@router']
       tags:
           - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+  Subugoe\IIIFBundle\EventListener\UrlManipulatorListener:
+    alias: app.tokens.action_listener
 
   #
   # The following definition is an example on how to create the translator
