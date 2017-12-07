@@ -130,6 +130,11 @@ class Document
     private $related = [];
 
     /**
+     * @var array
+     */
+    private $logPartWork = [];
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -658,6 +663,26 @@ class Document
     public function setIssue(string $issue): self
     {
         $this->issue = $issue;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLogPartWork(): array
+    {
+        return $this->logPartWork;
+    }
+
+    /**
+     * @param array $logPartWork
+     *
+     * @return Document
+     */
+    public function setLogPartWork(array $logPartWork): self
+    {
+        $this->logPartWork = $logPartWork;
 
         return $this;
     }

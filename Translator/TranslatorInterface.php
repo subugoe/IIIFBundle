@@ -17,6 +17,15 @@ interface TranslatorInterface
     public function getDocumentById(string $id): Document;
 
     /**
+     * @param string $field
+     * @param string $value
+     * @param array  $fields
+     *
+     * @return Document
+     */
+    public function getDocumentBy(string $field, string $value, array $fields = []): Document;
+
+    /**
      * @param string $imageId
      *
      * @return Document
