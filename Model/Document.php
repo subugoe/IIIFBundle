@@ -135,6 +135,11 @@ class Document
     private $logPartWork = [];
 
     /**
+     * @var string
+     */
+    private $permaLink;
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -683,6 +688,26 @@ class Document
     public function setLogPartWork(array $logPartWork): self
     {
         $this->logPartWork = $logPartWork;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPermaLink(): string
+    {
+        return $this->permaLink;
+    }
+
+    /**
+     * @param string $permaLink
+     *
+     * @return Document
+     */
+    public function setPermaLink(string $permaLink): self
+    {
+        $this->permaLink = $permaLink;
 
         return $this;
     }
