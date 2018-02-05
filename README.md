@@ -26,7 +26,7 @@ subugoe_iiif:
 
 It is also necessary to define a so-called translator-service with the name ```subugoe_iiif.translator```, i.e.:
 ```
-  subugoe_iiif.translator:
+  Subugoe\IIIFBundle\Translator\TranslatorInterface:
     class:      Subugoe\IIIFBundle\Translator\SubugoeTranslator
     arguments:  ["@subugoe_find.search_service"]
 ```
