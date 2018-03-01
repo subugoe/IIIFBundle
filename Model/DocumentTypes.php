@@ -11,28 +11,30 @@ use MyCLabs\Enum\Enum;
  */
 class DocumentTypes extends Enum
 {
-    const SECTION = 'section';
     const ARTICLE = 'article';
-    const ISSUE = 'issue';
-    const VOLUME = 'volume';
-    const CONTAINED_WORK = 'contained_work';
     const BINDING = 'binding';
-    const CORRIGENDA = 'corrigenda';
-    const ILLUSTRATION = 'illustration';
-    const TABLE_OF_CONTENTS = 'contents';
-    const MAP = 'map';
+    const BUNDLE = 'bundle';
     const COLOPHON = 'colophon';
+    const CONTAINED_WORK = 'contained_work';
+    const CORRIGENDA = 'corrigenda';
+    const DEDICATION = 'dedication';
     const ENGRAVED_TITLEPAGE = 'engraved_titlepage';
-    const MULTIVOLUME_WORK = 'multivolume_work';
-    const MONOGRAPH = 'monograph';
-    const MUSICAL_NOTATION = 'musical_notation';
-    const PERIODICAL = 'periodical';
+    const FILE = 'file';
+    const FOLDER = 'folder';
+    const ILLUSTRATION = 'illustration';
     const INDEX = 'index';
+    const ISSUE = 'issue';
+    const MAP = 'map';
+    const MONOGRAPH = 'monograph';
+    const MULTIVOLUME_WORK = 'multivolume_work';
+    const MUSICAL_NOTATION = 'musical_notation';
+    const PERIODICAL = 'volume';
+    const PREFACE = 'preface';
+    const SECTION = 'section';
+    const TABLE_OF_CONTENTS = 'contents';
     const TABLE = 'table';
     const TITLE_PAGE = 'title_page';
-    const PREFACE = 'preface';
-    const DEDICATION = 'dedication';
-    const FOLDER = 'folder';
+    const VOLUME = 'volume';
 
     const UNKNOWN = 'unknown';
 }
