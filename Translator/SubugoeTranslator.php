@@ -292,14 +292,17 @@ class SubugoeTranslator implements TranslatorInterface
     private function getMappedDocumentType(string $doctype): string
     {
         $typeMapping = [
-            'monograph' => DocumentTypes::MONOGRAPH,
-            'periodicalvolume' => DocumentTypes::ISSUE,
-            'volume' => DocumentTypes::VOLUME,
-            'periodical' => DocumentTypes::PERIODICAL,
-            'multivolume_work' => DocumentTypes::MULTIVOLUME_WORK,
-            'multivolumework' => DocumentTypes::MULTIVOLUME_WORK,
-            'folder' => DocumentTypes::MULTIVOLUME_WORK,
+            'bundle' => DocumentTypes::BUNDLE,
+            'contained_work' => DocumentTypes::CONTAINED_WORK,
+            'file' => DocumentTypes::FILE,
+            'folder' => DocumentTypes::FOLDER,
             'manuscript' => DocumentTypes::MONOGRAPH,
+            'map' => DocumentTypes::MAP,
+            'monograph' => DocumentTypes::MONOGRAPH,
+            'multivolume_work' => DocumentTypes::MULTIVOLUME_WORK,
+            'periodical' => DocumentTypes::VOLUME,
+            'periodicalvolume' => DocumentTypes::VOLUME,
+            'volume' => DocumentTypes::VOLUME,
         ];
 
         if (array_key_exists($doctype, $typeMapping)) {
