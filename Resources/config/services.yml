@@ -1,15 +1,4 @@
 services:
-
-  Subugoe\IIIFBundle\Controller\ImageController:
-    autowire: true
-    autoconfigure: true
-    tags: ['controller.service_arguments']
-
-  Subugoe\IIIFBundle\Controller\PresentationController:
-    autowire: true
-    autoconfigure: true
-    tags: ['controller.service_arguments']
-
   subugoe_iiif.image_service:
     class:      Subugoe\IIIFBundle\Service\ImageService
     arguments:  ["@liip_imagine", "@router", "%image%", "@subugoe_iiif.translator","@subugoe_iiif.file_service"]
