@@ -112,8 +112,16 @@ class ImageService
 
         if (array_key_exists('host', $this->imageConfiguration['http'])) {
             $context = $this->router->getContext();
-            $context->setHost($this->imageConfiguration['http']['host']);
-            $context->setScheme($this->imageConfiguration['http']['scheme']);
+            $url = sprintf('%s://%s', $this->imageConfiguration['http']['scheme'], $this->imageConfiguration['http']['host']);
+            $urlParts = parse_url($url);
+
+            if (isset($urlParts['port'])) {
+                $context->setHttpPort($urlParts['port']);
+            }
+
+            $context
+                ->setHost($urlParts['host'])
+                ->setScheme($urlParts['scheme']);
         }
 
         $imageInformation = new ImageInformation();

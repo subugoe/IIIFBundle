@@ -313,14 +313,31 @@ class PresentationService
 
         if (array_key_exists('host', $this->imageConfiguration['http']) && $type === static::CONTEXT_IMAGE) {
             $context = new RequestContext();
-            $context->setHost($this->imageConfiguration['http']['host']);
-            $context->setScheme($this->imageConfiguration['http']['scheme']);
+
+            $url = sprintf('%s://%s', $this->imageConfiguration['http']['scheme'], $this->imageConfiguration['http']['host']);
+            $urlParts = parse_url($url);
+
+            if (isset($urlParts['port'])) {
+                $context->setHttpPort($urlParts['port']);
+            }
+
+            $context
+                ->setHost($urlParts['host'])
+                ->setScheme($urlParts['scheme']);
 
             return $context;
         } elseif (array_key_exists('host', $this->presentationConfiguration['http']) && $type === static::CONTEXT_MANIFESTS) {
             $context = new RequestContext();
-            $context->setHost($this->presentationConfiguration['http']['host']);
-            $context->setScheme($this->presentationConfiguration['http']['scheme']);
+
+            $url = sprintf('%s://%s', $this->presentationConfiguration['http']['scheme'], $this->presentationConfiguration['http']['host']);
+            $urlParts = parse_url($url);
+
+            if (isset($urlParts['port'])) {
+                $context->setHttpPort($urlParts['port']);
+            }
+
+            $context->setHost($urlParts['host']);
+            $context->setScheme($urlParts['scheme']);
 
             return $context;
         } else {
