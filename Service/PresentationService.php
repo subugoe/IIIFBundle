@@ -94,7 +94,12 @@ class PresentationService
             ->setStructures($structures)
             ->setSeeAlso($document->getSeeAlso())
             ->setRendering($document->getRenderings())
-            ->setRelated($document->getRelated());
+            ->setRelated($document->getRelated())
+        ;
+
+        if (!empty($document->getLicense())) {
+            $manifest->setLicense($document->getLicense());
+        }
 
         if (!empty($document->getDescription())) {
             $manifest->setDescription($document->getDescription());
@@ -193,7 +198,7 @@ class PresentationService
 
         $images = $this->getImages($document, $canvasId);
 
-        if ($physicalStructureId !== -1) {
+        if (-1 !== $physicalStructureId) {
             $label = $document->getPhysicalStructure($physicalStructureId)->getLabel();
         } else {
             $label = $this->getLabelForCanvas($document, $canvasId);

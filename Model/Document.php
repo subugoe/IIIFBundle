@@ -135,6 +135,11 @@ class Document
     private $permaLink;
 
     /**
+     * @var string
+     */
+    private $license = '';
+
+    /**
      * @return string
      */
     public function getId(): string
@@ -683,6 +688,26 @@ class Document
     public function setPermaLink(string $permaLink): self
     {
         $this->permaLink = $permaLink;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLicense(): string
+    {
+        return $this->license;
+    }
+
+    /**
+     * @param string $license
+     *
+     * @return Document
+     */
+    public function setLicense(string $license): Document
+    {
+        $this->license = $license;
 
         return $this;
     }
