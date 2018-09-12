@@ -14,8 +14,8 @@ subugoe_iiif:
     thumbnail_size:       "96,"
     zoom_levels:          [1, 2, 4, 8, 16]
   presentation:
-    logo:                 "http://gdz.sub.uni-goettingen.de/fileadmin/gdz/layout/head_logo.jpg"
-    service_id:           "http://gdzdev.sub.uni-goettingen.de/"
+    logo:                 "http://service.example.com/fileadmin/gdz/layout/head_logo.jpg"
+    service_id:           "http://service.exmple.com/"
     http:
         scheme:           "https"
         host:             "manifests.example.com"
