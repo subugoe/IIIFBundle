@@ -11,7 +11,6 @@ subugoe_iiif:
         scheme:           "https"
         host:             "images.example.com"
     tile_width:           512
-    tile_width:           512
     thumbnail_size:       "96,"
     zoom_levels:          [1, 2, 4, 8, 16]
   presentation:
