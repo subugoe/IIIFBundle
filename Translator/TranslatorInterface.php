@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Translator;
 
-use Subugoe\IIIFBundle\Model\Document;
+use Subugoe\IIIFBundle\Model\DocumentInterface;
 use Subugoe\IIIFBundle\Model\Presentation\Collection;
 
 interface TranslatorInterface
@@ -12,25 +12,25 @@ interface TranslatorInterface
     /**
      * @param string $id
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function getDocumentById(string $id): Document;
+    public function getDocumentById(string $id): DocumentInterface;
 
     /**
      * @param string $field
      * @param string $value
      * @param array  $fields
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function getDocumentBy(string $field, string $value, array $fields = []): Document;
+    public function getDocumentBy(string $field, string $value, array $fields = []): DocumentInterface;
 
     /**
      * @param string $imageId
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function getDocumentByImageId(string $imageId): Document;
+    public function getDocumentByImageId(string $imageId): DocumentInterface;
 
     /**
      * @param string $collectionId

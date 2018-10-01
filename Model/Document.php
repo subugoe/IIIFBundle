@@ -7,7 +7,7 @@ namespace Subugoe\IIIFBundle\Model;
 /**
  * Document for holding generic data.
  */
-class Document
+class Document implements DocumentInterface
 {
     /**
      * @var string
@@ -150,9 +150,9 @@ class Document
     /**
      * @param string $id
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setId(string $id): self
+    public function setId(string $id): DocumentInterface
     {
         $this->id = $id;
 
@@ -170,9 +170,9 @@ class Document
     /**
      * @param array $title
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setTitle(array $title): self
+    public function setTitle(array $title): DocumentInterface
     {
         $this->title = $title;
 
@@ -190,9 +190,9 @@ class Document
     /**
      * @param array $rightsOwner
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setRightsOwner(array $rightsOwner): self
+    public function setRightsOwner(array $rightsOwner): DocumentInterface
     {
         $this->rightsOwner = $rightsOwner;
 
@@ -210,9 +210,9 @@ class Document
     /**
      * @param array $authors
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setAuthors(array $authors): self
+    public function setAuthors(array $authors): DocumentInterface
     {
         $this->authors = $authors;
 
@@ -230,9 +230,9 @@ class Document
     /**
      * @param array $publishingPlaces
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setPublishingPlaces(array $publishingPlaces): self
+    public function setPublishingPlaces(array $publishingPlaces): DocumentInterface
     {
         $this->publishingPlaces = $publishingPlaces;
 
@@ -250,9 +250,9 @@ class Document
     /**
      * @param array $classification
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setClassification(array $classification): self
+    public function setClassification(array $classification): DocumentInterface
     {
         $this->classification = $classification;
 
@@ -270,9 +270,9 @@ class Document
     /**
      * @param int $publishingYear
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setPublishingYear(int $publishingYear): self
+    public function setPublishingYear(int $publishingYear): DocumentInterface
     {
         $this->publishingYear = $publishingYear;
 
@@ -290,9 +290,9 @@ class Document
     /**
      * @param array $publisher
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setPublisher(array $publisher): self
+    public function setPublisher(array $publisher): DocumentInterface
     {
         $this->publisher = $publisher;
 
@@ -310,9 +310,9 @@ class Document
     /**
      * @param array $language
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setLanguage(array $language): self
+    public function setLanguage(array $language): DocumentInterface
     {
         $this->language = $language;
 
@@ -330,9 +330,9 @@ class Document
     /**
      * @param array $subtitle
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setSubtitle(array $subtitle): self
+    public function setSubtitle(array $subtitle): DocumentInterface
     {
         $this->subtitle = $subtitle;
 
@@ -350,9 +350,9 @@ class Document
     /**
      * @param string $imageFormat
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setImageFormat(string $imageFormat): self
+    public function setImageFormat(string $imageFormat): DocumentInterface
     {
         $this->imageFormat = $imageFormat;
 
@@ -370,9 +370,9 @@ class Document
     /**
      * @param array $logicalStructures
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setLogicalStructures(array $logicalStructures): self
+    public function setLogicalStructures(array $logicalStructures): DocumentInterface
     {
         $this->logicalStructures = $logicalStructures;
 
@@ -408,9 +408,9 @@ class Document
     /**
      * @param string $type
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setType(string $type): self
+    public function setType(string $type): DocumentInterface
     {
         $this->type = $type;
 
@@ -438,9 +438,9 @@ class Document
     /**
      * @param array $physicalStructures
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setPhysicalStructures(array $physicalStructures): self
+    public function setPhysicalStructures(array $physicalStructures): DocumentInterface
     {
         $this->physicalStructures = $physicalStructures;
 
@@ -466,9 +466,9 @@ class Document
     /**
      * @param string $description
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setDescription(string $description): self
+    public function setDescription(string $description): DocumentInterface
     {
         $this->description = $description;
 
@@ -486,9 +486,9 @@ class Document
     /**
      * @param array $parents
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setParents(array $parents): self
+    public function setParents(array $parents): DocumentInterface
     {
         $this->parents = $parents;
 
@@ -498,7 +498,7 @@ class Document
     /**
      * @param Document $document
      */
-    public function setParent(self $document)
+    public function setParent(DocumentInterface $document)
     {
         $this->parents[] = $document;
     }
@@ -514,9 +514,9 @@ class Document
     /**
      * @param array $renderings
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setRenderings(array $renderings): self
+    public function setRenderings(array $renderings): DocumentInterface
     {
         $this->renderings = $renderings;
 
@@ -534,9 +534,9 @@ class Document
     /**
      * @param array $seeAlso
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setSeeAlso(array $seeAlso): self
+    public function setSeeAlso(array $seeAlso): DocumentInterface
     {
         $this->seeAlso = $seeAlso;
 
@@ -554,9 +554,9 @@ class Document
     /**
      * @param array $metadata
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setMetadata(array $metadata): self
+    public function setMetadata(array $metadata): DocumentInterface
     {
         $this->metadata = $metadata;
 
@@ -574,9 +574,9 @@ class Document
     /**
      * @param array $additionalIdentifiers
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setAdditionalIdentifiers(array $additionalIdentifiers): self
+    public function setAdditionalIdentifiers(array $additionalIdentifiers): DocumentInterface
     {
         $this->additionalIdentifiers = $additionalIdentifiers;
 
@@ -603,9 +603,9 @@ class Document
     /**
      * @param array $related
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setRelated(array $related): self
+    public function setRelated(array $related): DocumentInterface
     {
         $this->related = $related;
 
@@ -623,9 +623,9 @@ class Document
     /**
      * @param \DateTimeImmutable $indexingDate
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setIndexingDate(\DateTimeImmutable $indexingDate): self
+    public function setIndexingDate(\DateTimeImmutable $indexingDate): DocumentInterface
     {
         $this->indexingDate = $indexingDate;
 
@@ -643,9 +643,9 @@ class Document
     /**
      * @param string $titlePage
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setTitlePage(string $titlePage): self
+    public function setTitlePage(string $titlePage): DocumentInterface
     {
         $this->titlePage = $titlePage;
 
@@ -663,9 +663,9 @@ class Document
     /**
      * @param string $issue
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setIssue(string $issue): self
+    public function setIssue(string $issue): DocumentInterface
     {
         $this->issue = $issue;
 
@@ -683,9 +683,9 @@ class Document
     /**
      * @param string $permaLink
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setPermaLink(string $permaLink): self
+    public function setPermaLink(string $permaLink): DocumentInterface
     {
         $this->permaLink = $permaLink;
 
@@ -703,9 +703,9 @@ class Document
     /**
      * @param string $license
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function setLicense(string $license): Document
+    public function setLicense(string $license): DocumentInterface
     {
         $this->license = $license;
 
