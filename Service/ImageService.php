@@ -8,7 +8,10 @@ use Imagine\Image\Box;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
+use Imagine\Image\Palette\PaletteInterface;
+use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
+use Imagine\Image\Profile;
 use Subugoe\IIIFBundle\Model\Document;
 use Subugoe\IIIFBundle\Model\Image\Dimension;
 use Subugoe\IIIFBundle\Model\Image\Image;
@@ -77,6 +80,10 @@ class ImageService
     {
         $image = $this->imagine->load($this->getOriginalFileContents($imageEntity));
 
+        // strip the profile, as Firefox uses this and may display images with strange colors
+        $profile = new Profile('', '');
+        $image = $image->profile($profile);
+
         $this->getRegion($imageEntity->getRegion(), $image);
         $this->getSize($imageEntity->getSize(), $image);
         $this->getRotation($imageEntity->getRotation(), $image);
@@ -103,7 +110,7 @@ class ImageService
         }
 
         $ppi = $image->getImagick()->getImageResolution();
-        $image->strip();
+        $image = $image->strip();
         $originalSize = $image->getSize();
         $sizeList = $this->imageConfiguration['zoom_levels'];
         $sizes = $this->getImageSizes($originalSize);
