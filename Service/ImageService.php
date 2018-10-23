@@ -77,6 +77,11 @@ class ImageService
         $this->imageConfiguration = $imageConfiguration;
     }
 
+    public function getImageConfiguration(): array
+    {
+        return $this->imageConfiguration;
+    }
+
     /**
      * @param \Subugoe\IIIFBundle\Model\Image\Image $imageEntity
      *
