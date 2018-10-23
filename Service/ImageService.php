@@ -8,8 +8,6 @@ use Imagine\Image\Box;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
-use Imagine\Image\Palette\PaletteInterface;
-use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
 use Imagine\Image\Profile;
 use Subugoe\IIIFBundle\Model\Document;
@@ -49,6 +47,11 @@ class ImageService
     private $fileService;
 
     /**
+     * @var array
+     */
+    private $imageConfiguration;
+
+    /**
      * ImageService constructor.
      *
      * @param ImagineInterface    $imagine
@@ -60,15 +63,18 @@ class ImageService
     public function __construct(
         ImagineInterface $imagine,
         Router $router,
-        array $imageConfiguration,
         TranslatorInterface $translator,
         FileService $fileService
     ) {
         $this->imagine = $imagine;
         $this->router = $router;
-        $this->imageConfiguration = $imageConfiguration;
         $this->translator = $translator;
         $this->fileService = $fileService;
+    }
+
+    public function setImageConfiguration(array $imageConfiguration)
+    {
+        $this->imageConfiguration = $imageConfiguration;
     }
 
     /**

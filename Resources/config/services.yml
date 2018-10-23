@@ -1,6 +1,10 @@
 services:
   Subugoe\IIIFBundle\Service\ImageService:
-    arguments:  ["@liip_imagine", "@router", "%image%", "@subugoe_iiif.translator",'@Subugoe\IIIFBundle\Service\FileService']
+    arguments:  ["@liip_imagine", "@router", "@subugoe_iiif.translator",'@Subugoe\IIIFBundle\Service\FileService']
+    calls:
+      - method: 'setImageConfiguration'
+        arguments:
+          - '%image%'
 
   Subugoe\IIIFBundle\Service\FileService:
     arguments:  ["@cache_filesystem", "@source_filesystem"]
