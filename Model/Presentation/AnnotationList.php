@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Model\Presentation;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -31,7 +32,7 @@ class AnnotationList
     private $type = 'sc:AnnotationList';
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $resources;
 
@@ -96,19 +97,19 @@ class AnnotationList
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getResources(): array
+    public function getResources(): ArrayCollection
     {
         return $this->resources;
     }
 
     /**
-     * @param array $resources
+     * @param ArrayCollection $resources
      *
      * @return AnnotationList
      */
-    public function setResources(array $resources): self
+    public function setResources(ArrayCollection $resources): self
     {
         $this->resources = $resources;
 

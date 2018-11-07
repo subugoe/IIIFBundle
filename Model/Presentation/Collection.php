@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Model\Presentation;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 class Collection
@@ -32,7 +33,7 @@ class Collection
     private $label;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $medatata;
 
@@ -107,19 +108,19 @@ class Collection
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getMedatata(): array
+    public function getMedatata(): ArrayCollection
     {
         return $this->medatata;
     }
 
     /**
-     * @param array $medatata
+     * @param ArrayCollection $medatata
      *
      * @return Collection
      */
-    public function setMedatata(array $medatata): self
+    public function setMedatata(ArrayCollection $medatata): self
     {
         $this->medatata = $medatata;
 

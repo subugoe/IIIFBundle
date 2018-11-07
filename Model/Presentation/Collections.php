@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Model\Presentation;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -51,7 +52,7 @@ class Collections
     private $attribution;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $collections;
 
@@ -136,19 +137,19 @@ class Collections
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getCollections(): array
+    public function getCollections(): ArrayCollection
     {
         return $this->collections;
     }
 
     /**
-     * @param array $collections
+     * @param ArrayCollection $collections
      *
      * @return Collections
      */
-    public function setCollections(array $collections): self
+    public function setCollections(ArrayCollection $collections): self
     {
         $this->collections = $collections;
 

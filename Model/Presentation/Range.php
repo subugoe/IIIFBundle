@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Model\Presentation;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -38,7 +39,7 @@ class Range
     private $viewingHint = 'top';
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $members;
 
@@ -103,19 +104,19 @@ class Range
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getMembers(): array
+    public function getMembers(): ArrayCollection
     {
         return $this->members;
     }
 
     /**
-     * @param array $members
+     * @param ArrayCollection $members
      *
      * @return Range
      */
-    public function setMembers(array $members): self
+    public function setMembers(ArrayCollection $members): self
     {
         $this->members = $members;
 

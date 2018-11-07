@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Model\Presentation;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -58,7 +59,7 @@ final class Sequence
     private $startCanvas;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $canvases;
 
@@ -103,19 +104,19 @@ final class Sequence
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getCanvases(): array
+    public function getCanvases(): ArrayCollection
     {
         return $this->canvases;
     }
 
     /**
-     * @param array $canvases
+     * @param ArrayCollection $canvases
      *
      * @return Sequence
      */
-    public function setCanvases(array $canvases): self
+    public function setCanvases(ArrayCollection $canvases): self
     {
         $this->canvases = $canvases;
 

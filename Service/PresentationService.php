@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Service;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Subugoe\IIIFBundle\Exception\DataException;
 use Subugoe\IIIFBundle\Exception\IIIFException;
 use Subugoe\IIIFBundle\Exception\MalformedDocumentException;
@@ -84,13 +85,13 @@ class PresentationService
                 ],
                 RouterInterface::ABSOLUTE_URL)
             )
-            ->setLabel($document->getTitle()[0])
+            ->setLabel($document->getTitle()->get(0))
             ->setNavDate($this->getNavDate($document))
             ->setThumbnail($thumbnail)
             ->setMetadata($metadata)
             ->setAttribution($attribution)
             ->setLogo($logo)
-            ->setSequences([$sequences])
+            ->setSequences(new ArrayCollection([$sequences]))
             ->setStructures($structures)
             ->setSeeAlso($document->getSeeAlso())
             ->setRendering($document->getRenderings())
@@ -128,7 +129,7 @@ class PresentationService
             'name' => $name,
         ], RouterInterface::ABSOLUTE_URL));
 
-        $resources = [];
+        $resources = new ArrayCollection();
         $resourceData = new ResourceData();
         $resourceData
             ->setType('dctypes:Text')
@@ -139,7 +140,7 @@ class PresentationService
         $resource
             ->setResource($resourceData);
 
-        $resources[] = $resource;
+        $resources->add($resource);
         $annotationList->setResources($resources);
 
         return $annotationList;
@@ -222,7 +223,7 @@ class PresentationService
                 ->setId($this->router->generate('subugoe_iiif_annotation-list', ['id' => $document->getId(), 'name' => $canvasId], RouterInterface::ABSOLUTE_URL))
                 ->setType('sc:AnnotationList');
 
-            $canvas->setOtherContent([$annotationList]);
+            $canvas->setOtherContent(new ArrayCollection([$annotationList]));
         }
 
         return $canvas;
@@ -374,9 +375,9 @@ class PresentationService
      * @param \Subugoe\IIIFBundle\Model\Document $document
      * @param string                             $range
      *
-     * @return array
+     * @return ArrayCollection
      */
-    private function getMembersForRange(\Subugoe\IIIFBundle\Model\Document $document, string $range)
+    private function getMembersForRange(\Subugoe\IIIFBundle\Model\Document $document, string $range): ArrayCollection
     {
         $logicalStructures = $document->getLogicalStructures();
         $numberOflogicalStructures = count($logicalStructures);
@@ -392,7 +393,7 @@ class PresentationService
             ++$i;
         }
 
-        return [];
+        return new ArrayCollection();
     }
 
     /**
@@ -465,34 +466,34 @@ class PresentationService
     /**
      * @param \Subugoe\IIIFBundle\Model\Document $document
      *
-     * @return array
+     * @return ArrayCollection
      */
-    private function getMetadata(\Subugoe\IIIFBundle\Model\Document $document): array
+    private function getMetadata(\Subugoe\IIIFBundle\Model\Document $document): ArrayCollection
     {
-        $metadata = [];
+        $metadata = new ArrayCollection();
         foreach ($document->getMetadata() as $key => $value) {
             if (!empty($value)) {
                 $data = new Metadata();
                 $data
                     ->setLabel($key)
                     ->setValue($value);
-                $metadata[] = $data;
+                $metadata->add($data);
             }
         }
 
         return $metadata;
     }
 
-    private function getStructureMetadata(LogicalStructure $structure): array
+    private function getStructureMetadata(LogicalStructure $structure): ArrayCollection
     {
-        $metadata = [];
+        $metadata = new ArrayCollection();
         foreach ($structure->getMetadata() as $key => $value) {
             if (!empty($value)) {
                 $data = new Metadata();
                 $data
                     ->setLabel($key)
                     ->setValue($value);
-                $metadata[] = $data;
+                $metadata->add($data);
             }
         }
 
@@ -506,8 +507,8 @@ class PresentationService
      */
     private function getAttribution(\Subugoe\IIIFBundle\Model\Document $document): string
     {
-        if (array_key_exists('0', $document->getRightsOwner())) {
-            return $document->getRightsOwner()[0];
+        if ($document->getRightsOwner()->containsKey(0)) {
+            return $document->getRightsOwner()->get(0);
         }
 
         return '';
@@ -516,13 +517,13 @@ class PresentationService
     /**
      * @param \Subugoe\IIIFBundle\Model\Document $document
      *
-     * @return array
+     * @return ArrayCollection
      */
-    private function getStructures(\Subugoe\IIIFBundle\Model\Document $document): array
+    private function getStructures(\Subugoe\IIIFBundle\Model\Document $document): ArrayCollection
     {
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
 
-        $structures = [];
+        $structures = new ArrayCollection();
         $numberOfStructureElements = count($document->getLogicalStructures());
 
         $counter = 0;
@@ -554,7 +555,7 @@ class PresentationService
                         'range' => $parentStructure->getId(),
                     ], RouterInterface::ABSOLUTE_URL));
                 }
-                $structures[] = $structure;
+                $structures->add($structure);
 
                 ++$counter;
             }
@@ -594,9 +595,9 @@ class PresentationService
      * @param \Subugoe\IIIFBundle\Model\Document $document
      * @param LogicalStructure                   $logicalStructure
      *
-     * @return array
+     * @return ArrayCollection
      */
-    private function getMembersOfLogicalStructure(\Subugoe\IIIFBundle\Model\Document $document, LogicalStructure $logicalStructure)
+    private function getMembersOfLogicalStructure(\Subugoe\IIIFBundle\Model\Document $document, LogicalStructure $logicalStructure): ArrayCollection
     {
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
 
@@ -604,13 +605,13 @@ class PresentationService
         $structureEnd = $this->getPositionOfPhysicalPage($document, $logicalStructure->getEndPage());
         $numberOfElements = ($structureEnd - $structureStart + 1);
 
-        $canvases = [];
+        $canvases = new ArrayCollection();
 
         for ($i = 0; $i < $numberOfElements; ++$i) {
-            $canvases[] = $this->router->generate('subugoe_iiif_canvas', [
+            $canvases->add($this->router->generate('subugoe_iiif_canvas', [
                 'id' => $document->getId(),
                 'canvas' => $document->getPhysicalStructure($structureStart + $i)->getIdentifier(),
-            ], RouterInterface::ABSOLUTE_URL);
+            ], RouterInterface::ABSOLUTE_URL));
         }
 
         return $canvases;
@@ -717,21 +718,21 @@ class PresentationService
      * @param \Subugoe\IIIFBundle\Model\Document $document Document ID
      * @param string                             $canvasId
      *
-     * @return array
+     * @return ArrayCollection
      */
-    private function getImages(\Subugoe\IIIFBundle\Model\Document $document, string $canvasId): array
+    private function getImages(\Subugoe\IIIFBundle\Model\Document $document, string $canvasId): ArrayCollection
     {
-        return [$this->getImage($document, $canvasId)];
+        return new ArrayCollection([$this->getImage($document, $canvasId)]);
     }
 
     /**
      * @param \Subugoe\IIIFBundle\Model\Document $document
      *
-     * @return array
+     * @return ArrayCollection
      */
-    private function getCanvases(\Subugoe\IIIFBundle\Model\Document $document): array
+    private function getCanvases(\Subugoe\IIIFBundle\Model\Document $document): ArrayCollection
     {
-        $canvases = [];
+        $canvases = new ArrayCollection();
         $numberOfPages = count($document->getPhysicalStructures());
 
         $count = 0;
@@ -740,7 +741,7 @@ class PresentationService
             $canvas = $this->getCanvas($document, $document->getPhysicalStructure($count)->getIdentifier(), $count);
             // Embedded canvases do not have a context field
             $canvas->setContext('');
-            $canvases[] = $canvas;
+            $canvases->add($canvas);
             ++$count;
         }
 

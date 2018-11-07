@@ -2,6 +2,8 @@
 
 namespace Subugoe\IIIFBundle\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Document for holding generic data.
  */
@@ -20,64 +22,64 @@ interface DocumentInterface
     public function setId(string $id): DocumentInterface;
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getTitle(): array;
+    public function getTitle(): ArrayCollection;
 
     /**
-     * @param array $title
+     * @param ArrayCollection $title
      *
      * @return DocumentInterface
      */
-    public function setTitle(array $title): DocumentInterface;
+    public function setTitle(ArrayCollection $title): DocumentInterface;
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getRightsOwner(): array;
+    public function getRightsOwner(): ArrayCollection;
 
     /**
-     * @param array $rightsOwner
+     * @param ArrayCollection $rightsOwner
      *
      * @return DocumentInterface
      */
-    public function setRightsOwner(array $rightsOwner): DocumentInterface;
+    public function setRightsOwner(ArrayCollection $rightsOwner): DocumentInterface;
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getAuthors(): array;
+    public function getAuthors(): ArrayCollection;
 
     /**
-     * @param array $authors
+     * @param ArrayCollection $authors
      *
      * @return DocumentInterface
      */
-    public function setAuthors(array $authors): DocumentInterface;
+    public function setAuthors(ArrayCollection $authors): DocumentInterface;
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getPublishingPlaces(): array;
+    public function getPublishingPlaces(): ArrayCollection;
 
     /**
-     * @param array $publishingPlaces
+     * @param ArrayCollection $publishingPlaces
      *
      * @return DocumentInterface
      */
-    public function setPublishingPlaces(array $publishingPlaces): DocumentInterface;
+    public function setPublishingPlaces(ArrayCollection $publishingPlaces): DocumentInterface;
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getClassification(): array;
+    public function getClassification(): ArrayCollection;
 
     /**
-     * @param array $classification
+     * @param ArrayCollection $classification
      *
      * @return DocumentInterface
      */
-    public function setClassification(array $classification): DocumentInterface;
+    public function setClassification(ArrayCollection $classification): DocumentInterface;
 
     /**
      * @return int
@@ -92,40 +94,40 @@ interface DocumentInterface
     public function setPublishingYear(int $publishingYear): DocumentInterface;
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getPublisher(): array;
+    public function getPublisher(): ArrayCollection;
 
     /**
-     * @param array $publisher
+     * @param ArrayCollection $publisher
      *
      * @return DocumentInterface
      */
-    public function setPublisher(array $publisher): DocumentInterface;
+    public function setPublisher(ArrayCollection $publisher): DocumentInterface;
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getLanguage(): array;
+    public function getLanguage(): ArrayCollection;
 
     /**
-     * @param array $language
+     * @param ArrayCollection $language
      *
      * @return DocumentInterface
      */
-    public function setLanguage(array $language): DocumentInterface;
+    public function setLanguage(ArrayCollection $language): DocumentInterface;
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getSubtitle(): array;
+    public function getSubtitle(): ArrayCollection;
 
     /**
-     * @param array $subtitle
+     * @param ArrayCollection $subtitle
      *
      * @return DocumentInterface
      */
-    public function setSubtitle(array $subtitle): DocumentInterface;
+    public function setSubtitle(ArrayCollection $subtitle): DocumentInterface;
 
     /**
      * @return string
@@ -140,16 +142,16 @@ interface DocumentInterface
     public function setImageFormat(string $imageFormat): DocumentInterface;
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getLogicalStructures(): array;
+    public function getLogicalStructures(): ArrayCollection;
 
     /**
-     * @param array $logicalStructures
+     * @param ArrayCollection $logicalStructures
      *
      * @return DocumentInterface
      */
-    public function setLogicalStructures(array $logicalStructures): DocumentInterface;
+    public function setLogicalStructures(ArrayCollection $logicalStructures): DocumentInterface;
 
     /**
      * @param LogicalStructure $structure
@@ -176,9 +178,9 @@ interface DocumentInterface
     public function setType(string $type): DocumentInterface;
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getPhysicalStructures(): array;
+    public function getPhysicalStructures(): ArrayCollection;
 
     /**
      * @param int $id
@@ -188,11 +190,11 @@ interface DocumentInterface
     public function getPhysicalStructure(int $id): PhysicalStructure;
 
     /**
-     * @param array $physicalStructures
+     * @param ArrayCollection $physicalStructures
      *
      * @return DocumentInterface
      */
-    public function setPhysicalStructures(array $physicalStructures): DocumentInterface;
+    public function setPhysicalStructures(ArrayCollection $physicalStructures): DocumentInterface;
 
     /**
      * @param PhysicalStructure $structure
@@ -212,16 +214,16 @@ interface DocumentInterface
     public function setDescription(string $description): DocumentInterface;
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getParents(): array;
+    public function getParents(): ArrayCollection;
 
     /**
-     * @param array $parents
+     * @param ArrayCollection $parents
      *
      * @return DocumentInterface
      */
-    public function setParents(array $parents): DocumentInterface;
+    public function setParents(ArrayCollection $parents): DocumentInterface;
 
     /**
      * @param DocumentInterface $document
@@ -229,52 +231,52 @@ interface DocumentInterface
     public function setParent(DocumentInterface $document);
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getRenderings(): array;
+    public function getRenderings(): ArrayCollection;
 
     /**
-     * @param array $renderings
+     * @param ArrayCollection $renderings
      *
      * @return DocumentInterface
      */
-    public function setRenderings(array $renderings): DocumentInterface;
+    public function setRenderings(ArrayCollection $renderings): DocumentInterface;
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getSeeAlso(): array;
+    public function getSeeAlso(): ArrayCollection;
 
     /**
-     * @param array $seeAlso
+     * @param ArrayCollection $seeAlso
      *
      * @return DocumentInterface
      */
-    public function setSeeAlso(array $seeAlso): DocumentInterface;
+    public function setSeeAlso(ArrayCollection $seeAlso): DocumentInterface;
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getMetadata(): array;
+    public function getMetadata(): ArrayCollection;
 
     /**
-     * @param array $metadata
+     * @param ArrayCollection $metadata
      *
      * @return DocumentInterface
      */
-    public function setMetadata(array $metadata): DocumentInterface;
+    public function setMetadata(ArrayCollection $metadata): DocumentInterface;
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getAdditionalIdentifiers(): array;
+    public function getAdditionalIdentifiers(): ArrayCollection;
 
     /**
-     * @param array $additionalIdentifiers
+     * @param ArrayCollection $additionalIdentifiers
      *
      * @return DocumentInterface
      */
-    public function setAdditionalIdentifiers(array $additionalIdentifiers): DocumentInterface;
+    public function setAdditionalIdentifiers(ArrayCollection $additionalIdentifiers): DocumentInterface;
 
     /**
      * @param string $key
@@ -283,16 +285,16 @@ interface DocumentInterface
     public function addMetadata(string $key, string $value);
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getRelated(): array;
+    public function getRelated(): ArrayCollection;
 
     /**
-     * @param array $related
+     * @param ArrayCollection $related
      *
      * @return DocumentInterface
      */
-    public function setRelated(array $related): DocumentInterface;
+    public function setRelated(ArrayCollection $related): DocumentInterface;
 
     /**
      * @return \DateTimeImmutable

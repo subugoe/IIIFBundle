@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Model\Presentation;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -25,7 +26,7 @@ class Structure
     private $type = 'sc:Range';
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $metadata;
 
@@ -41,17 +42,17 @@ class Structure
     private $viewingHint;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $members;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $ranges;
 
     /**
-     * @var array;
+     * @var ArrayCollection;
      */
     private $canvases;
 
@@ -61,7 +62,7 @@ class Structure
     private $within;
 
     /**
-     * @var array
+     * @var ArrayCollection
      * @Serializer\SkipWhenEmpty()
      */
     private $rendering;
@@ -147,19 +148,19 @@ class Structure
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getMembers(): array
+    public function getMembers(): ArrayCollection
     {
         return $this->members;
     }
 
     /**
-     * @param array $members
+     * @param ArrayCollection $members
      *
      * @return Structure
      */
-    public function setMembers(array $members): self
+    public function setMembers(ArrayCollection $members): self
     {
         $this->members = $members;
 
@@ -167,19 +168,19 @@ class Structure
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getRanges(): array
+    public function getRanges(): ArrayCollection
     {
         return $this->ranges;
     }
 
     /**
-     * @param array $ranges
+     * @param ArrayCollection $ranges
      *
      * @return Structure
      */
-    public function setRanges(array $ranges): self
+    public function setRanges(ArrayCollection $ranges): self
     {
         $this->ranges = $ranges;
 
@@ -187,19 +188,19 @@ class Structure
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getCanvases(): array
+    public function getCanvases(): ArrayCollection
     {
         return $this->canvases;
     }
 
     /**
-     * @param array $canvases
+     * @param ArrayCollection $canvases
      *
      * @return Structure
      */
-    public function setCanvases(array $canvases): self
+    public function setCanvases(ArrayCollection $canvases): self
     {
         $this->canvases = $canvases;
 
@@ -227,19 +228,19 @@ class Structure
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getMetadata(): array
+    public function getMetadata(): ArrayCollection
     {
         return $this->metadata;
     }
 
     /**
-     * @param array $metadata
+     * @param ArrayCollection $metadata
      *
      * @return Structure
      */
-    public function setMetadata(array $metadata): self
+    public function setMetadata(ArrayCollection $metadata): self
     {
         $this->metadata = $metadata;
 
@@ -247,19 +248,19 @@ class Structure
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getRendering(): array
+    public function getRendering(): ArrayCollection
     {
         return $this->rendering;
     }
 
     /**
-     * @param array $rendering
+     * @param ArrayCollection $rendering
      *
      * @return Structure
      */
-    public function setRendering(array $rendering): self
+    public function setRendering(ArrayCollection $rendering): self
     {
         $this->rendering = $rendering;
 

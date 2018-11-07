@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Model\Presentation;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -75,7 +76,7 @@ class Document
     private $label;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $metadata;
 
@@ -85,12 +86,12 @@ class Document
     private $docstrct;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $titles;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $publishingPlaces;
 
@@ -100,7 +101,7 @@ class Document
     private $thumbnail;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $sequences;
 
@@ -116,13 +117,13 @@ class Document
     private $logo;
 
     /**
-     * @var array
+     * @var ArrayCollection
      * @Serializer\SkipWhenEmpty()
      */
     private $rendering;
 
     /**
-     * @var array
+     * @var ArrayCollection
      * @Serializer\SerializedName("seeAlso")
      */
     private $seeAlso;
@@ -130,12 +131,12 @@ class Document
     /**
      * A.k.a Ranges.
      *
-     * @var array
+     * @var ArrayCollection
      */
     private $structures;
 
     /**
-     * @var array
+     * @var ArrayCollection
      * @Serializer\SkipWhenEmpty()
      */
     private $related;
@@ -181,19 +182,19 @@ class Document
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getTitles(): array
+    public function getTitles(): ArrayCollection
     {
         return $this->titles;
     }
 
     /**
-     * @param array $titles
+     * @param ArrayCollection $titles
      *
      * @return Document
      */
-    public function setTitles(array $titles): self
+    public function setTitles(ArrayCollection $titles): self
     {
         $this->titles = $titles;
 
@@ -201,19 +202,19 @@ class Document
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getPublishingPlaces(): array
+    public function getPublishingPlaces(): ArrayCollection
     {
         return $this->publishingPlaces;
     }
 
     /**
-     * @param array $publishingPlaces
+     * @param ArrayCollection $publishingPlaces
      *
      * @return Document
      */
-    public function setPublishingPlaces(array $publishingPlaces): self
+    public function setPublishingPlaces(ArrayCollection $publishingPlaces): self
     {
         $this->publishingPlaces = $publishingPlaces;
 
@@ -261,19 +262,19 @@ class Document
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getSequences(): array
+    public function getSequences(): ArrayCollection
     {
         return $this->sequences;
     }
 
     /**
-     * @param array $sequences
+     * @param ArrayCollection $sequences
      *
      * @return Document
      */
-    public function setSequences(array $sequences): self
+    public function setSequences(ArrayCollection $sequences): self
     {
         $this->sequences = $sequences;
 
@@ -281,19 +282,19 @@ class Document
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getMetadata(): array
+    public function getMetadata(): ArrayCollection
     {
         return $this->metadata;
     }
 
     /**
-     * @param array $metadata
+     * @param ArrayCollection $metadata
      *
      * @return Document
      */
-    public function setMetadata(array $metadata): self
+    public function setMetadata(ArrayCollection $metadata): self
     {
         $this->metadata = $metadata;
 
@@ -341,19 +342,19 @@ class Document
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getStructures(): array
+    public function getStructures(): ArrayCollection
     {
         return $this->structures;
     }
 
     /**
-     * @param array $structures
+     * @param ArrayCollection $structures
      *
      * @return Document
      */
-    public function setStructures(array $structures): self
+    public function setStructures(ArrayCollection $structures): self
     {
         $this->structures = $structures;
 
@@ -441,19 +442,19 @@ class Document
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getRendering(): array
+    public function getRendering(): ArrayCollection
     {
         return $this->rendering;
     }
 
     /**
-     * @param array $rendering
+     * @param ArrayCollection $rendering
      *
      * @return Document
      */
-    public function setRendering(array $rendering): self
+    public function setRendering(ArrayCollection $rendering): self
     {
         $this->rendering = $rendering;
 
@@ -461,19 +462,19 @@ class Document
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getSeeAlso(): array
+    public function getSeeAlso(): ArrayCollection
     {
         return $this->seeAlso;
     }
 
     /**
-     * @param array $seeAlso
+     * @param ArrayCollection $seeAlso
      *
      * @return Document
      */
-    public function setSeeAlso(array $seeAlso): self
+    public function setSeeAlso(ArrayCollection $seeAlso): self
     {
         $this->seeAlso = $seeAlso;
 
@@ -481,19 +482,19 @@ class Document
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getRelated(): array
+    public function getRelated(): ArrayCollection
     {
         return $this->related;
     }
 
     /**
-     * @param array $related
+     * @param ArrayCollection $related
      *
      * @return Document
      */
-    public function setRelated(array $related): self
+    public function setRelated(ArrayCollection $related): self
     {
         $this->related = $related;
 

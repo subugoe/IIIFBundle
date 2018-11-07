@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Model\Presentation;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -50,12 +51,12 @@ class Canvas
     private $width;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $images;
 
     /**
-     * @var array
+     * @var ArrayCollection
      * @Serializer\SerializedName("otherContent")
      */
     private $otherContent;
@@ -141,19 +142,19 @@ class Canvas
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getImages(): array
+    public function getImages(): ArrayCollection
     {
         return $this->images;
     }
 
     /**
-     * @param array $images
+     * @param ArrayCollection $images
      *
      * @return Canvas
      */
-    public function setImages(array $images): self
+    public function setImages(ArrayCollection $images): self
     {
         $this->images = $images;
 
@@ -161,19 +162,19 @@ class Canvas
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getOtherContent(): array
+    public function getOtherContent(): ArrayCollection
     {
         return $this->otherContent;
     }
 
     /**
-     * @param array $otherContent
+     * @param ArrayCollection $otherContent
      *
      * @return Canvas
      */
-    public function setOtherContent(array $otherContent): self
+    public function setOtherContent(ArrayCollection $otherContent): self
     {
         $this->otherContent = $otherContent;
 

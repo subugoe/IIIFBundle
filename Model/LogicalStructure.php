@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Logical structure.
  */
@@ -40,12 +42,12 @@ class LogicalStructure
     private $level;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $renderings;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $metadata;
 
@@ -170,19 +172,19 @@ class LogicalStructure
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getRenderings(): array
+    public function getRenderings(): ArrayCollection
     {
         return $this->renderings;
     }
 
     /**
-     * @param array $renderings
+     * @param ArrayCollection $renderings
      *
      * @return LogicalStructure
      */
-    public function setRenderings(array $renderings): self
+    public function setRenderings(ArrayCollection $renderings): self
     {
         $this->renderings = $renderings;
 
@@ -190,19 +192,19 @@ class LogicalStructure
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getMetadata(): array
+    public function getMetadata(): ArrayCollection
     {
         return $this->metadata;
     }
 
     /**
-     * @param array $metadata
+     * @param ArrayCollection $metadata
      *
      * @return LogicalStructure
      */
-    public function setMetadata(array $metadata): self
+    public function setMetadata(ArrayCollection $metadata): self
     {
         $this->metadata = $metadata;
 

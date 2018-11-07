@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Document for holding generic data.
  */
@@ -15,37 +17,37 @@ class Document implements DocumentInterface
     private $id;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
-    private $title = [];
+    private $title;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
-    private $subtitle = [];
+    private $subtitle;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $rightsOwner;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $metadata;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $authors;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $classification;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $publishingPlaces;
 
@@ -65,24 +67,24 @@ class Document implements DocumentInterface
     private $titlePage;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $publisher;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     private $language;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
-    private $logicalStructures = [];
+    private $logicalStructures;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
-    private $physicalStructures = [];
+    private $physicalStructures;
 
     /**
      * @var string
@@ -100,24 +102,24 @@ class Document implements DocumentInterface
     private $description;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
-    private $parents = [];
+    private $parents;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
-    private $renderings = [];
+    private $renderings;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
-    private $seeAlso = [];
+    private $seeAlso;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
-    private $additionalIdentifiers = [];
+    private $additionalIdentifiers;
 
     /**
      * @var string
@@ -125,9 +127,9 @@ class Document implements DocumentInterface
     private $issue;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
-    private $related = [];
+    private $related;
 
     /**
      * @var string
@@ -138,6 +140,26 @@ class Document implements DocumentInterface
      * @var string
      */
     private $license = '';
+
+    public function __construct()
+    {
+        $this->title = new ArrayCollection();
+        $this->subtitle = new ArrayCollection();
+        $this->rightsOwner = new ArrayCollection();
+        $this->metadata = new ArrayCollection();
+        $this->authors = new ArrayCollection();
+        $this->classification = new ArrayCollection();
+        $this->publishingPlaces = new ArrayCollection();
+        $this->publisher = new ArrayCollection();
+        $this->language = new ArrayCollection();
+        $this->logicalStructures = new ArrayCollection();
+        $this->physicalStructures = new ArrayCollection();
+        $this->parents = new ArrayCollection();
+        $this->renderings = new ArrayCollection();
+        $this->seeAlso = new ArrayCollection();
+        $this->additionalIdentifiers = new ArrayCollection();
+        $this->related = new ArrayCollection();
+    }
 
     /**
      * @return string
@@ -160,19 +182,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getTitle(): array
+    public function getTitle(): ArrayCollection
     {
         return $this->title;
     }
 
     /**
-     * @param array $title
+     * @param ArrayCollection $title
      *
      * @return DocumentInterface
      */
-    public function setTitle(array $title): DocumentInterface
+    public function setTitle(ArrayCollection $title): DocumentInterface
     {
         $this->title = $title;
 
@@ -180,19 +202,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getRightsOwner(): array
+    public function getRightsOwner(): ArrayCollection
     {
         return $this->rightsOwner;
     }
 
     /**
-     * @param array $rightsOwner
+     * @param ArrayCollection $rightsOwner
      *
      * @return DocumentInterface
      */
-    public function setRightsOwner(array $rightsOwner): DocumentInterface
+    public function setRightsOwner(ArrayCollection $rightsOwner): DocumentInterface
     {
         $this->rightsOwner = $rightsOwner;
 
@@ -200,19 +222,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getAuthors(): array
+    public function getAuthors(): ArrayCollection
     {
         return $this->authors;
     }
 
     /**
-     * @param array $authors
+     * @param ArrayCollection $authors
      *
      * @return DocumentInterface
      */
-    public function setAuthors(array $authors): DocumentInterface
+    public function setAuthors(ArrayCollection $authors): DocumentInterface
     {
         $this->authors = $authors;
 
@@ -220,19 +242,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getPublishingPlaces(): array
+    public function getPublishingPlaces(): ArrayCollection
     {
         return $this->publishingPlaces;
     }
 
     /**
-     * @param array $publishingPlaces
+     * @param ArrayCollection $publishingPlaces
      *
      * @return DocumentInterface
      */
-    public function setPublishingPlaces(array $publishingPlaces): DocumentInterface
+    public function setPublishingPlaces(ArrayCollection $publishingPlaces): DocumentInterface
     {
         $this->publishingPlaces = $publishingPlaces;
 
@@ -240,19 +262,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getClassification(): array
+    public function getClassification(): ArrayCollection
     {
         return $this->classification;
     }
 
     /**
-     * @param array $classification
+     * @param ArrayCollection $classification
      *
      * @return DocumentInterface
      */
-    public function setClassification(array $classification): DocumentInterface
+    public function setClassification(ArrayCollection $classification): DocumentInterface
     {
         $this->classification = $classification;
 
@@ -280,19 +302,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getPublisher(): array
+    public function getPublisher(): ArrayCollection
     {
         return $this->publisher;
     }
 
     /**
-     * @param array $publisher
+     * @param ArrayCollection $publisher
      *
      * @return DocumentInterface
      */
-    public function setPublisher(array $publisher): DocumentInterface
+    public function setPublisher(ArrayCollection $publisher): DocumentInterface
     {
         $this->publisher = $publisher;
 
@@ -300,19 +322,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getLanguage(): array
+    public function getLanguage(): ArrayCollection
     {
         return $this->language;
     }
 
     /**
-     * @param array $language
+     * @param ArrayCollection $language
      *
      * @return DocumentInterface
      */
-    public function setLanguage(array $language): DocumentInterface
+    public function setLanguage(ArrayCollection $language): DocumentInterface
     {
         $this->language = $language;
 
@@ -320,19 +342,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getSubtitle(): array
+    public function getSubtitle(): ArrayCollection
     {
         return $this->subtitle;
     }
 
     /**
-     * @param array $subtitle
+     * @param ArrayCollection $subtitle
      *
      * @return DocumentInterface
      */
-    public function setSubtitle(array $subtitle): DocumentInterface
+    public function setSubtitle(ArrayCollection $subtitle): DocumentInterface
     {
         $this->subtitle = $subtitle;
 
@@ -360,19 +382,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getLogicalStructures(): array
+    public function getLogicalStructures(): ArrayCollection
     {
         return $this->logicalStructures;
     }
 
     /**
-     * @param array $logicalStructures
+     * @param ArrayCollection $logicalStructures
      *
      * @return DocumentInterface
      */
-    public function setLogicalStructures(array $logicalStructures): DocumentInterface
+    public function setLogicalStructures(ArrayCollection $logicalStructures): DocumentInterface
     {
         $this->logicalStructures = $logicalStructures;
 
@@ -384,7 +406,7 @@ class Document implements DocumentInterface
      */
     public function addLogicalStructure(LogicalStructure $structure)
     {
-        $this->logicalStructures[] = $structure;
+        $this->logicalStructures->add($structure);
     }
 
     /**
@@ -394,7 +416,7 @@ class Document implements DocumentInterface
      */
     public function getLogicalStructure(int $id): LogicalStructure
     {
-        return $this->logicalStructures[$id];
+        return $this->logicalStructures->get($id);
     }
 
     /**
@@ -418,9 +440,9 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getPhysicalStructures(): array
+    public function getPhysicalStructures(): ArrayCollection
     {
         return $this->physicalStructures;
     }
@@ -436,11 +458,11 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @param array $physicalStructures
+     * @param ArrayCollection $physicalStructures
      *
      * @return DocumentInterface
      */
-    public function setPhysicalStructures(array $physicalStructures): DocumentInterface
+    public function setPhysicalStructures(ArrayCollection $physicalStructures): DocumentInterface
     {
         $this->physicalStructures = $physicalStructures;
 
@@ -476,19 +498,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getParents(): array
+    public function getParents(): ArrayCollection
     {
         return $this->parents;
     }
 
     /**
-     * @param array $parents
+     * @param ArrayCollection $parents
      *
      * @return DocumentInterface
      */
-    public function setParents(array $parents): DocumentInterface
+    public function setParents(ArrayCollection $parents): DocumentInterface
     {
         $this->parents = $parents;
 
@@ -504,19 +526,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getRenderings(): array
+    public function getRenderings(): ArrayCollection
     {
         return $this->renderings;
     }
 
     /**
-     * @param array $renderings
+     * @param ArrayCollection $renderings
      *
      * @return DocumentInterface
      */
-    public function setRenderings(array $renderings): DocumentInterface
+    public function setRenderings(ArrayCollection $renderings): DocumentInterface
     {
         $this->renderings = $renderings;
 
@@ -524,19 +546,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getSeeAlso(): array
+    public function getSeeAlso(): ArrayCollection
     {
         return $this->seeAlso;
     }
 
     /**
-     * @param array $seeAlso
+     * @param ArrayCollection $seeAlso
      *
      * @return DocumentInterface
      */
-    public function setSeeAlso(array $seeAlso): DocumentInterface
+    public function setSeeAlso(ArrayCollection $seeAlso): DocumentInterface
     {
         $this->seeAlso = $seeAlso;
 
@@ -544,19 +566,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getMetadata(): array
+    public function getMetadata(): ArrayCollection
     {
         return $this->metadata;
     }
 
     /**
-     * @param array $metadata
+     * @param ArrayCollection $metadata
      *
      * @return DocumentInterface
      */
-    public function setMetadata(array $metadata): DocumentInterface
+    public function setMetadata(ArrayCollection $metadata): DocumentInterface
     {
         $this->metadata = $metadata;
 
@@ -564,19 +586,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getAdditionalIdentifiers(): array
+    public function getAdditionalIdentifiers(): ArrayCollection
     {
         return $this->additionalIdentifiers;
     }
 
     /**
-     * @param array $additionalIdentifiers
+     * @param ArrayCollection $additionalIdentifiers
      *
      * @return DocumentInterface
      */
-    public function setAdditionalIdentifiers(array $additionalIdentifiers): DocumentInterface
+    public function setAdditionalIdentifiers(ArrayCollection $additionalIdentifiers): DocumentInterface
     {
         $this->additionalIdentifiers = $additionalIdentifiers;
 
@@ -593,19 +615,19 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return array
+     * @return ArrayCollection
      */
-    public function getRelated(): array
+    public function getRelated(): ArrayCollection
     {
         return $this->related;
     }
 
     /**
-     * @param array $related
+     * @param ArrayCollection $related
      *
      * @return DocumentInterface
      */
-    public function setRelated(array $related): DocumentInterface
+    public function setRelated(ArrayCollection $related): DocumentInterface
     {
         $this->related = $related;
 
