@@ -140,7 +140,7 @@ class PhysicalStructure
     /**
      * @return string
      */
-    public function getAnnotation(): string
+    public function getAnnotation(): ?string
     {
         return $this->annotation;
     }
