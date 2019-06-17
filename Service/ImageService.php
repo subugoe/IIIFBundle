@@ -10,6 +10,7 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
 use Imagine\Image\Profile;
+use Imagine\Imagick\Imagine;
 use Subugoe\IIIFBundle\Model\Document;
 use Subugoe\IIIFBundle\Model\Image\Dimension;
 use Subugoe\IIIFBundle\Model\Image\Image;
@@ -54,14 +55,13 @@ class ImageService
     /**
      * ImageService constructor.
      *
-     * @param ImagineInterface    $imagine
+     * @param Imagine             $imagine
      * @param Router              $router
-     * @param array               $imageConfiguration
      * @param TranslatorInterface $translator
      * @param FileService         $fileService
      */
     public function __construct(
-        ImagineInterface $imagine,
+        Imagine $imagine,
         Router $router,
         TranslatorInterface $translator,
         FileService $fileService

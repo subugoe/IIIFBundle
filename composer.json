@@ -5,7 +5,7 @@
     "authors": [
         {
             "name": "Ingo Pfennigstorf",
-            "email": "i.pfennigstorf@gmail.com"
+            "email": "pfennigstorf@sub.uni-goettingen.de"
         },
         {
             "name": "Ali Sajedi",
@@ -19,12 +19,12 @@
         "ext-gd": "*",
         "ext-imagick": "*",
         "jms/serializer-bundle": "^2.0",
-        "liip/imagine-bundle": "^1.8|^2.0",
+        "liip/imagine-bundle": "^2.0",
         "ralouphie/mimey": "^2.0",
         "oneup/flysystem-bundle": "^2.0|^3.0",
-        "myclabs/php-enum": "^1.5"
+        "myclabs/php-enum": "^1.7"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^3.2"
+        "symfony/phpunit-bridge": "^4.0"
     }
 }

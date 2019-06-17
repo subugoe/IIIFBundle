@@ -4,7 +4,7 @@ namespace Subugoe\IIIFBundle\EventListener;
 
 use Subugoe\IIIFBundle\Controller\ImageController;
 use Subugoe\IIIFBundle\Controller\PresentationController;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -41,7 +41,7 @@ class UrlManipulatorListener
         $this->router = $router;
     }
 
-    public function onKernelController(FilterControllerEvent $event)
+    public function onKernelController(ControllerEvent $event)
     {
         $controller = $event->getController();
 
