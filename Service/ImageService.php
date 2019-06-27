@@ -11,12 +11,12 @@ use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
 use Imagine\Image\Profile;
 use Imagine\Imagick\Imagine;
-use Subugoe\IIIFBundle\Model\Document;
-use Subugoe\IIIFBundle\Model\Image\Dimension;
-use Subugoe\IIIFBundle\Model\Image\Image;
-use Subugoe\IIIFBundle\Model\Image\ImageInformation;
-use Subugoe\IIIFBundle\Model\Image\Tile;
-use Subugoe\IIIFBundle\Model\PhysicalStructure;
+use Subugoe\IIIFModel\Model\Document;
+use Subugoe\IIIFModel\Model\Image\Dimension;
+use Subugoe\IIIFModel\Model\Image\Image;
+use Subugoe\IIIFModel\Model\Image\ImageInformation;
+use Subugoe\IIIFModel\Model\Image\Tile;
+use Subugoe\IIIFModel\Model\PhysicalStructure;
 use Subugoe\IIIFBundle\Translator\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -83,7 +83,7 @@ class ImageService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Image\Image $imageEntity
+     * @param \Subugoe\IIIFModel\Model\Image\Image $imageEntity
      *
      * @return string
      */
@@ -110,7 +110,7 @@ class ImageService
      */
     public function getImageJsonInformation(string $identifier, $originalImage): ImageInformation
     {
-        $imageEntity = new \Subugoe\IIIFBundle\Model\Image\Image();
+        $imageEntity = new \Subugoe\IIIFModel\Model\Image\Image();
         $imageEntity->setIdentifier($identifier);
 
         try {
@@ -158,11 +158,11 @@ class ImageService
     /**
      * Stores the original image in a cache file.
      *
-     * @param \Subugoe\IIIFBundle\Model\Image\Image $image
+     * @param \Subugoe\IIIFModel\Model\Image\Image $image
      *
      * @return \Psr\Http\Message\StreamInterface|string
      */
-    public function getOriginalFileContents(\Subugoe\IIIFBundle\Model\Image\Image $image)
+    public function getOriginalFileContents(\Subugoe\IIIFModel\Model\Image\Image $image)
     {
         $document = $this->translator->getDocumentByImageId($image->getIdentifier());
         $filename = $this->getFilename($document, $image);
@@ -475,7 +475,7 @@ class ImageService
         return $tiles;
     }
 
-    private function getFilename(Document $document, \Subugoe\IIIFBundle\Model\Image\Image $image): string
+    private function getFilename(Document $document, \Subugoe\IIIFModel\Model\Image\Image $image): string
     {
         /** @var PhysicalStructure $physicalStructure */
         foreach ($document->getPhysicalStructures() as $physicalStructure) {

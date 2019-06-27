@@ -7,16 +7,16 @@ namespace Subugoe\IIIFBundle\Translator;
 use GuzzleHttp\Client;
 use Solarium\QueryType\Select\Result\DocumentInterface;
 use Subugoe\FindBundle\Service\SearchService;
-use Subugoe\IIIFBundle\Model\Document;
-use Subugoe\IIIFBundle\Model\DocumentTypes;
-use Subugoe\IIIFBundle\Model\LogicalStructure;
-use Subugoe\IIIFBundle\Model\PhysicalStructure;
-use Subugoe\IIIFBundle\Model\Presentation\Collection;
-use Subugoe\IIIFBundle\Model\Presentation\Collections;
-use Subugoe\IIIFBundle\Model\Presentation\Image;
-use Subugoe\IIIFBundle\Model\Presentation\Related;
-use Subugoe\IIIFBundle\Model\Presentation\Rendering;
-use Subugoe\IIIFBundle\Model\Presentation\SeeAlso;
+use Subugoe\IIIFModel\Model\Document;
+use Subugoe\IIIFModel\Model\DocumentTypes;
+use Subugoe\IIIFModel\Model\LogicalStructure;
+use Subugoe\IIIFModel\Model\PhysicalStructure;
+use Subugoe\IIIFModel\Model\Presentation\Collection;
+use Subugoe\IIIFModel\Model\Presentation\Collections;
+use Subugoe\IIIFModel\Model\Presentation\Image;
+use Subugoe\IIIFModel\Model\Presentation\Related;
+use Subugoe\IIIFModel\Model\Presentation\Rendering;
+use Subugoe\IIIFModel\Model\Presentation\SeeAlso;
 use Symfony\Component\Routing\RouterInterface;
 
 class SubugoeTranslator implements TranslatorInterface

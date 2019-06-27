@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Translator;
 
-use Subugoe\IIIFBundle\Model\DocumentInterface;
-use Subugoe\IIIFBundle\Model\Presentation\Collection;
+use Subugoe\IIIFModel\Model\DocumentInterface;
+use Subugoe\IIIFModel\Model\Presentation\Collection;
 
 interface TranslatorInterface
 {

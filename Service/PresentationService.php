@@ -7,21 +7,21 @@ namespace Subugoe\IIIFBundle\Service;
 use Subugoe\IIIFBundle\Exception\DataException;
 use Subugoe\IIIFBundle\Exception\IIIFException;
 use Subugoe\IIIFBundle\Exception\MalformedDocumentException;
-use Subugoe\IIIFBundle\Model\LogicalStructure;
-use Subugoe\IIIFBundle\Model\PhysicalStructure;
-use Subugoe\IIIFBundle\Model\Presentation\AnnotationList;
-use Subugoe\IIIFBundle\Model\Presentation\Canvas;
-use Subugoe\IIIFBundle\Model\Presentation\Collection;
-use Subugoe\IIIFBundle\Model\Presentation\Collections;
-use Subugoe\IIIFBundle\Model\Presentation\Document;
-use Subugoe\IIIFBundle\Model\Presentation\Image;
-use Subugoe\IIIFBundle\Model\Presentation\GenericResource;
-use Subugoe\IIIFBundle\Model\Presentation\Metadata;
-use Subugoe\IIIFBundle\Model\Presentation\Range;
-use Subugoe\IIIFBundle\Model\Presentation\ResourceData;
-use Subugoe\IIIFBundle\Model\Presentation\Sequence;
-use Subugoe\IIIFBundle\Model\Presentation\Service;
-use Subugoe\IIIFBundle\Model\Presentation\Structure;
+use Subugoe\IIIFModel\Model\LogicalStructure;
+use Subugoe\IIIFModel\Model\PhysicalStructure;
+use Subugoe\IIIFModel\Model\Presentation\AnnotationList;
+use Subugoe\IIIFModel\Model\Presentation\Canvas;
+use Subugoe\IIIFModel\Model\Presentation\Collection;
+use Subugoe\IIIFModel\Model\Presentation\Collections;
+use Subugoe\IIIFModel\Model\Presentation\Document;
+use Subugoe\IIIFModel\Model\Presentation\Image;
+use Subugoe\IIIFModel\Model\Presentation\GenericResource;
+use Subugoe\IIIFModel\Model\Presentation\Metadata;
+use Subugoe\IIIFModel\Model\Presentation\Range;
+use Subugoe\IIIFModel\Model\Presentation\ResourceData;
+use Subugoe\IIIFModel\Model\Presentation\Sequence;
+use Subugoe\IIIFModel\Model\Presentation\Service;
+use Subugoe\IIIFModel\Model\Presentation\Structure;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -60,11 +60,11 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      *
      * @return Document
      */
-    public function getManifest(\Subugoe\IIIFBundle\Model\Document $document): Document
+    public function getManifest(\Subugoe\IIIFModel\Model\Document $document): Document
     {
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
 
@@ -113,12 +113,12 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      * @param string                             $name
      *
      * @return AnnotationList
      */
-    public function getAnnotationList(\Subugoe\IIIFBundle\Model\Document $document, string $name): AnnotationList
+    public function getAnnotationList(\Subugoe\IIIFModel\Model\Document $document, string $name): AnnotationList
     {
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
 
@@ -166,12 +166,12 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      * @param string                             $name
      *
      * @return Range
      */
-    public function getRange(\Subugoe\IIIFBundle\Model\Document $document, string $name)
+    public function getRange(\Subugoe\IIIFModel\Model\Document $document, string $name)
     {
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
 
@@ -186,13 +186,13 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      * @param string                             $canvasId
      * @param int                                $physicalStructureId
      *
      * @return Canvas
      */
-    public function getCanvas(\Subugoe\IIIFBundle\Model\Document $document, string $canvasId, int $physicalStructureId = -1): Canvas
+    public function getCanvas(\Subugoe\IIIFModel\Model\Document $document, string $canvasId, int $physicalStructureId = -1): Canvas
     {
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
 
@@ -229,12 +229,12 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      * @param string                             $imageId
      *
      * @return GenericResource
      */
-    public function getImage(\Subugoe\IIIFBundle\Model\Document $document, string $imageId): GenericResource
+    public function getImage(\Subugoe\IIIFModel\Model\Document $document, string $imageId): GenericResource
     {
         $imageParameters = [
             'identifier' => $imageId,
@@ -275,12 +275,12 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      * @param string                             $name
      *
      * @return Sequence
      */
-    public function getSequence(\Subugoe\IIIFBundle\Model\Document $document, $name): Sequence
+    public function getSequence(\Subugoe\IIIFModel\Model\Document $document, $name): Sequence
     {
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
 
@@ -351,12 +351,12 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      * @param string                             $identifier
      *
      * @return int
      */
-    private function getPagePositionByIdentifier(\Subugoe\IIIFBundle\Model\Document $document, string $identifier): int
+    private function getPagePositionByIdentifier(\Subugoe\IIIFModel\Model\Document $document, string $identifier): int
     {
         $position = 0;
         /** @var PhysicalStructure $physicalStructure */
@@ -371,12 +371,12 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      * @param string                             $range
      *
      * @return array
      */
-    private function getMembersForRange(\Subugoe\IIIFBundle\Model\Document $document, string $range)
+    private function getMembersForRange(\Subugoe\IIIFModel\Model\Document $document, string $range)
     {
         $logicalStructures = $document->getLogicalStructures();
         $numberOflogicalStructures = count($logicalStructures);
@@ -396,11 +396,11 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      *
      * @return \DateTime
      */
-    private function getNavDate(\Subugoe\IIIFBundle\Model\Document $document)
+    private function getNavDate(\Subugoe\IIIFModel\Model\Document $document)
     {
         return \DateTime::createFromFormat('Y-m-d H:i:s', vsprintf('%d-%s-%s %s:%s:%s',
             [
@@ -415,11 +415,11 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      *
      * @return Image
      */
-    private function getThumbnail(\Subugoe\IIIFBundle\Model\Document $document): Image
+    private function getThumbnail(\Subugoe\IIIFModel\Model\Document $document): Image
     {
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_IMAGE));
 
@@ -463,11 +463,11 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      *
      * @return array
      */
-    private function getMetadata(\Subugoe\IIIFBundle\Model\Document $document): array
+    private function getMetadata(\Subugoe\IIIFModel\Model\Document $document): array
     {
         $metadata = [];
         foreach ($document->getMetadata() as $key => $value) {
@@ -500,11 +500,11 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      *
      * @return string
      */
-    private function getAttribution(\Subugoe\IIIFBundle\Model\Document $document): string
+    private function getAttribution(\Subugoe\IIIFModel\Model\Document $document): string
     {
         if (array_key_exists('0', $document->getRightsOwner())) {
             return $document->getRightsOwner()[0];
@@ -514,11 +514,11 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      *
      * @return array
      */
-    private function getStructures(\Subugoe\IIIFBundle\Model\Document $document): array
+    private function getStructures(\Subugoe\IIIFModel\Model\Document $document): array
     {
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
 
@@ -564,7 +564,7 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      * @param LogicalStructure                   $structure
      * @param int                                $position
      *
@@ -572,7 +572,7 @@ class PresentationService
      *
      * @return LogicalStructure
      */
-    private function getPreviousHierarchyStructure(\Subugoe\IIIFBundle\Model\Document $document, LogicalStructure $structure, int $position): LogicalStructure
+    private function getPreviousHierarchyStructure(\Subugoe\IIIFModel\Model\Document $document, LogicalStructure $structure, int $position): LogicalStructure
     {
         $level = $structure->getLevel();
         $parentLevel = $level - 1;
@@ -591,12 +591,12 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      * @param LogicalStructure                   $logicalStructure
      *
      * @return array
      */
-    private function getMembersOfLogicalStructure(\Subugoe\IIIFBundle\Model\Document $document, LogicalStructure $logicalStructure)
+    private function getMembersOfLogicalStructure(\Subugoe\IIIFModel\Model\Document $document, LogicalStructure $logicalStructure)
     {
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
 
@@ -617,14 +617,14 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      * @param int                                $page
      *
      * @throws MalformedDocumentException
      *
      * @return int
      */
-    private function getPositionOfPhysicalPage(\Subugoe\IIIFBundle\Model\Document $document, int $page)
+    private function getPositionOfPhysicalPage(\Subugoe\IIIFModel\Model\Document $document, int $page)
     {
         $i = 0;
         /** @var PhysicalStructure $structure */
@@ -644,12 +644,12 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      * @param string                             $name
      *
      * @return Sequence
      */
-    private function getSequences(\Subugoe\IIIFBundle\Model\Document $document, string $name): Sequence
+    private function getSequences(\Subugoe\IIIFModel\Model\Document $document, string $name): Sequence
     {
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
 
@@ -674,12 +674,12 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      * @param string                             $canvasId
      *
      * @return string
      */
-    private function getLabelForCanvas(\Subugoe\IIIFBundle\Model\Document $document, string $canvasId)
+    private function getLabelForCanvas(\Subugoe\IIIFModel\Model\Document $document, string $canvasId)
     {
         $physicalStructures = $document->getPhysicalStructures();
 
@@ -694,12 +694,12 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      * @param string                             $rangeId
      *
      * @return string
      */
-    private function getLabelForRange(\Subugoe\IIIFBundle\Model\Document $document, string $rangeId)
+    private function getLabelForRange(\Subugoe\IIIFModel\Model\Document $document, string $rangeId)
     {
         $logicalStructures = $document->getLogicalStructures();
 
@@ -714,22 +714,22 @@ class PresentationService
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document Document ID
+     * @param \Subugoe\IIIFModel\Model\Document $document Document ID
      * @param string                             $canvasId
      *
      * @return array
      */
-    private function getImages(\Subugoe\IIIFBundle\Model\Document $document, string $canvasId): array
+    private function getImages(\Subugoe\IIIFModel\Model\Document $document, string $canvasId): array
     {
         return [$this->getImage($document, $canvasId)];
     }
 
     /**
-     * @param \Subugoe\IIIFBundle\Model\Document $document
+     * @param \Subugoe\IIIFModel\Model\Document $document
      *
      * @return array
      */
-    private function getCanvases(\Subugoe\IIIFBundle\Model\Document $document): array
+    private function getCanvases(\Subugoe\IIIFModel\Model\Document $document): array
     {
         $canvases = [];
         $numberOfPages = count($document->getPhysicalStructures());
