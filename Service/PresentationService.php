@@ -22,10 +22,11 @@ use Subugoe\IIIFModel\Model\Presentation\ResourceData;
 use Subugoe\IIIFModel\Model\Presentation\Sequence;
 use Subugoe\IIIFModel\Model\Presentation\Service;
 use Subugoe\IIIFModel\Model\Presentation\Structure;
+use Subugoe\IIIFModel\Service\PresentationServiceInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 
-class PresentationService
+class PresentationService implements PresentationServiceInterface
 {
     const CONTEXT_IMAGE = 'images';
     const CONTEXT_MANIFESTS = 'manifests';
@@ -171,7 +172,7 @@ class PresentationService
      *
      * @return Range
      */
-    public function getRange(\Subugoe\IIIFModel\Model\Document $document, string $name)
+    public function getRange(\Subugoe\IIIFModel\Model\Document $document, string $name): Range
     {
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
 

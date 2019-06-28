@@ -18,6 +18,7 @@ use Subugoe\IIIFModel\Model\Image\ImageInformation;
 use Subugoe\IIIFModel\Model\Image\Tile;
 use Subugoe\IIIFModel\Model\PhysicalStructure;
 use Subugoe\IIIFBundle\Translator\TranslatorInterface;
+use Subugoe\IIIFModel\Service\ImageServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -25,7 +26,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Image manipulation service.
  */
-class ImageService
+class ImageService implements ImageServiceInterface
 {
     /**
      * @var ImagineInterface
@@ -87,7 +88,7 @@ class ImageService
      *
      * @return string
      */
-    public function process($imageEntity)
+    public function process($imageEntity): string
     {
         $image = $this->imagine->load($this->getOriginalFileContents($imageEntity));
 
