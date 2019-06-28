@@ -3,7 +3,7 @@
 namespace tests\Subugoe\IIIFBundle\Model;
 
 use PHPUnit\Framework\TestCase;
-use Subugoe\IIIFBundle\Model\Document;
+use Subugoe\IIIFModel\Model\Document;
 
 class DocumentTest extends TestCase
 {

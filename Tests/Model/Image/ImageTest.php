@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace tests\Subugoe\IIIFBundle\Model\Image;
+namespace tests\Subugoe\IIIFModel\Model\Image;
 
 use PHPUnit\Framework\TestCase;
-use Subugoe\IIIFBundle\Model\Image\Image;
+use Subugoe\IIIFModel\Model\Image\Image;
 
 class ImageTest extends TestCase
 {

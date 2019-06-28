@@ -3,7 +3,7 @@
 namespace tests\Subugoe\IIIFBundle\Model;
 
 use PHPUnit\Framework\TestCase;
-use Subugoe\IIIFBundle\Model\LogicalStructure;
+use Subugoe\IIIFModel\Model\LogicalStructure;
 
 /**
  * Test for logical structure element.

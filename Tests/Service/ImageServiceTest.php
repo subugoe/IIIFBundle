@@ -3,7 +3,7 @@
 namespace Subugoe\IIIFBundle\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Subugoe\IIIFBundle\Model\Image\Image;
+use Subugoe\IIIFModel\Model\Image\Image;
 use Subugoe\IIIFBundle\Service\ImageService;
 
 class ImageServiceTest extends TestCase

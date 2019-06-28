@@ -2,11 +2,11 @@
 
 namespace Subugoe\IIIFBundle\Tests\Translator;
 
-use Subugoe\IIIFBundle\Model\Document;
-use Subugoe\IIIFBundle\Model\DocumentTypes;
-use Subugoe\IIIFBundle\Model\LogicalStructure;
-use Subugoe\IIIFBundle\Model\PhysicalStructure;
-use Subugoe\IIIFBundle\Model\Presentation\Collection;
+use Subugoe\IIIFModel\Model\Document;
+use Subugoe\IIIFModel\Model\DocumentTypes;
+use Subugoe\IIIFModel\Model\LogicalStructure;
+use Subugoe\IIIFModel\Model\PhysicalStructure;
+use Subugoe\IIIFModel\Model\Presentation\Collection;
 use Subugoe\IIIFBundle\Translator\TranslatorInterface;
 
 /**
