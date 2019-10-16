@@ -425,6 +425,7 @@ class PresentationService
 
         $thumbnail = new Image();
         $thumbnailService = new Service();
+        $thumbnailService->setId($this->router->generate('subugoe_iiif_manifest', ['id' => $document->getId()]));
 
         $thumbnailParameters = [
             'identifier' => $document->getPhysicalStructure(0)->getIdentifier(),
