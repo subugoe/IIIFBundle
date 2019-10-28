@@ -418,6 +418,7 @@ class PresentationService
      * @param \Subugoe\IIIFModel\Model\Document $document
      *
      * @return Image
+     * @throws IIIFException
      */
     private function getThumbnail(\Subugoe\IIIFModel\Model\Document $document): Image
     {
@@ -425,7 +426,7 @@ class PresentationService
 
         $thumbnail = new Image();
         $thumbnailService = new Service();
-        $thumbnailService->setId($this->router->generate('subugoe_iiif_manifest', ['id' => $document->getId()]));
+        $thumbnailService->setId($this->router->generate('subugoe_iiif_manifest', ['id' => $document->getId()], RouterInterface::ABSOLUTE_URL));
 
         $thumbnailParameters = [
             'identifier' => $document->getPhysicalStructure(0)->getIdentifier(),
