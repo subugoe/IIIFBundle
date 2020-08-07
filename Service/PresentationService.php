@@ -534,7 +534,7 @@ class PresentationService
             $firstLevel = $document->getLogicalStructure(0)->getLevel();
             while ($counter <= $counterEnd) {
                 $logicalStructure = $document->getLogicalStructure($counter);
-                $members = $this->getMembersOfLogicalStructure($document, $logicalStructure);
+                $canvases = $this->getMembersOfLogicalStructure($document, $logicalStructure);
 
                 $structure = new Structure();
                 $structure
@@ -544,9 +544,9 @@ class PresentationService
                     ], RouterInterface::ABSOLUTE_URL)
                     )
                     ->setLabel($logicalStructure->getLabel())
-                    ->setType('sc:Range')
+                    ->setType('sc:Canvas')
                     ->setRendering($logicalStructure->getRenderings())
-                    ->setMembers($members)
+                    ->setCanvases($canvases)
                     ->setMetadata($this->getStructureMetadata($logicalStructure));
 
                 if ($firstLevel !== $logicalStructure->getLevel()) {
