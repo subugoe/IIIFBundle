@@ -476,7 +476,7 @@ class PresentationService
             if (!empty($value)) {
                 $data = new Metadata();
                 $data
-                    ->setLabel($key)
+                    ->setLabel((string) $key)
                     ->setValue($value);
                 $metadata[] = $data;
             }
