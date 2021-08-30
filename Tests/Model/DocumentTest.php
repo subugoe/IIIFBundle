@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\Subugoe\IIIFBundle\Model;
+namespace Subugoe\IIIFBundle\Tests\Model;
 
 use PHPUnit\Framework\TestCase;
 use Subugoe\IIIFModel\Model\Document;
@@ -12,7 +12,7 @@ class DocumentTest extends TestCase
      */
     private $document;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->document = new Document();
     }

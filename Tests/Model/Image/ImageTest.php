@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace tests\Subugoe\IIIFModel\Model\Image;
+namespace Subugoe\IIIFModel\Tests\Model;
 
 use PHPUnit\Framework\TestCase;
 use Subugoe\IIIFModel\Model\Image\Image;
@@ -14,7 +14,7 @@ class ImageTest extends TestCase
      */
     protected $fixture;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->fixture = new Image();
     }

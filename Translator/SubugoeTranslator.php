@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Translator;
 
-use GuzzleHttp\Client;
-use Solarium\QueryType\Select\Result\DocumentInterface;
-use Subugoe\FindBundle\Service\SearchService;
 use Subugoe\IIIFModel\Model\Document;
+use Subugoe\IIIFModel\Model\DocumentInterface;
 use Subugoe\IIIFModel\Model\DocumentTypes;
 use Subugoe\IIIFModel\Model\LogicalStructure;
 use Subugoe\IIIFModel\Model\PhysicalStructure;
@@ -413,5 +411,10 @@ class SubugoeTranslator implements TranslatorInterface
         }
 
         return $relatedArr;
+    }
+
+    public function getDocumentBy(string $field, string $value, array $fields = []): DocumentInterface
+    {
+        // TODO: Implement getDocumentBy() method.
     }
 }

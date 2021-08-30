@@ -15,17 +15,21 @@
     "autoload": {
        "psr-4": { "Subugoe\\IIIFBundle\\": "" }
     },
+    "autoload-dev": {
+       "psr-4": { "Subugoe\\IIIFBundle\\Tests\\": "Tests/" }
+    },
     "require": {
         "ext-gd": "*",
         "ext-imagick": "*",
         "jms/serializer-bundle": "^3.0",
         "liip/imagine-bundle": "^2.0",
         "ralouphie/mimey": "^2.0",
-        "oneup/flysystem-bundle": "^3.0|^4.0",
+        "oneup/flysystem-bundle": "^4.0",
         "subugoe/iiif-model": "^0.1",
         "myclabs/php-enum": "^1.7"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^4.0"
+        "phpunit/phpunit": "^9.5",
+        "league/flysystem-memory": "^2.0"
     }
 }

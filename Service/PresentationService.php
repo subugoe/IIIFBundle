@@ -331,7 +331,9 @@ class PresentationService
                 ->setScheme($urlParts['scheme']);
 
             return $context;
-        } elseif (array_key_exists('host', $this->presentationConfiguration['http']) && $type === static::CONTEXT_MANIFESTS) {
+        }
+
+        if (array_key_exists('host', $this->presentationConfiguration['http']) && $type === static::CONTEXT_MANIFESTS) {
             $context = new RequestContext();
 
             $url = sprintf('%s://%s', $this->presentationConfiguration['http']['scheme'], $this->presentationConfiguration['http']['host']);
@@ -345,9 +347,9 @@ class PresentationService
             $context->setScheme($urlParts['scheme']);
 
             return $context;
-        } else {
-            return $this->router->getContext();
         }
+
+        return $this->router->getContext();
     }
 
     /**

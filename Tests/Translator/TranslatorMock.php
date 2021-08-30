@@ -3,6 +3,7 @@
 namespace Subugoe\IIIFBundle\Tests\Translator;
 
 use Subugoe\IIIFModel\Model\Document;
+use Subugoe\IIIFModel\Model\DocumentInterface;
 use Subugoe\IIIFModel\Model\DocumentTypes;
 use Subugoe\IIIFModel\Model\LogicalStructure;
 use Subugoe\IIIFModel\Model\PhysicalStructure;
@@ -8316,5 +8317,10 @@ class TranslatorMock implements TranslatorInterface
         $metadata['author'] = 'foo';
 
         return $metadata;
+    }
+
+    public function getDocumentBy(string $field, string $value, array $fields = []): DocumentInterface
+    {
+        // TODO: Implement getDocumentBy() method.
     }
 }

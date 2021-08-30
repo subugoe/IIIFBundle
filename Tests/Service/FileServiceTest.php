@@ -1,10 +1,9 @@
 <?php
 
-namespace Subugoe\IIIFBundle\Tests;
+namespace Subugoe\IIIFBundle\Tests\Service;
 
-use League\Flysystem\Adapter\NullAdapter;
 use League\Flysystem\Filesystem;
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\TestCase;
 use Subugoe\IIIFBundle\Service\FileService;
 
@@ -15,17 +14,17 @@ class FileServiceTest extends TestCase
      */
     protected $fileService;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        $cache = new Filesystem(new NullAdapter());
+        $cache = new Filesystem(new InMemoryFilesystemAdapter());
         $source = clone $cache;
 
         $this->fileService = new FileService($cache, $source);
     }
 
-    public function testRetrievalOfCacheFilesystemReturnsFilesystemInterface()
+    public function testRetrievalOfCacheFilesystemReturnsFilesystem()
     {
-        $this->assertInstanceOf(FilesystemInterface::class, $this->fileService->getCacheFilesystem());
-        $this->assertInstanceOf(FilesystemInterface::class, $this->fileService->getSourceFilesystem());
+        $this->assertInstanceOf(Filesystem::class, $this->fileService->getCacheFilesystem());
+        $this->assertInstanceOf(Filesystem::class, $this->fileService->getSourceFilesystem());
     }
 }

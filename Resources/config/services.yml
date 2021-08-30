@@ -12,11 +12,6 @@ services:
   Subugoe\IIIFBundle\Service\PresentationService:
     arguments:  ["@router", "%image%", "%presentation%"]
 
-  Subugoe\IIIFBundle\EventListener\UrlManipulatorListener:
-      arguments: ['%image%', '%presentation%', '@router']
-      tags:
-          - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
-
   #
   # The following definition is an example on how to create the translator
   #

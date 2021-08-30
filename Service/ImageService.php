@@ -172,17 +172,17 @@ class ImageService
         $originalImageCacheFile = sprintf('/orig/%s.%s', $image->getIdentifier(), $document->getImageFormat());
 
         if ($this->imageConfiguration['originals_caching']) {
-            if (!$cacheFilesystem->has($originalImageCacheFile)) {
+            if (!$cacheFilesystem->fileExists($originalImageCacheFile)) {
                 $sourceImage = $sourceFilesystem->read($filename);
                 $cacheFilesystem->write($originalImageCacheFile, $sourceImage);
             }
         }
 
-        if ($cacheFilesystem->has($originalImageCacheFile)) {
+        if ($cacheFilesystem->fileExists($originalImageCacheFile)) {
             return $cacheFilesystem->read($originalImageCacheFile);
         }
 
-        if (!$sourceFilesystem->has($filename)) {
+        if (!$sourceFilesystem->fileExists($filename)) {
             return false;
         }
 
@@ -237,7 +237,7 @@ class ImageService
 
         if ('square' === $region) {
             $regionSort = 'squareBased';
-        } elseif (strstr($region, 'pct')) {
+        } elseif (strpos($region, 'pct') !== false) {
             $regionSort = 'percentageBased';
         } else {
             $regionSort = 'pixelBased';
@@ -315,19 +315,19 @@ class ImageService
         }
 
         $rawSize = $size;
-        if (strstr($size, '!')) {
+        if (strpos($size, '!') !== false) {
             $size = str_replace('!', '', $size);
         }
         $regionWidth = $image->getSize()->getWidth();
         $regionHeight = $image->getSize()->getHeight();
-        if (!strstr($size, 'pct')) {
+        if (strpos($size, 'pct') === false) {
             $requestedSize = explode(',', $size);
             if (2 != count($requestedSize)) {
                 throw new BadRequestHttpException(sprintf('Bad Request: Size syntax %s is not valid.', $size));
             }
             $width = $requestedSize[0];
             $height = $requestedSize[1];
-            if (strstr($rawSize, '!')) {
+            if (strpos($rawSize, '!') !== false) {
                 $w = (($regionWidth / $regionHeight) * $height);
                 $h = (($regionHeight / $regionWidth) * $width);
             } else {
@@ -343,7 +343,7 @@ class ImageService
                 }
             }
             $image->resize(new Box($w, $h));
-        } elseif (strstr($size, 'pct')) {
+        } elseif (strpos($size, 'pct') !== false) {
             $requestedPercentage = explode(':', $size)[1];
             if (is_numeric($requestedPercentage)) {
                 $w = (($regionWidth * $requestedPercentage) / 100);
@@ -380,8 +380,8 @@ class ImageService
 
         if (isset($rotation) && !empty($rotation)) {
             $rotationDegree = str_replace('!', '', $rotation);
-            if (intval($rotationDegree) <= 360) {
-                if (strstr($rotation, '!')) {
+            if ((int)$rotationDegree <= 360) {
+                if (strpos($rotation, '!') !== false) {
                     $image->flipVertically();
                 }
                 $image->rotate(str_replace('!', '', $rotation));

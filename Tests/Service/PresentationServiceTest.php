@@ -1,6 +1,6 @@
 <?php
 
-namespace Subugoe\IIIFBundle\Tests;
+namespace Subugoe\IIIFBundle\Tests\Service;
 
 use PHPUnit\Framework\TestCase;
 use Subugoe\IIIFBundle\Service\PresentationService;
@@ -20,7 +20,7 @@ class PresentationServiceTest extends TestCase
      */
     private $translator;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $router = $this->getRouterMock();
         $this->translator = new TranslatorMock();
@@ -135,12 +135,13 @@ class PresentationServiceTest extends TestCase
     {
         $mock = $this->getMockBuilder(Router::class)
             ->disableOriginalConstructor()
-            ->setMethods(['generate', 'supports', 'exists'])
+            ->addMethods(['supports', 'exists'])
+            ->onlyMethods(['generate'])
             ->getMockForAbstractClass();
 
         $mock->expects($this->any())
             ->method('generate')
-            ->will($this->returnValue('https://gdz.sub.uni-goettingen.de'));
+            ->willReturn('https://gdz.sub.uni-goettingen.de');
 
         return $mock;
     }

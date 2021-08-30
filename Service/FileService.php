@@ -2,7 +2,7 @@
 
 namespace Subugoe\IIIFBundle\Service;
 
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\Filesystem;
 
 /**
  * Wrapper around cache and source filesystems.
@@ -10,33 +10,33 @@ use League\Flysystem\FilesystemInterface;
 class FileService
 {
     /**
-     * @var FilesystemInterface
+     * @var Filesystem
      */
     private $cacheFilesystem;
 
     /**
-     * @var FilesystemInterface
+     * @var Filesystem
      */
     private $sourceFilesystem;
 
-    public function __construct(FilesystemInterface $cacheFilesystem, FilesystemInterface $sourceFilesystem)
+    public function __construct(Filesystem $cacheFilesystem, Filesystem $sourceFilesystem)
     {
         $this->cacheFilesystem = $cacheFilesystem;
         $this->sourceFilesystem = $sourceFilesystem;
     }
 
     /**
-     * @return FilesystemInterface
+     * @return Filesystem
      */
-    public function getCacheFilesystem(): FilesystemInterface
+    public function getCacheFilesystem(): Filesystem
     {
         return $this->cacheFilesystem;
     }
 
     /**
-     * @return FilesystemInterface
+     * @return Filesystem
      */
-    public function getSourceFilesystem(): FilesystemInterface
+    public function getSourceFilesystem(): Filesystem
     {
         return $this->sourceFilesystem;
     }

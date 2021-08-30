@@ -1,6 +1,6 @@
 <?php
 
-namespace Subugoe\IIIFBundle\Tests;
+namespace Subugoe\IIIFBundle\Tests\Service;
 
 use PHPUnit\Framework\TestCase;
 use Subugoe\IIIFModel\Model\Image\Image;
@@ -13,12 +13,12 @@ class ImageServiceTest extends TestCase
      */
     protected $imageService;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $imageService = $this
             ->getMockBuilder(ImageService::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getImageHash'])
+            ->onlyMethods(['getImageHash'])
             ->getMock();
 
         $this->imageService = $imageService;
@@ -30,6 +30,6 @@ class ImageServiceTest extends TestCase
         $image->setFormat('jpg');
         $identifier = $this->imageService->getCachedFileIdentifier($image);
 
-        $this->assertSame('a/7ece429f5899ac0466fe0cb626a6f394e1c83fb2099cea96d0d9ad68a77ec3ec.jpg', $identifier);
+        $this->assertSame('a/9bbf4fcfccd6f56f1c01728cacee96e01da5379855d85da9a19d759a79349a49.jpg', $identifier);
     }
 }

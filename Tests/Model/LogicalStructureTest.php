@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\Subugoe\IIIFBundle\Model;
+namespace Subugoe\IIIFBundle\Tests\Model;
 
 use PHPUnit\Framework\TestCase;
 use Subugoe\IIIFModel\Model\LogicalStructure;
@@ -15,7 +15,7 @@ class LogicalStructureTest extends TestCase
      */
     private $logicalStructure;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->logicalStructure = new LogicalStructure();
     }
