@@ -26,12 +26,16 @@ use Subugoe\IIIFModel\Model\Presentation\ResourceData;
 use Subugoe\IIIFModel\Model\Presentation\Sequence;
 use Subugoe\IIIFModel\Model\Presentation\Service;
 use Subugoe\IIIFModel\Model\Presentation\Structure;
+use Subugoe\IIIFModel\Service\PresentationServiceInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 
 class PresentationService implements PresentationServiceInterface
 {
+    public const CONTEXT_IMAGE = 'images';
+    public const CONTEXT_MANIFESTS = 'manifests';
+
     private RouterInterface $router;
 
     private array $imageConfiguration;

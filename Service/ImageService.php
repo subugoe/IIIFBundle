@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Image manipulation service.
  */
-class ImageService implements ImageServiceInterface
+class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
 {
     private Imagine $imagine;
 
