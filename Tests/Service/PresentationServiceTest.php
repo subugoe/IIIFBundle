@@ -3,6 +3,7 @@
 namespace Subugoe\IIIFBundle\Tests\Service;
 
 use PHPUnit\Framework\TestCase;
+use Subugoe\IIIFBundle\Exception\MalformedDocumentException;
 use Subugoe\IIIFBundle\Service\PresentationService;
 use Subugoe\IIIFBundle\Tests\Translator\TranslatorMock;
 use Subugoe\IIIFBundle\Translator\TranslatorInterface;
@@ -45,10 +46,7 @@ class PresentationServiceTest extends TestCase
         $this->presentationService = new PresentationService($router, $imageConfiguration, $presentationConfiguration);
     }
 
-    /**
-     * @return array
-     */
-    public function documentProvider()
+    public function documentProvider(): array
     {
         return [
             ['PPN613131266'],
@@ -57,10 +55,7 @@ class PresentationServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function annotationProvider()
+    public function annotationProvider(): array
     {
         return [
             ['PPN613131266', false],
@@ -70,7 +65,7 @@ class PresentationServiceTest extends TestCase
         ];
     }
 
-    public function malformedDocumentProvider()
+    public function malformedDocumentProvider(): array
     {
         return [
             ['PPN599471603_0013'],
@@ -79,10 +74,7 @@ class PresentationServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function RangeProvider()
+    public function RangeProvider(): array
     {
         return [
             ['PPN613131266', 27],
@@ -92,7 +84,7 @@ class PresentationServiceTest extends TestCase
     /**
      * @dataProvider documentProvider
      */
-    public function testSequences($id)
+    public function testSequences($id): void
     {
         $document = $this->translator->getDocumentById($id);
         $this->presentationService->getManifest($document);
@@ -101,7 +93,7 @@ class PresentationServiceTest extends TestCase
     /**
      * @dataProvider rangeProvider
      */
-    public function testRanges($id, $count)
+    public function testRanges($id, $count): void
     {
         $document = $this->translator->getDocumentById($id);
         $ranges = $this->presentationService->getRange($document, 'LOG_0003');
@@ -112,7 +104,7 @@ class PresentationServiceTest extends TestCase
     /**
      * @dataProvider annotationProvider
      */
-    public function testAnnotationExistance($id, $expected)
+    public function testAnnotationExistance($id, $expected): void
     {
         $document = $this->translator->getDocumentById($id);
         $this->assertSame(!empty($document->getPhysicalStructure(0)->getAnnotation()), $expected);
@@ -120,17 +112,14 @@ class PresentationServiceTest extends TestCase
 
     /**
      * @dataProvider malformedDocumentProvider
-     * @expectedException \Subugoe\IIIFBundle\Exception\MalformedDocumentException
      */
-    public function testMalformedDocument($id)
+    public function testMalformedDocument($id): void
     {
+        $this->expectException(MalformedDocumentException::class);
         $document = $this->translator->getDocumentById($id);
         $this->presentationService->getManifest($document);
     }
 
-    /**
-     * @return \Symfony\Bundle\FrameworkBundle\Routing\Router
-     */
     protected function getRouterMock()
     {
         $mock = $this->getMockBuilder(Router::class)

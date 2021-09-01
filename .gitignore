@@ -37,6 +37,7 @@
 # PHPUnit
 /app/phpunit.xml
 /phpunit.xml
+.phpunit.result.cache
 
 # Build data
 /build/
@@ -47,5 +48,6 @@
 # Backup entities generated with doctrine:generate:entities command
 */Entity/*~
 /.php_cs.cache
+/.php-cs-fixer.cache
 composer.lock
 .phpunit.result.cache

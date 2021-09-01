@@ -46,11 +46,6 @@ class SubugoeTranslator implements TranslatorInterface
 
     /**
      * SubugoeTranslator constructor.
-     *
-     * @param SearchService                                      $searchService
-     * @param RouterInterface                                    $router
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator
-     * @param string                                             $rootDirectory
      */
     public function __construct(SearchService $searchService, RouterInterface $router, \Symfony\Component\Translation\TranslatorInterface $translator, string $rootDirectory, array $collections)
     {
@@ -62,8 +57,6 @@ class SubugoeTranslator implements TranslatorInterface
     }
 
     /**
-     * @param string $collectionId
-     *
      * @return Collection
      */
     public function getCollectionById(string $collectionId)
@@ -96,11 +89,6 @@ class SubugoeTranslator implements TranslatorInterface
         return $collections;
     }
 
-    /**
-     * @param string $id
-     *
-     * @return Document
-     */
     public function getDocumentById(string $id): Document
     {
         $document = new Document();
@@ -187,16 +175,16 @@ class SubugoeTranslator implements TranslatorInterface
         return $document;
     }
 
-    /**
-     * @param string $imageId
-     *
-     * @return Document
-     */
     public function getDocumentByImageId(string $imageId): Document
     {
         $solrDocument = $this->searchService->getDocumentBy('page_key', $imageId, ['id']);
 
         return $this->getDocumentById($solrDocument['id']);
+    }
+
+    public function getDocumentBy(string $field, string $value, array $fields = []): DocumentInterface
+    {
+        // TODO: Implement getDocumentBy() method.
     }
 
     private function getAdditionalIdentifiers(DocumentInterface $solrDocument): array
@@ -233,7 +221,7 @@ class SubugoeTranslator implements TranslatorInterface
         if (isset($solrDocument['creator'])) {
             $author = $this->getLinkedMetadata($solrDocument['creator'], true, 'facet_creator_personal');
 
-            if ($author !== []) {
+            if ([] !== $author) {
                 $metadata[$this->translateLabel('author', count($author))] = $author;
             }
         }
@@ -241,7 +229,7 @@ class SubugoeTranslator implements TranslatorInterface
         if (isset($solrDocument['place_publish'])) {
             $place = $this->getLinkedMetadata($solrDocument['place_publish'], false);
 
-            if ($place !== []) {
+            if ([] !== $place) {
                 $metadata[$this->translateLabel('place', count($place))] = $place;
             }
         }
@@ -257,7 +245,7 @@ class SubugoeTranslator implements TranslatorInterface
         if (isset($solrDocument['publisher'])) {
             $publisher = $this->getLinkedMetadata($solrDocument['publisher'], true, 'facet_publisher');
 
-            if ($publisher !== []) {
+            if ([] !== $publisher) {
                 $metadata[$this->translateLabel('publisher')] = $publisher;
             }
         }
@@ -377,7 +365,7 @@ class SubugoeTranslator implements TranslatorInterface
     {
         $metadataArr = [];
 
-        if (is_array($metadata) && $metadata !== []) {
+        if (is_array($metadata) && [] !== $metadata) {
             foreach ($metadata as $key => $value) {
                 if (!empty($value) && !empty($facet) && $link) {
                     $url = $this->router->generate('_homepage', ["filter[${key}][${facet}]" => $value], RouterInterface::ABSOLUTE_URL);
@@ -395,7 +383,7 @@ class SubugoeTranslator implements TranslatorInterface
     private function getRelated(array $catalogue): array
     {
         $relatedArr = [];
-        if (is_array($catalogue) && $catalogue !== []) {
+        if (is_array($catalogue) && [] !== $catalogue) {
             foreach ($catalogue as $value) {
                 $catalogueArr = explode(' ', trim($value));
                 $related = new Related();
@@ -411,10 +399,5 @@ class SubugoeTranslator implements TranslatorInterface
         }
 
         return $relatedArr;
-    }
-
-    public function getDocumentBy(string $field, string $value, array $fields = []): DocumentInterface
-    {
-        // TODO: Implement getDocumentBy() method.
     }
 }

@@ -2,13 +2,13 @@
 
 namespace Subugoe\IIIFBundle\Tests\Translator;
 
+use Subugoe\IIIFBundle\Translator\TranslatorInterface;
 use Subugoe\IIIFModel\Model\Document;
 use Subugoe\IIIFModel\Model\DocumentInterface;
 use Subugoe\IIIFModel\Model\DocumentTypes;
 use Subugoe\IIIFModel\Model\LogicalStructure;
 use Subugoe\IIIFModel\Model\PhysicalStructure;
 use Subugoe\IIIFModel\Model\Presentation\Collection;
-use Subugoe\IIIFBundle\Translator\TranslatorInterface;
 
 /**
  * For testing purposes.
@@ -8190,11 +8190,6 @@ class TranslatorMock implements TranslatorInterface
         ],
     ];
 
-    /**
-     * @param string $id
-     *
-     * @return Document
-     */
     public function getDocumentById(string $id): Document
     {
         $document = new Document();
@@ -8266,32 +8261,22 @@ class TranslatorMock implements TranslatorInterface
         return $document;
     }
 
-    /**
-     * @param string $imageId
-     *
-     * @return Document
-     */
     public function getDocumentByImageId(string $imageId): Document
     {
         return $this->getDocumentById($this->documents[0]);
     }
 
-    /**
-     * @param string $collectionId
-     *
-     * @return Collection
-     */
-    public function getCollectionById(string $collectionId)
+    public function getCollectionById(string $collectionId): Collection
     {
         return new Collection();
     }
 
-    /**
-     * @param string $doctype
-     *
-     * @return string
-     */
-    private function getMappedDocumentType(string $doctype)
+    public function getDocumentBy(string $field, string $value, array $fields = []): DocumentInterface
+    {
+        // TODO: Implement getDocumentBy() method.
+    }
+
+    private function getMappedDocumentType(string $doctype): string
     {
         $typeMapping = [
             'monograph' => DocumentTypes::MONOGRAPH,
@@ -8317,10 +8302,5 @@ class TranslatorMock implements TranslatorInterface
         $metadata['author'] = 'foo';
 
         return $metadata;
-    }
-
-    public function getDocumentBy(string $field, string $value, array $fields = []): DocumentInterface
-    {
-        // TODO: Implement getDocumentBy() method.
     }
 }

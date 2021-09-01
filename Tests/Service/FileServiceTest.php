@@ -9,10 +9,7 @@ use Subugoe\IIIFBundle\Service\FileService;
 
 class FileServiceTest extends TestCase
 {
-    /**
-     * @var FileService
-     */
-    protected $fileService;
+    protected FileService $fileService;
 
     protected function setUp(): void
     {
@@ -22,7 +19,7 @@ class FileServiceTest extends TestCase
         $this->fileService = new FileService($cache, $source);
     }
 
-    public function testRetrievalOfCacheFilesystemReturnsFilesystem()
+    public function testRetrievalOfCacheFilesystemReturnsFilesystem(): void
     {
         $this->assertInstanceOf(Filesystem::class, $this->fileService->getCacheFilesystem());
         $this->assertInstanceOf(Filesystem::class, $this->fileService->getSourceFilesystem());

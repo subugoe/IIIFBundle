@@ -3,8 +3,8 @@
 namespace Subugoe\IIIFBundle\Tests\Service;
 
 use PHPUnit\Framework\TestCase;
-use Subugoe\IIIFModel\Model\Image\Image;
 use Subugoe\IIIFBundle\Service\ImageService;
+use Subugoe\IIIFModel\Model\Image\Image;
 
 class ImageServiceTest extends TestCase
 {
@@ -24,7 +24,7 @@ class ImageServiceTest extends TestCase
         $this->imageService = $imageService;
     }
 
-    public function testIdentifierCalculation()
+    public function testIdentifierCalculation(): void
     {
         $image = (new Image())->setIdentifier('a');
         $image->setFormat('jpg');

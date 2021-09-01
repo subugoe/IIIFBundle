@@ -19,6 +19,7 @@
        "psr-4": { "Subugoe\\IIIFBundle\\Tests\\": "Tests/" }
     },
     "require": {
+        "php": "^7.4 || ^8.0",
         "ext-gd": "*",
         "ext-imagick": "*",
         "jms/serializer-bundle": "^3.0",

@@ -1,6 +1,6 @@
 # IIIF Bundle
 
-This is a Symfony 3.x Bundle to get an IIIF Representation out of arbitrary data structures.
+This is a Symfony 5.x Bundle to get an IIIF Representation out of arbitrary data structures.
 
 ## Example configuration
 

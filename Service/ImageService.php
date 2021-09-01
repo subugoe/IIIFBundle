@@ -11,54 +11,39 @@ use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
 use Imagine\Image\Profile;
 use Imagine\Imagick\Imagine;
+use League\Flysystem\FilesystemException;
+use Subugoe\IIIFBundle\Translator\TranslatorInterface;
 use Subugoe\IIIFModel\Model\Document;
 use Subugoe\IIIFModel\Model\Image\Dimension;
 use Subugoe\IIIFModel\Model\Image\Image;
 use Subugoe\IIIFModel\Model\Image\ImageInformation;
 use Subugoe\IIIFModel\Model\Image\Tile;
 use Subugoe\IIIFModel\Model\PhysicalStructure;
-use Subugoe\IIIFBundle\Translator\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Image manipulation service.
  */
-class ImageService
+class ImageService implements ImageServiceInterface
 {
     /**
      * @var ImagineInterface
      */
     private $imagine;
 
-    /**
-     * @var Router
-     */
-    private $router;
+    private Router $router;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private TranslatorInterface $translator;
 
-    /**
-     * @var FileService
-     */
-    private $fileService;
+    private FileService $fileService;
 
-    /**
-     * @var array
-     */
-    private $imageConfiguration;
+    private array $imageConfiguration;
 
     /**
      * ImageService constructor.
-     *
-     * @param Imagine             $imagine
-     * @param Router              $router
-     * @param TranslatorInterface $translator
-     * @param FileService         $fileService
      */
     public function __construct(
         Imagine $imagine,
@@ -72,7 +57,7 @@ class ImageService
         $this->fileService = $fileService;
     }
 
-    public function setImageConfiguration(array $imageConfiguration)
+    public function setImageConfiguration(array $imageConfiguration): void
     {
         $this->imageConfiguration = $imageConfiguration;
     }
@@ -82,12 +67,7 @@ class ImageService
         return $this->imageConfiguration;
     }
 
-    /**
-     * @param \Subugoe\IIIFModel\Model\Image\Image $imageEntity
-     *
-     * @return string
-     */
-    public function process($imageEntity)
+    public function process(Image $imageEntity): string
     {
         $image = $this->imagine->load($this->getOriginalFileContents($imageEntity));
 
@@ -103,21 +83,15 @@ class ImageService
         return $image->get($imageEntity->getFormat());
     }
 
-    /**
-     * @param string $identifier
-     *
-     * @return ImageInformation
-     */
     public function getImageJsonInformation(string $identifier, $originalImage): ImageInformation
     {
-        $imageEntity = new \Subugoe\IIIFModel\Model\Image\Image();
+        $imageEntity = new Image();
         $imageEntity->setIdentifier($identifier);
 
         try {
             $image = $this->imagine->load($originalImage);
         } catch (\Exception $e) {
-            throw new NotFoundHttpException(sprintf('Image with identifier %s not found',
-                $imageEntity->getIdentifier()));
+            throw new NotFoundHttpException(sprintf('Image with identifier %s not found', $imageEntity->getIdentifier()));
         }
 
         $ppi = $image->getImagick()->getImageResolution();
@@ -145,7 +119,7 @@ class ImageService
         $imageInformation = new ImageInformation();
         $imageInformation
             ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $identifier],
-                Router::ABSOLUTE_URL))
+                UrlGeneratorInterface::ABSOLUTE_URL))
             ->setPpi($ppi)
             ->setWidth($originalSize->getWidth())
             ->setHeight($originalSize->getHeight())
@@ -158,11 +132,11 @@ class ImageService
     /**
      * Stores the original image in a cache file.
      *
-     * @param \Subugoe\IIIFModel\Model\Image\Image $image
+     * @return false|string
      *
-     * @return \Psr\Http\Message\StreamInterface|string
+     * @throws FilesystemException
      */
-    public function getOriginalFileContents(\Subugoe\IIIFModel\Model\Image\Image $image)
+    public function getOriginalFileContents(Image $image)
     {
         $document = $this->translator->getDocumentByImageId($image->getIdentifier());
         $filename = $this->getFilename($document, $image);
@@ -171,11 +145,9 @@ class ImageService
         $cacheFilesystem = $this->fileService->getCacheFilesystem();
         $originalImageCacheFile = sprintf('/orig/%s.%s', $image->getIdentifier(), $document->getImageFormat());
 
-        if ($this->imageConfiguration['originals_caching']) {
-            if (!$cacheFilesystem->fileExists($originalImageCacheFile)) {
-                $sourceImage = $sourceFilesystem->read($filename);
-                $cacheFilesystem->write($originalImageCacheFile, $sourceImage);
-            }
+        if ($this->imageConfiguration['originals_caching'] && !$cacheFilesystem->fileExists($originalImageCacheFile)) {
+            $sourceImage = $sourceFilesystem->read($filename);
+            $cacheFilesystem->write($originalImageCacheFile, $sourceImage);
         }
 
         if ($cacheFilesystem->fileExists($originalImageCacheFile)) {
@@ -191,7 +163,7 @@ class ImageService
 
     public function getCachedFileIdentifier(Image $image): string
     {
-        $cachedFile = vsprintf(
+        return vsprintf(
             '%s/%s.%s',
             [
                 $image->getIdentifier(),
@@ -199,8 +171,6 @@ class ImageService
                 $image->getFormat(),
             ]
         );
-
-        return $cachedFile;
     }
 
     private function getImageHash(Image $image): string
@@ -224,12 +194,12 @@ class ImageService
      *
      * @return ImageInterface
      */
-    private function getRegion(string $region, ImageInterface $image): ImageInterface
+    private function getRegion(string $region, ImageInterface $image): void
     {
         $region = trim($region);
 
         if ('full' === $region) {
-            return $image;
+            return;
         }
 
         $sourceImageWidth = $image->getSize()->getWidth();
@@ -237,7 +207,7 @@ class ImageService
 
         if ('square' === $region) {
             $regionSort = 'squareBased';
-        } elseif (strpos($region, 'pct') !== false) {
+        } elseif (false !== strpos($region, 'pct')) {
             $regionSort = 'percentageBased';
         } else {
             $regionSort = 'pixelBased';
@@ -285,8 +255,6 @@ class ImageService
         }
 
         $image->crop(new Point($x, $y), new Box($w, $h));
-
-        return $image;
     }
 
     /*
@@ -308,26 +276,26 @@ class ImageService
      *
      * @return ImageInterface
      */
-    private function getSize(string $size, ImageInterface $image): ImageInterface
+    private function getSize(string $size, ImageInterface $image): void
     {
         if ('full' === $size || 'max' === $size) {
-            return $image;
+            return;
         }
 
         $rawSize = $size;
-        if (strpos($size, '!') !== false) {
+        if (false !== strpos($size, '!')) {
             $size = str_replace('!', '', $size);
         }
         $regionWidth = $image->getSize()->getWidth();
         $regionHeight = $image->getSize()->getHeight();
-        if (strpos($size, 'pct') === false) {
+        if (false === strpos($size, 'pct')) {
             $requestedSize = explode(',', $size);
             if (2 != count($requestedSize)) {
                 throw new BadRequestHttpException(sprintf('Bad Request: Size syntax %s is not valid.', $size));
             }
             $width = $requestedSize[0];
             $height = $requestedSize[1];
-            if (strpos($rawSize, '!') !== false) {
+            if (false !== strpos($rawSize, '!')) {
                 $w = (($regionWidth / $regionHeight) * $height);
                 $h = (($regionHeight / $regionWidth) * $width);
             } else {
@@ -343,7 +311,7 @@ class ImageService
                 }
             }
             $image->resize(new Box($w, $h));
-        } elseif (strpos($size, 'pct') !== false) {
+        } elseif (false !== strpos($size, 'pct')) {
             $requestedPercentage = explode(':', $size)[1];
             if (is_numeric($requestedPercentage)) {
                 $w = (($regionWidth * $requestedPercentage) / 100);
@@ -353,8 +321,6 @@ class ImageService
                 throw new BadRequestHttpException(sprintf('Bad Request: Size syntax %s is not valid.', $size));
             }
         }
-
-        return $image;
     }
 
     /*
@@ -372,16 +338,16 @@ class ImageService
      *
      * @return ImageInterface
      */
-    private function getRotation(string $rotation, ImageInterface $image): ImageInterface
+    private function getRotation(string $rotation, ImageInterface $image): void
     {
         if (0 === (int) $rotation) {
-            return $image;
+            return;
         }
 
-        if (isset($rotation) && !empty($rotation)) {
+        if (!empty($rotation)) {
             $rotationDegree = str_replace('!', '', $rotation);
-            if ((int)$rotationDegree <= 360) {
-                if (strpos($rotation, '!') !== false) {
+            if ((int) $rotationDegree <= 360) {
+                if (false !== strpos($rotation, '!')) {
                     $image->flipVertically();
                 }
                 $image->rotate(str_replace('!', '', $rotation));
@@ -389,8 +355,6 @@ class ImageService
                 throw new BadRequestHttpException(sprintf('Bad Request: Rotation argument %s is not between 0 and 360.', $rotationDegree));
             }
         }
-
-        return $image;
     }
 
     /*
@@ -411,10 +375,10 @@ class ImageService
      *
      * @return ImageInterface
      */
-    private function getQuality(string $quality, ImageInterface $image): ImageInterface
+    private function getQuality(string $quality, ImageInterface $image): void
     {
         if ('default' === $quality || 'color' === $quality) {
-            return $image;
+            return;
         }
 
         switch ($quality) {
@@ -430,15 +394,8 @@ class ImageService
             default:
                 throw new BadRequestHttpException(sprintf('Bad Request: %s is not a supported quality.', $quality));
         }
-
-        return $image;
     }
 
-    /**
-     * @param BoxInterface $originalSize
-     *
-     * @return array
-     */
     private function getImageSizes(BoxInterface $originalSize): array
     {
         $sizes = [];
@@ -456,11 +413,6 @@ class ImageService
         return array_reverse($sizes);
     }
 
-    /**
-     * @param array $sizeList
-     *
-     * @return array
-     */
     private function getTileInformation(array $sizeList): array
     {
         $tiles = [];
@@ -475,7 +427,7 @@ class ImageService
         return $tiles;
     }
 
-    private function getFilename(Document $document, \Subugoe\IIIFModel\Model\Image\Image $image): string
+    private function getFilename(Document $document, Image $image): string
     {
         /** @var PhysicalStructure $physicalStructure */
         foreach ($document->getPhysicalStructures() as $physicalStructure) {

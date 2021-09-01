@@ -10,17 +10,14 @@ use Subugoe\IIIFModel\Model\LogicalStructure;
  */
 class LogicalStructureTest extends TestCase
 {
-    /**
-     * @var LogicalStructure
-     */
-    private $logicalStructure;
+    private LogicalStructure $logicalStructure;
 
     protected function setUp(): void
     {
         $this->logicalStructure = new LogicalStructure();
     }
 
-    public function testSettingTheIdSetsTheId()
+    public function testSettingTheIdSetsTheId(): void
     {
         $id = 'guzu';
 
@@ -28,7 +25,7 @@ class LogicalStructureTest extends TestCase
         $this->assertSame($id, $this->logicalStructure->getId());
     }
 
-    public function testSettingTheLabelSetsTheLabel()
+    public function testSettingTheLabelSetsTheLabel(): void
     {
         $label = 'guzu';
 
@@ -36,7 +33,7 @@ class LogicalStructureTest extends TestCase
         $this->assertSame($label, $this->logicalStructure->getLabel());
     }
 
-    public function testSettingTheTypeReturnsTheType()
+    public function testSettingTheTypeReturnsTheType(): void
     {
         $type = 'guzu';
 
@@ -44,7 +41,7 @@ class LogicalStructureTest extends TestCase
         $this->assertSame($type, $this->logicalStructure->getType());
     }
 
-    public function testStartPageSetsTheStartPage()
+    public function testStartPageSetsTheStartPage(): void
     {
         $startPage = 100;
 
@@ -52,7 +49,7 @@ class LogicalStructureTest extends TestCase
         $this->assertSame($startPage, $this->logicalStructure->getStartPage());
     }
 
-    public function testEndPageSetsTheStartPage()
+    public function testEndPageSetsTheStartPage(): void
     {
         $endPage = 100;
 
@@ -60,7 +57,7 @@ class LogicalStructureTest extends TestCase
         $this->assertSame($endPage, $this->logicalStructure->getEndPage());
     }
 
-    public function testSettingTheLevelSetsTheLabel()
+    public function testSettingTheLevelSetsTheLabel(): void
     {
         $level = 100;
 
