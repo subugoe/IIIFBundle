@@ -10,7 +10,7 @@ services:
     arguments:  ["@cache_filesystem", "@source_filesystem"]
 
   Subugoe\IIIFBundle\Service\PresentationService:
-    arguments:  ["@router", "%image%", "%presentation%"]
+    arguments:  ["@router", "%image%", "%presentation%", '@Subugoe\IIIFBundle\Service\FileService']
 
   #
   # The following definition is an example on how to create the translator
