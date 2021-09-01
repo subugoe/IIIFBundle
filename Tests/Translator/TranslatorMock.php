@@ -15,7 +15,7 @@ use Subugoe\IIIFModel\Model\Presentation\Collection;
  */
 class TranslatorMock implements TranslatorInterface
 {
-    private $documents = [
+    private array $documents = [
         'PPN613131266' => [
             'image_format' => 'jpg',
             'iswork' => true,
@@ -305,7 +305,7 @@ class TranslatorMock implements TranslatorInterface
             'relateditem_note' => [' '],
             'relateditem_type' => ['series'],
             'mods' => '<mods:mods xmlns:mods="http://www.loc.gov/mods/v3"><mods:classification authority="ZVDD">VD17-nova</mods:classification><mods:recordInfo><mods:recordIdentifier source="gbv-ppn">PPN613131266</mods:recordIdentifier></mods:recordInfo><mods:identifier type="vd17">VD17 7:705635K</mods:identifier><mods:identifier type="PPNanalog">PPN581166787</mods:identifier><mods:titleInfo><mods:title>Disputatio Theologica De Ministerio Ecclesiastico</mods:title></mods:titleInfo><mods:genre authority="vd17" type="class">Dissertation:theol.</mods:genre><mods:language><mods:languageTerm authority="iso639-2b" type="code">la</mods:languageTerm></mods:language><mods:originInfo><mods:place><mods:placeTerm type="text">Kiloni[i]</mods:placeTerm></mods:place><mods:dateIssued encoding="w3cdtf" keyDate="yes">1676</mods:dateIssued><mods:publisher>Reumannus</mods:publisher></mods:originInfo><mods:relatedItem type="series"><mods:titleInfo><mods:title>VD17-nova</mods:title></mods:titleInfo></mods:relatedItem><mods:name type="personal"><mods:role><mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm></mods:role><mods:namePart type="family">Kortholt</mods:namePart><mods:namePart type="given">Christianus</mods:namePart><mods:displayForm>Kortholt, Christianus</mods:displayForm></mods:name><mods:name type="personal"><mods:role><mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm></mods:role><mods:namePart type="family">Bilsius</mods:namePart><mods:namePart type="given">Johannes</mods:namePart><mods:displayForm>Bilsius, Johannes</mods:displayForm></mods:name><mods:physicalDescription><mods:extent>[2] Bl., 36 S</mods:extent></mods:physicalDescription></mods:mods>',
-            '_version_' => 1562841272364826624,
+            '_version_' => 1_562_841_272_364_826_624,
             'uid' => '0bea9a4a-8f9e-4f32-93f8-8cc102ad6285',
             'date_modified' => '2017-03-25T11:33:02.073Z',
             'date_indexed' => '2017-03-25T11:33:02.073Z',

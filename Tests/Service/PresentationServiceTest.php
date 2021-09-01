@@ -6,20 +6,13 @@ use PHPUnit\Framework\TestCase;
 use Subugoe\IIIFBundle\Exception\MalformedDocumentException;
 use Subugoe\IIIFBundle\Service\PresentationService;
 use Subugoe\IIIFBundle\Tests\Translator\TranslatorMock;
-use Subugoe\IIIFBundle\Translator\TranslatorInterface;
 use Symfony\Component\Routing\Router;
 
 class PresentationServiceTest extends TestCase
 {
-    /**
-     * @var PresentationService
-     */
-    private $presentationService;
+    private \Subugoe\IIIFBundle\Service\PresentationService $presentationService;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Subugoe\IIIFBundle\Tests\Translator\TranslatorMock $translator;
 
     protected function setUp(): void
     {

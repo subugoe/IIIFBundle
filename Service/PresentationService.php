@@ -270,7 +270,7 @@ class PresentationService implements PresentationServiceInterface
     private function setRoutingContext(string $type): RequestContext
     {
         if ($type !== static::CONTEXT_MANIFESTS && $type !== static::CONTEXT_IMAGE) {
-            throw new IIIFException(sprintf('Request type %s not defined', $type), 1497438291);
+            throw new IIIFException(sprintf('Request type %s not defined', $type), 1_497_438_291);
         }
 
         if (array_key_exists('host', $this->imageConfiguration['http']) && $type === static::CONTEXT_IMAGE) {
@@ -320,7 +320,7 @@ class PresentationService implements PresentationServiceInterface
             ++$position;
         }
 
-        throw new InvalidArgumentException(sprintf('Page with label %s not found in document %s', $identifier, $document->getId()), 1490689215);
+        throw new InvalidArgumentException(sprintf('Page with label %s not found in document %s', $identifier, $document->getId()), 1_490_689_215);
     }
 
     /**
@@ -345,7 +345,10 @@ class PresentationService implements PresentationServiceInterface
         return [];
     }
 
-    private function getNavDate(\Subugoe\IIIFModel\Model\Document $document): DateTime
+    /**
+     * @return \DateTime|\DateTimeImmutable
+     */
+    private function getNavDate(\Subugoe\IIIFModel\Model\Document $document): \DateTimeInterface
     {
         return DateTime::createFromFormat('Y-m-d H:i:s', vsprintf('%d-%s-%s %s:%s:%s',
             [
@@ -507,7 +510,7 @@ class PresentationService implements PresentationServiceInterface
             }
         }
 
-        throw new DataException(vsprintf('Parent structure at position %d with level %d and parent level %d not defined', [$position, $level, $parentLevel]), 1494506264);
+        throw new DataException(vsprintf('Parent structure at position %d with level %d and parent level %d not defined', [$position, $level, $parentLevel]), 1_494_506_264);
     }
 
     /**

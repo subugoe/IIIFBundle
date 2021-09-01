@@ -7,7 +7,6 @@ namespace Subugoe\IIIFBundle\Service;
 use Imagine\Image\Box;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\ImageInterface;
-use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
 use Imagine\Image\Profile;
 use Imagine\Imagick\Imagine;
@@ -29,10 +28,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class ImageService implements ImageServiceInterface
 {
-    /**
-     * @var ImagineInterface
-     */
-    private $imagine;
+    private Imagine $imagine;
 
     private Router $router;
 
@@ -299,16 +295,8 @@ class ImageService implements ImageServiceInterface
                 $w = (($regionWidth / $regionHeight) * $height);
                 $h = (($regionHeight / $regionWidth) * $width);
             } else {
-                if (!empty($width)) {
-                    $w = $width;
-                } else {
-                    $w = (($regionWidth / $regionHeight) * $height);
-                }
-                if (!empty($height)) {
-                    $h = $height;
-                } else {
-                    $h = (($regionHeight / $regionWidth) * $width);
-                }
+                $w = empty($width) ? ($regionWidth / $regionHeight) * $height : $width;
+                $h = empty($height) ? ($regionHeight / $regionWidth) * $width : $height;
             }
             $image->resize(new Box($w, $h));
         } elseif (false !== strpos($size, 'pct')) {

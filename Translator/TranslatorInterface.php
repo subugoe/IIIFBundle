@@ -15,8 +15,5 @@ interface TranslatorInterface
 
     public function getDocumentByImageId(string $imageId): DocumentInterface;
 
-    /**
-     * @return Collection
-     */
-    public function getCollectionById(string $collectionId);
+    public function getCollectionById(string $collectionId): Collection;
 }

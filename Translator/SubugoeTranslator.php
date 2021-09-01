@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Translator;
 
+use Subugoe\FindBundle\Service\SearchService;
 use Subugoe\IIIFModel\Model\Document;
 use Subugoe\IIIFModel\Model\DocumentInterface;
 use Subugoe\IIIFModel\Model\DocumentTypes;
@@ -19,34 +20,19 @@ use Symfony\Component\Routing\RouterInterface;
 
 class SubugoeTranslator implements TranslatorInterface
 {
-    /**
-     * @var SearchService
-     */
-    private $searchService;
+    private SearchService $searchService;
 
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private \Symfony\Component\Routing\RouterInterface $router;
 
     /**
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
     private $translator;
 
-    /**
-     * @var string
-     */
-    private $rootDirectory;
+    private string $rootDirectory;
 
-    /**
-     * @var array
-     */
-    private $collections;
+    private array $collections;
 
-    /**
-     * SubugoeTranslator constructor.
-     */
     public function __construct(SearchService $searchService, RouterInterface $router, \Symfony\Component\Translation\TranslatorInterface $translator, string $rootDirectory, array $collections)
     {
         $this->searchService = $searchService;
@@ -56,10 +42,7 @@ class SubugoeTranslator implements TranslatorInterface
         $this->collections = $collections;
     }
 
-    /**
-     * @return Collection
-     */
-    public function getCollectionById(string $collectionId)
+    public function getCollectionById(string $collectionId): Collection
     {
         $collection = new Collection();
         $collection
@@ -117,7 +100,7 @@ class SubugoeTranslator implements TranslatorInterface
         for ($i = 0; $i < $numberOfLogicalStructures; ++$i) {
             $structure = new LogicalStructure();
 
-            $label = (!empty(trim($solrDocument['log_label'][$i]))) ? $solrDocument['log_label'][$i] : $this->translator->trans($solrDocument['log_type'][$i]);
+            $label = (empty(trim($solrDocument['log_label'][$i]))) ? $this->translator->trans($solrDocument['log_type'][$i]) : $solrDocument['log_label'][$i];
 
             $structure
                 ->setId($solrDocument['log_id'][$i])
@@ -234,7 +217,7 @@ class SubugoeTranslator implements TranslatorInterface
             }
         }
 
-        if (count($document->getParents()) > 0) {
+        if ([] !== $document->getParents()) {
             $metadata[$this->translateLabel('parent_work')] = sprintf('<a href="%s">%s</a>',
                 $this->router->generate('_volumes', ['id' => $document->getParents()[0]->getId()], RouterInterface::ABSOLUTE_URL),
                 $document->getParents()[0]->getTitle()[0]);
