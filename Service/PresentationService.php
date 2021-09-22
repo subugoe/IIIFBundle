@@ -7,6 +7,7 @@ namespace Subugoe\IIIFBundle\Service;
 use DateTime;
 use Exception;
 use InvalidArgumentException;
+use Mimey\MimeTypes;
 use Subugoe\IIIFBundle\Exception\DataException;
 use Subugoe\IIIFBundle\Exception\IIIFException;
 use Subugoe\IIIFBundle\Exception\MalformedDocumentException;
@@ -26,11 +27,9 @@ use Subugoe\IIIFModel\Model\Presentation\Sequence;
 use Subugoe\IIIFModel\Model\Presentation\Service;
 use Subugoe\IIIFModel\Model\Presentation\Structure;
 use Subugoe\IIIFModel\Service\PresentationServiceInterface;
-use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Contracts\Cache\CacheInterface;
 
 class PresentationService implements PresentationServiceInterface
 {
@@ -41,26 +40,22 @@ class PresentationService implements PresentationServiceInterface
     private const DEFAULT_WIDTH = 300;
 
     private RouterInterface $router;
-    private FileService $fileService;
-    private CacheInterface $cache;
+
     private array $imageConfiguration;
+
     private array $presentationConfiguration;
 
-    public function __construct(RouterInterface $router, FileService $fileService, CacheInterface $cache)
+    private FileServiceInterface $fileService;
+
+    /**
+     * PresentationService constructor.
+     */
+    public function __construct(RouterInterface $router, array $imageConfiguration, array $presentationConfiguration, FileServiceInterface $fileService)
     {
         $this->router = $router;
-        $this->fileService = $fileService;
-        $this->cache = $cache;
-    }
-
-    public function setImageConfiguration(array $imageConfiguration): void
-    {
         $this->imageConfiguration = $imageConfiguration;
-    }
-
-    public function setPresentationConfiguration(array $presentationConfiguration): void
-    {
         $this->presentationConfiguration = $presentationConfiguration;
+        $this->fileService = $fileService;
     }
 
     /**
@@ -243,7 +238,8 @@ class PresentationService implements PresentationServiceInterface
         $image = new GenericResource();
         $resource = new ResourceData();
         $mimes = new MimeTypes();
-        $format = $mimes->guessMimeType($document->getImageFormat()) ?: '';
+
+        $format = $mimes->getMimeType($document->getImageFormat()) ?: '';
 
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_IMAGE));
 
@@ -306,11 +302,8 @@ class PresentationService implements PresentationServiceInterface
 
     private function getImageDimenstions(string $filename): array
     {
-        $identifier = 'iiifbundle-imagedimension-%s'.md5($filename);
-        $dimensions = $this->cache->get($identifier, function() use ($filename){
-            $image = $this->fileService->getSourceFilesystem()->read($filename);
-            return getimagesizefromstring($image);
-        });
+        $image = $this->fileService->getSourceFilesystem()->read($filename);
+        $dimensions = getimagesizefromstring($image);
         /*
          * @see https://www.php.net/manual/de/function.getimagesize.php#refsect1-function.getimagesize-returnvalues
          * 0 = width

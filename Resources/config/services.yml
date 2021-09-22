@@ -10,15 +10,8 @@ services:
     arguments:  ["@cache_filesystem", "@source_filesystem"]
 
   Subugoe\IIIFBundle\Service\PresentationService:
-    autowire: true
-    autoconfigure: true
-    calls:
-      - method: 'setImageConfiguration'
-        arguments:
-          - '%image%'
-      - method: 'setPresentationConfiguration'
-        arguments:
-          - '%presentation%'
+    arguments:  ["@router", "%image%", "%presentation%", '@Subugoe\IIIFBundle\Service\FileService']
+
   #
   # The following definition is an example on how to create the translator
   #
