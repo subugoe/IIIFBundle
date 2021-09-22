@@ -30,6 +30,7 @@ use Subugoe\IIIFModel\Service\PresentationServiceInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class PresentationService implements PresentationServiceInterface
 {
@@ -40,7 +41,7 @@ class PresentationService implements PresentationServiceInterface
     private const DEFAULT_WIDTH = 300;
 
     private RouterInterface $router;
-
+    private CacheInterface $cache;
     private array $imageConfiguration;
 
     private array $presentationConfiguration;
@@ -50,12 +51,13 @@ class PresentationService implements PresentationServiceInterface
     /**
      * PresentationService constructor.
      */
-    public function __construct(RouterInterface $router, array $imageConfiguration, array $presentationConfiguration, FileServiceInterface $fileService)
+    public function __construct(RouterInterface $router, array $imageConfiguration, array $presentationConfiguration, FileServiceInterface $fileService, CacheInterface $cache)
     {
         $this->router = $router;
         $this->imageConfiguration = $imageConfiguration;
         $this->presentationConfiguration = $presentationConfiguration;
         $this->fileService = $fileService;
+        $this->cache = $cache;
     }
 
     /**
@@ -300,16 +302,25 @@ class PresentationService implements PresentationServiceInterface
         return $sequence;
     }
 
+    /**
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
     private function getImageDimenstions(string $filename): array
     {
-        $image = $this->fileService->getSourceFilesystem()->read($filename);
-        $dimensions = getimagesizefromstring($image);
+        $identifier = sprintf('iiibundle-imagedimension-%s', md5($filename));
+
+        // This needs to be cached, as retrieving the image and calculating everything
+        // each time is very expensive.
+        $dimensions = $this->cache->get($identifier, function () use ($filename) {
+            $image = $this->fileService->getSourceFilesystem()->read($filename);
+            return getimagesizefromstring($image);
+        });
+
         /*
          * @see https://www.php.net/manual/de/function.getimagesize.php#refsect1-function.getimagesize-returnvalues
          * 0 = width
          * 1 = height
          */
-
         return [$dimensions[0], $dimensions[1]];
     }
 
