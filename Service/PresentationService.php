@@ -36,26 +36,20 @@ class PresentationService implements PresentationServiceInterface
     public const CONTEXT_IMAGE = 'images';
     public const CONTEXT_MANIFESTS = 'manifests';
 
-    private const DEFAULT_HEIGHT = 400;
-    private const DEFAULT_WIDTH = 300;
-
     private RouterInterface $router;
 
     private array $imageConfiguration;
 
     private array $presentationConfiguration;
 
-    private FileServiceInterface $fileService;
-
     /**
      * PresentationService constructor.
      */
-    public function __construct(RouterInterface $router, array $imageConfiguration, array $presentationConfiguration, FileServiceInterface $fileService)
+    public function __construct(RouterInterface $router, array $imageConfiguration, array $presentationConfiguration)
     {
         $this->router = $router;
         $this->imageConfiguration = $imageConfiguration;
         $this->presentationConfiguration = $presentationConfiguration;
-        $this->fileService = $fileService;
     }
 
     /**
@@ -172,12 +166,11 @@ class PresentationService implements PresentationServiceInterface
     public function getCanvas(\Subugoe\IIIFModel\Model\Document $document, string $canvasId, int $physicalStructureId = -1): Canvas
     {
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
-        $physicalStructure = $document->getPhysicalStructure($physicalStructureId);
 
         $images = $this->getImages($document, $canvasId);
 
         if (-1 !== $physicalStructureId) {
-            $label = $physicalStructure->getLabel();
+            $label = $document->getPhysicalStructure($physicalStructureId)->getLabel();
         } else {
             $label = $this->getLabelForCanvas($document, $canvasId);
         }
@@ -190,31 +183,17 @@ class PresentationService implements PresentationServiceInterface
             ],
                 UrlGeneratorInterface::ABSOLUTE_URL))
             ->setLabel($label)
+            ->setHeight(400)
+            ->setWidth(300)
             ->setImages($images);
 
-        if (!empty($physicalStructure->getAnnotation())) {
+        if (!empty($document->getPhysicalStructure($physicalStructureId)->getAnnotation())) {
             $annotationList = new AnnotationList();
             $annotationList
                 ->setId($this->router->generate('subugoe_iiif_annotation-list', ['id' => $document->getId(), 'name' => $canvasId], UrlGeneratorInterface::ABSOLUTE_URL))
                 ->setType('sc:AnnotationList');
 
             $canvas->setOtherContent([$annotationList]);
-        }
-
-        if ($physicalStructure->getFilename()) {
-            $dimensions = $this->getImageDimenstions($physicalStructure->getFilename());
-            /*
-             * @see https://www.php.net/manual/de/function.getimagesize.php#refsect1-function.getimagesize-returnvalues
-             * 0 = width
-             * 1 = height
-             */
-            $canvas
-                ->setWidth($dimensions[0])
-                ->setHeight($dimensions[1]);
-        } else {
-            $canvas
-                ->setHeight(self::DEFAULT_HEIGHT)
-                ->setWidth(self::DEFAULT_WIDTH);
         }
 
         return $canvas;
@@ -233,7 +212,6 @@ class PresentationService implements PresentationServiceInterface
             'quality' => 'default',
             'format' => $document->getImageFormat(),
         ];
-        $imageFileName = $this->getFilenameFromImageId($document, $imageId);
 
         $image = new GenericResource();
         $resource = new ResourceData();
@@ -252,19 +230,9 @@ class PresentationService implements PresentationServiceInterface
         $resource
             ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], UrlGeneratorInterface::ABSOLUTE_URL))
             ->setFormat($format)
+            ->setWidth(300)
+            ->setHeight(400)
             ->setService($imageService);
-
-        if ('' !== $imageFileName) {
-            $dimensions = $this->getImageDimenstions($imageFileName);
-
-            $resource
-                ->setWidth($dimensions[0])
-                ->setHeight($dimensions[1]);
-        } else {
-            $resource
-            ->setWidth(self::DEFAULT_WIDTH)
-            ->setHeight(self::DEFAULT_HEIGHT);
-        }
 
         $image
             ->setId($this->router->generate('subugoe_iiif_imagepresentation', ['id' => $document->getId(), 'name' => $imageId], UrlGeneratorInterface::ABSOLUTE_URL))
@@ -298,32 +266,6 @@ class PresentationService implements PresentationServiceInterface
                 UrlGeneratorInterface::ABSOLUTE_URL));
 
         return $sequence;
-    }
-
-    private function getImageDimenstions(string $filename): array
-    {
-        $image = $this->fileService->getSourceFilesystem()->read($filename);
-        $dimensions = getimagesizefromstring($image);
-        /*
-         * @see https://www.php.net/manual/de/function.getimagesize.php#refsect1-function.getimagesize-returnvalues
-         * 0 = width
-         * 1 = height
-         */
-
-        return [$dimensions[0], $dimensions[1]];
-    }
-
-    private function getFilenameFromImageId(
-            \Subugoe\IIIFModel\Model\Document $document, string $imageId): string
-    {
-        /** @var PhysicalStructure $physicalStructure */
-        foreach ($document->getPhysicalStructures() as $physicalStructure) {
-            if ($imageId === $physicalStructure->getIdentifier()) {
-                return $physicalStructure->getFilename();
-            }
-        }
-
-        return '';
     }
 
     /**
