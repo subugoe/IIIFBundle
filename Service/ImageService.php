@@ -424,6 +424,6 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
             }
         }
 
-        return $image->getIdentifier().$image->getFormat();
+        return $image->getIdentifier().'.'.$image->getFormat();
     }
 }
