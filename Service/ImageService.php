@@ -18,10 +18,10 @@ use Subugoe\IIIFModel\Model\Image\Image;
 use Subugoe\IIIFModel\Model\Image\ImageInformation;
 use Subugoe\IIIFModel\Model\Image\Tile;
 use Subugoe\IIIFModel\Model\PhysicalStructure;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Image manipulation service.
@@ -30,7 +30,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
 {
     private Imagine $imagine;
 
-    private Router $router;
+    private RouterInterface $router;
 
     private TranslatorInterface $translator;
 
@@ -43,7 +43,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
      */
     public function __construct(
         Imagine $imagine,
-        Router $router,
+        RouterInterface $router,
         TranslatorInterface $translator,
         FileService $fileService
     ) {
@@ -415,7 +415,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
         return $tiles;
     }
 
-    private function getFilename(Document $document, Image $image): string
+    public function getFilename(Document $document, Image $image): string
     {
         /** @var PhysicalStructure $physicalStructure */
         foreach ($document->getPhysicalStructures() as $physicalStructure) {
