@@ -28,14 +28,11 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
 {
-    private FileService $fileService;
-
-    private array $imageConfiguration = [];
-    private Imagine $imagine;
-
-    private RouterInterface $router;
-
-    private TranslatorInterface $translator;
+    protected FileService $fileService;
+    protected array $imageConfiguration = [];
+    protected Imagine $imagine;
+    protected RouterInterface $router;
+    protected TranslatorInterface $translator;
 
     /**
      * ImageService constructor.
@@ -180,12 +177,12 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
         $this->imageConfiguration = $imageConfiguration;
     }
 
-    private function getImageHash(Image $image): string
+    protected function getImageHash(Image $image): string
     {
         return hash('sha256', serialize($image));
     }
 
-    private function getImageSizes(BoxInterface $originalSize): array
+    protected function getImageSizes(BoxInterface $originalSize): array
     {
         $sizes = [];
         $sizeList = $this->imageConfiguration['zoom_levels'];
@@ -220,7 +217,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
      *
      * @return ImageInterface
      */
-    private function getQuality(string $quality, ImageInterface $image): void
+    protected function getQuality(string $quality, ImageInterface $image): void
     {
         if ('default' === $quality || 'color' === $quality) {
             return;
@@ -257,7 +254,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
      *
      * @return ImageInterface
      */
-    private function getRegion(string $region, ImageInterface $image): void
+    protected function getRegion(string $region, ImageInterface $image): void
     {
         $region = trim($region);
 
@@ -335,7 +332,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
      *
      * @return ImageInterface
      */
-    private function getRotation(string $rotation, ImageInterface $image): void
+    protected function getRotation(string $rotation, ImageInterface $image): void
     {
         if (0 === (int) $rotation) {
             return;
@@ -373,7 +370,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
      *
      * @return ImageInterface
      */
-    private function getSize(string $size, ImageInterface $image): void
+    protected function getSize(string $size, ImageInterface $image): void
     {
         if ('full' === $size || 'max' === $size) {
             return;
@@ -412,7 +409,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
         }
     }
 
-    private function getTileInformation(array $sizeList): array
+    protected function getTileInformation(array $sizeList): array
     {
         $tiles = [];
         $tile = new Tile();
