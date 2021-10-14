@@ -69,14 +69,6 @@ class ImageTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function testSettingTheRegionWillReturnTheCorrectRegion()
-    {
-        $label = 'Titel';
-        $this->fixture->setRegion($label);
-
-        $this->assertSame($label, $this->fixture->getRegion());
-    }
-
     /**
      * @dataProvider rotationProvider
      */
@@ -86,5 +78,13 @@ class ImageTest extends TestCase
         $result = $this->fixture->getRotation();
 
         $this->assertSame($expected, $result);
+    }
+
+    public function testSettingTheRegionWillReturnTheCorrectRegion()
+    {
+        $label = 'Titel';
+        $this->fixture->setRegion($label);
+
+        $this->assertSame($label, $this->fixture->getRegion());
     }
 }

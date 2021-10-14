@@ -8190,6 +8190,16 @@ class TranslatorMock implements TranslatorInterface
         ],
     ];
 
+    public function getCollectionById(string $collectionId): Collection
+    {
+        return new Collection();
+    }
+
+    public function getDocumentBy(string $field, string $value, array $fields = []): DocumentInterface
+    {
+        // TODO: Implement getDocumentBy() method.
+    }
+
     public function getDocumentById(string $id): Document
     {
         $document = new Document();
@@ -8264,16 +8274,6 @@ class TranslatorMock implements TranslatorInterface
     public function getDocumentByImageId(string $imageId): Document
     {
         return $this->getDocumentById($this->documents[0]);
-    }
-
-    public function getCollectionById(string $collectionId): Collection
-    {
-        return new Collection();
-    }
-
-    public function getDocumentBy(string $field, string $value, array $fields = []): DocumentInterface
-    {
-        // TODO: Implement getDocumentBy() method.
     }
 
     private function getMappedDocumentType(string $doctype): string

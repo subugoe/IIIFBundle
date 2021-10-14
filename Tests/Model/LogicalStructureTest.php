@@ -17,6 +17,14 @@ class LogicalStructureTest extends TestCase
         $this->logicalStructure = new LogicalStructure();
     }
 
+    public function testEndPageSetsTheStartPage(): void
+    {
+        $endPage = 100;
+
+        $this->logicalStructure->setEndPage($endPage);
+        $this->assertSame($endPage, $this->logicalStructure->getEndPage());
+    }
+
     public function testSettingTheIdSetsTheId(): void
     {
         $id = 'guzu';
@@ -33,6 +41,14 @@ class LogicalStructureTest extends TestCase
         $this->assertSame($label, $this->logicalStructure->getLabel());
     }
 
+    public function testSettingTheLevelSetsTheLabel(): void
+    {
+        $level = 100;
+
+        $this->logicalStructure->setLevel($level);
+        $this->assertSame($level, $this->logicalStructure->getLevel());
+    }
+
     public function testSettingTheTypeReturnsTheType(): void
     {
         $type = 'guzu';
@@ -47,21 +63,5 @@ class LogicalStructureTest extends TestCase
 
         $this->logicalStructure->setStartPage($startPage);
         $this->assertSame($startPage, $this->logicalStructure->getStartPage());
-    }
-
-    public function testEndPageSetsTheStartPage(): void
-    {
-        $endPage = 100;
-
-        $this->logicalStructure->setEndPage($endPage);
-        $this->assertSame($endPage, $this->logicalStructure->getEndPage());
-    }
-
-    public function testSettingTheLevelSetsTheLabel(): void
-    {
-        $level = 100;
-
-        $this->logicalStructure->setLevel($level);
-        $this->assertSame($level, $this->logicalStructure->getLevel());
     }
 }

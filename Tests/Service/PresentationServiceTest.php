@@ -39,15 +39,6 @@ class PresentationServiceTest extends TestCase
         $this->presentationService = new PresentationService($router, $imageConfiguration, $presentationConfiguration);
     }
 
-    public function documentProvider(): array
-    {
-        return [
-            ['PPN613131266'],
-            ['PPN629651310'],
-            ['PPN592283860'],
-        ];
-    }
-
     public function annotationProvider(): array
     {
         return [
@@ -55,6 +46,15 @@ class PresentationServiceTest extends TestCase
             ['PPN629651310', false],
             ['PPN592283860', true],
             ['PPN599471603_0013', false],
+        ];
+    }
+
+    public function documentProvider(): array
+    {
+        return [
+            ['PPN613131266'],
+            ['PPN629651310'],
+            ['PPN592283860'],
         ];
     }
 
@@ -75,10 +75,20 @@ class PresentationServiceTest extends TestCase
     }
 
     /**
-     * @dataProvider documentProvider
+     * @dataProvider annotationProvider
      */
-    public function testSequences($id): void
+    public function testAnnotationExistance($id, $expected): void
     {
+        $document = $this->translator->getDocumentById($id);
+        $this->assertSame(!empty($document->getPhysicalStructure(0)->getAnnotation()), $expected);
+    }
+
+    /**
+     * @dataProvider malformedDocumentProvider
+     */
+    public function testMalformedDocument($id): void
+    {
+        $this->expectException(MalformedDocumentException::class);
         $document = $this->translator->getDocumentById($id);
         $this->presentationService->getManifest($document);
     }
@@ -95,20 +105,10 @@ class PresentationServiceTest extends TestCase
     }
 
     /**
-     * @dataProvider annotationProvider
+     * @dataProvider documentProvider
      */
-    public function testAnnotationExistance($id, $expected): void
+    public function testSequences($id): void
     {
-        $document = $this->translator->getDocumentById($id);
-        $this->assertSame(!empty($document->getPhysicalStructure(0)->getAnnotation()), $expected);
-    }
-
-    /**
-     * @dataProvider malformedDocumentProvider
-     */
-    public function testMalformedDocument($id): void
-    {
-        $this->expectException(MalformedDocumentException::class);
         $document = $this->translator->getDocumentById($id);
         $this->presentationService->getManifest($document);
     }

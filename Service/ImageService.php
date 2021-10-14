@@ -28,15 +28,14 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
 {
+    private FileService $fileService;
+
+    private array $imageConfiguration = [];
     private Imagine $imagine;
 
     private RouterInterface $router;
 
     private TranslatorInterface $translator;
-
-    private FileService $fileService;
-
-    private array $imageConfiguration;
 
     /**
      * ImageService constructor.
@@ -53,30 +52,33 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
         $this->fileService = $fileService;
     }
 
-    public function setImageConfiguration(array $imageConfiguration): void
+    public function getCachedFileIdentifier(Image $image): string
     {
-        $this->imageConfiguration = $imageConfiguration;
+        return vsprintf(
+            '%s/%s.%s',
+            [
+                $image->getIdentifier(),
+                $this->getImageHash($image),
+                $image->getFormat(),
+            ]
+        );
+    }
+
+    public function getFilename(Document $document, Image $image): string
+    {
+        /** @var PhysicalStructure $physicalStructure */
+        foreach ($document->getPhysicalStructures() as $physicalStructure) {
+            if ($image->getIdentifier() === $physicalStructure->getIdentifier()) {
+                return $physicalStructure->getFilename();
+            }
+        }
+
+        return $image->getIdentifier().'.'.$image->getFormat();
     }
 
     public function getImageConfiguration(): array
     {
         return $this->imageConfiguration;
-    }
-
-    public function process(Image $imageEntity): string
-    {
-        $image = $this->imagine->load($this->getOriginalFileContents($imageEntity));
-
-        // strip the profile, as Firefox uses this and may display images with strange colors
-        $profile = new Profile('', '');
-        $image = $image->profile($profile);
-
-        $this->getRegion($imageEntity->getRegion(), $image);
-        $this->getSize($imageEntity->getSize(), $image);
-        $this->getRotation($imageEntity->getRotation(), $image);
-        $this->getQuality($imageEntity->getQuality(), $image);
-
-        return $image->get($imageEntity->getFormat());
     }
 
     public function getImageJsonInformation(string $identifier, $originalImage): ImageInformation
@@ -157,21 +159,86 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
         return $sourceFilesystem->read($filename);
     }
 
-    public function getCachedFileIdentifier(Image $image): string
+    public function process(Image $imageEntity): string
     {
-        return vsprintf(
-            '%s/%s.%s',
-            [
-                $image->getIdentifier(),
-                $this->getImageHash($image),
-                $image->getFormat(),
-            ]
-        );
+        $image = $this->imagine->load($this->getOriginalFileContents($imageEntity));
+
+        // strip the profile, as Firefox uses this and may display images with strange colors
+        $profile = new Profile('', '');
+        $image = $image->profile($profile);
+
+        $this->getRegion($imageEntity->getRegion(), $image);
+        $this->getSize($imageEntity->getSize(), $image);
+        $this->getRotation($imageEntity->getRotation(), $image);
+        $this->getQuality($imageEntity->getQuality(), $image);
+
+        return $image->get($imageEntity->getFormat());
+    }
+
+    public function setImageConfiguration(array $imageConfiguration): void
+    {
+        $this->imageConfiguration = $imageConfiguration;
     }
 
     private function getImageHash(Image $image): string
     {
         return hash('sha256', serialize($image));
+    }
+
+    private function getImageSizes(BoxInterface $originalSize): array
+    {
+        $sizes = [];
+        $sizeList = $this->imageConfiguration['zoom_levels'];
+
+        foreach ($sizeList as $size) {
+            $dimension = new Dimension();
+            $dimension
+                ->setHeight($originalSize->getHeight() / $size)
+                ->setWidth($originalSize->getWidth() / $size);
+
+            $sizes[] = $dimension;
+        }
+
+        return array_reverse($sizes);
+    }
+
+    /*
+     * Apply the requested image quality as per IIIF-Image API
+     *
+     * Quality parameters may be:
+     *      - color
+     *      - gray
+     *      - bitonal
+     *      - default
+     *
+     * @see http://iiif.io/api/image/2.0/#quality
+     *
+     * @param string $quality The requested image quality
+     * @param ImageInterface $image The image object
+     *
+     * @throws BadRequestHttpException if wrong quality parameters provided
+     *
+     * @return ImageInterface
+     */
+    private function getQuality(string $quality, ImageInterface $image): void
+    {
+        if ('default' === $quality || 'color' === $quality) {
+            return;
+        }
+
+        switch ($quality) {
+            case 'gray':
+                $image->effects()->grayscale();
+                break;
+            case 'bitonal':
+                $max = $image->getImagick()->getQuantumRange();
+                $max = $max['quantumRangeLong'];
+                $imageClearnessFactor = 0.20;
+                $image->getImagick()->thresholdImage($max * $imageClearnessFactor);
+                break;
+            default:
+                throw new BadRequestHttpException(sprintf('Bad Request: %s is not a supported quality.', $quality));
+        }
     }
 
     /*
@@ -254,6 +321,40 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
     }
 
     /*
+     * Apply the requested image rotation as per IIIF-Image API
+     * Rotation parameters may be:
+     *      - n
+     *      - !n
+     *
+     * @see http://iiif.io/api/image/2.0/#rotation
+     *
+     * @param string $rotation The requested image rotation
+     * @param ImageInterface $image The image object
+     *
+     * @throws BadRequestHttpException if wrong rotation parameters provided
+     *
+     * @return ImageInterface
+     */
+    private function getRotation(string $rotation, ImageInterface $image): void
+    {
+        if (0 === (int) $rotation) {
+            return;
+        }
+
+        if (!empty($rotation)) {
+            $rotationDegree = str_replace('!', '', $rotation);
+            if ((int) $rotationDegree <= 360) {
+                if (false !== strpos($rotation, '!')) {
+                    $image->flipVertically();
+                }
+                $image->rotate(str_replace('!', '', $rotation));
+            } else {
+                throw new BadRequestHttpException(sprintf('Bad Request: Rotation argument %s is not between 0 and 360.', $rotationDegree));
+            }
+        }
+    }
+
+    /*
      * Apply the requested image size as per IIIF-Image API
      * Size parameters may be:
      *      - full
@@ -311,96 +412,6 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
         }
     }
 
-    /*
-     * Apply the requested image rotation as per IIIF-Image API
-     * Rotation parameters may be:
-     *      - n
-     *      - !n
-     *
-     * @see http://iiif.io/api/image/2.0/#rotation
-     *
-     * @param string $rotation The requested image rotation
-     * @param ImageInterface $image The image object
-     *
-     * @throws BadRequestHttpException if wrong rotation parameters provided
-     *
-     * @return ImageInterface
-     */
-    private function getRotation(string $rotation, ImageInterface $image): void
-    {
-        if (0 === (int) $rotation) {
-            return;
-        }
-
-        if (!empty($rotation)) {
-            $rotationDegree = str_replace('!', '', $rotation);
-            if ((int) $rotationDegree <= 360) {
-                if (false !== strpos($rotation, '!')) {
-                    $image->flipVertically();
-                }
-                $image->rotate(str_replace('!', '', $rotation));
-            } else {
-                throw new BadRequestHttpException(sprintf('Bad Request: Rotation argument %s is not between 0 and 360.', $rotationDegree));
-            }
-        }
-    }
-
-    /*
-     * Apply the requested image quality as per IIIF-Image API
-     *
-     * Quality parameters may be:
-     *      - color
-     *      - gray
-     *      - bitonal
-     *      - default
-     *
-     * @see http://iiif.io/api/image/2.0/#quality
-     *
-     * @param string $quality The requested image quality
-     * @param ImageInterface $image The image object
-     *
-     * @throws BadRequestHttpException if wrong quality parameters provided
-     *
-     * @return ImageInterface
-     */
-    private function getQuality(string $quality, ImageInterface $image): void
-    {
-        if ('default' === $quality || 'color' === $quality) {
-            return;
-        }
-
-        switch ($quality) {
-            case 'gray':
-                $image->effects()->grayscale();
-                break;
-            case 'bitonal':
-                $max = $image->getImagick()->getQuantumRange();
-                $max = $max['quantumRangeLong'];
-                $imageClearnessFactor = 0.20;
-                $image->getImagick()->thresholdImage($max * $imageClearnessFactor);
-                break;
-            default:
-                throw new BadRequestHttpException(sprintf('Bad Request: %s is not a supported quality.', $quality));
-        }
-    }
-
-    private function getImageSizes(BoxInterface $originalSize): array
-    {
-        $sizes = [];
-        $sizeList = $this->imageConfiguration['zoom_levels'];
-
-        foreach ($sizeList as $size) {
-            $dimension = new Dimension();
-            $dimension
-                ->setHeight($originalSize->getHeight() / $size)
-                ->setWidth($originalSize->getWidth() / $size);
-
-            $sizes[] = $dimension;
-        }
-
-        return array_reverse($sizes);
-    }
-
     private function getTileInformation(array $sizeList): array
     {
         $tiles = [];
@@ -413,17 +424,5 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
         $tiles[] = $tile;
 
         return $tiles;
-    }
-
-    public function getFilename(Document $document, Image $image): string
-    {
-        /** @var PhysicalStructure $physicalStructure */
-        foreach ($document->getPhysicalStructures() as $physicalStructure) {
-            if ($image->getIdentifier() === $physicalStructure->getIdentifier()) {
-                return $physicalStructure->getFilename();
-            }
-        }
-
-        return $image->getIdentifier().'.'.$image->getFormat();
     }
 }

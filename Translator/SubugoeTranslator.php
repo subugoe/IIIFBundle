@@ -20,18 +20,17 @@ use Symfony\Component\Routing\RouterInterface;
 
 class SubugoeTranslator implements TranslatorInterface
 {
-    private SearchService $searchService;
+    private array $collections;
+
+    private string $rootDirectory;
 
     private \Symfony\Component\Routing\RouterInterface $router;
+    private SearchService $searchService;
 
     /**
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
     private $translator;
-
-    private string $rootDirectory;
-
-    private array $collections;
 
     public function __construct(SearchService $searchService, RouterInterface $router, \Symfony\Component\Translation\TranslatorInterface $translator, string $rootDirectory, array $collections)
     {
@@ -70,6 +69,11 @@ class SubugoeTranslator implements TranslatorInterface
         }
 
         return $collections;
+    }
+
+    public function getDocumentBy(string $field, string $value, array $fields = []): DocumentInterface
+    {
+        // TODO: Implement getDocumentBy() method.
     }
 
     public function getDocumentById(string $id): Document
@@ -165,11 +169,6 @@ class SubugoeTranslator implements TranslatorInterface
         return $this->getDocumentById($solrDocument['id']);
     }
 
-    public function getDocumentBy(string $field, string $value, array $fields = []): DocumentInterface
-    {
-        // TODO: Implement getDocumentBy() method.
-    }
-
     private function getAdditionalIdentifiers(DocumentInterface $solrDocument): array
     {
         $ids = [];
@@ -185,9 +184,57 @@ class SubugoeTranslator implements TranslatorInterface
         return $ids;
     }
 
-    private function translateLabel(string $label, int $counter = 1): string
+    private function getCollectionContent(string $id): string
     {
-        return $this->translator->transChoice($label, $counter);
+        $file = sprintf('%s/Resources/content/dc/%s.md', $this->rootDirectory, $id);
+        $content = '';
+        if (file_exists($file)) {
+            $content = file_get_contents($file);
+        }
+
+        return $content;
+    }
+
+    private function getLinkedMetadata(array $metadata, bool $link, string $facet = ''): array
+    {
+        $metadataArr = [];
+
+        if (is_array($metadata) && [] !== $metadata) {
+            foreach ($metadata as $key => $value) {
+                if (!empty($value) && !empty($facet) && $link) {
+                    $url = $this->router->generate('_homepage', ["filter[${key}][${facet}]" => $value], RouterInterface::ABSOLUTE_URL);
+                    $href = sprintf('<a href="%s">%s</a>', $url, $value);
+                    $metadataArr[] = $href;
+                } elseif (!empty($value)) {
+                    $metadataArr[] = $value;
+                }
+            }
+        }
+
+        return $metadataArr;
+    }
+
+    private function getMappedDocumentType(string $doctype): string
+    {
+        $typeMapping = [
+            'bundle' => DocumentTypes::BUNDLE,
+            'contained_work' => DocumentTypes::CONTAINED_WORK,
+            'file' => DocumentTypes::FILE,
+            'folder' => DocumentTypes::FOLDER,
+            'manuscript' => DocumentTypes::MONOGRAPH,
+            'map' => DocumentTypes::MAP,
+            'monograph' => DocumentTypes::MONOGRAPH,
+            'multivolume_work' => DocumentTypes::MULTIVOLUME_WORK,
+            'periodical' => DocumentTypes::VOLUME,
+            'periodicalvolume' => DocumentTypes::VOLUME,
+            'volume' => DocumentTypes::VOLUME,
+        ];
+
+        if (array_key_exists($doctype, $typeMapping)) {
+            return $typeMapping[$doctype];
+        }
+
+        return DocumentTypes::UNKNOWN;
     }
 
     private function getMetadata(DocumentInterface $solrDocument, Document $document): array
@@ -247,38 +294,25 @@ class SubugoeTranslator implements TranslatorInterface
         return $metadata;
     }
 
-    private function getCollectionContent(string $id): string
+    private function getRelated(array $catalogue): array
     {
-        $file = sprintf('%s/Resources/content/dc/%s.md', $this->rootDirectory, $id);
-        $content = '';
-        if (file_exists($file)) {
-            $content = file_get_contents($file);
+        $relatedArr = [];
+        if (is_array($catalogue) && [] !== $catalogue) {
+            foreach ($catalogue as $value) {
+                $catalogueArr = explode(' ', trim($value));
+                $related = new Related();
+                $id = $catalogueArr[1];
+                $label = $catalogueArr[0];
+                if (!empty($id) && !empty($label)) {
+                    $related->setId($id);
+                    $related->setLabel($label);
+                    $related->setFormat('text/html');
+                    $relatedArr[] = $related;
+                }
+            }
         }
 
-        return $content;
-    }
-
-    private function getMappedDocumentType(string $doctype): string
-    {
-        $typeMapping = [
-            'bundle' => DocumentTypes::BUNDLE,
-            'contained_work' => DocumentTypes::CONTAINED_WORK,
-            'file' => DocumentTypes::FILE,
-            'folder' => DocumentTypes::FOLDER,
-            'manuscript' => DocumentTypes::MONOGRAPH,
-            'map' => DocumentTypes::MAP,
-            'monograph' => DocumentTypes::MONOGRAPH,
-            'multivolume_work' => DocumentTypes::MULTIVOLUME_WORK,
-            'periodical' => DocumentTypes::VOLUME,
-            'periodicalvolume' => DocumentTypes::VOLUME,
-            'volume' => DocumentTypes::VOLUME,
-        ];
-
-        if (array_key_exists($doctype, $typeMapping)) {
-            return $typeMapping[$doctype];
-        }
-
-        return DocumentTypes::UNKNOWN;
+        return $relatedArr;
     }
 
     private function getRenderings(string $id): array
@@ -344,43 +378,8 @@ class SubugoeTranslator implements TranslatorInterface
         return $seeAlsos;
     }
 
-    private function getLinkedMetadata(array $metadata, bool $link, string $facet = ''): array
+    private function translateLabel(string $label, int $counter = 1): string
     {
-        $metadataArr = [];
-
-        if (is_array($metadata) && [] !== $metadata) {
-            foreach ($metadata as $key => $value) {
-                if (!empty($value) && !empty($facet) && $link) {
-                    $url = $this->router->generate('_homepage', ["filter[${key}][${facet}]" => $value], RouterInterface::ABSOLUTE_URL);
-                    $href = sprintf('<a href="%s">%s</a>', $url, $value);
-                    $metadataArr[] = $href;
-                } elseif (!empty($value)) {
-                    $metadataArr[] = $value;
-                }
-            }
-        }
-
-        return $metadataArr;
-    }
-
-    private function getRelated(array $catalogue): array
-    {
-        $relatedArr = [];
-        if (is_array($catalogue) && [] !== $catalogue) {
-            foreach ($catalogue as $value) {
-                $catalogueArr = explode(' ', trim($value));
-                $related = new Related();
-                $id = $catalogueArr[1];
-                $label = $catalogueArr[0];
-                if (!empty($id) && !empty($label)) {
-                    $related->setId($id);
-                    $related->setLabel($label);
-                    $related->setFormat('text/html');
-                    $relatedArr[] = $related;
-                }
-            }
-        }
-
-        return $relatedArr;
+        return $this->translator->transChoice($label, $counter);
     }
 }

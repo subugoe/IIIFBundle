@@ -1,16 +1,13 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->exclude('build')
-    ->exclude('cache')
-    ->exclude('var')
-    ->exclude('vendor')
+    ->exclude(['var', 'cache', 'build', 'vendor', 'public'])
     ->in(__DIR__);
 
-$config = new PhpCsFixer\Config();
-$config
+return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
+        'array_syntax' => ['syntax' => 'short'],
         'ordered_class_elements' => [
             'order' => [
                 'use_trait',
@@ -26,11 +23,10 @@ $config
                 'phpunit',
                 'method_public',
                 'method_protected',
-                'method_private'
-            ]
+                'method_private',
+            ],
+            'sort_algorithm' => 'alpha',
         ],
-        'array_syntax' => ['syntax' => 'short'],
     ])
-    ->setFinder($finder);
-
-return $config;
+    ->setFinder($finder)
+;

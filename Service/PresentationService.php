@@ -36,11 +36,11 @@ class PresentationService implements PresentationServiceInterface
     public const CONTEXT_IMAGE = 'images';
     public const CONTEXT_MANIFESTS = 'manifests';
 
-    private RouterInterface $router;
-
     private array $imageConfiguration;
 
     private array $presentationConfiguration;
+
+    private RouterInterface $router;
 
     /**
      * PresentationService constructor.
@@ -50,6 +50,128 @@ class PresentationService implements PresentationServiceInterface
         $this->router = $router;
         $this->imageConfiguration = $imageConfiguration;
         $this->presentationConfiguration = $presentationConfiguration;
+    }
+
+    /**
+     * @throws IIIFException
+     */
+    public function getAnnotationList(\Subugoe\IIIFModel\Model\Document $document, string $name): AnnotationList
+    {
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
+
+        $annotationList = new AnnotationList();
+        $annotationList->setId($this->router->generate('subugoe_iiif_annotation-list', [
+            'id' => $document->getId(),
+            'name' => $name,
+        ], UrlGeneratorInterface::ABSOLUTE_URL));
+
+        $resources = [];
+        $resourceData = new ResourceData();
+        $resourceData
+            ->setType('dctypes:Text')
+            ->setId($document->getPhysicalStructure($this->getPagePositionByIdentifier($document, $name))->getAnnotation())
+            ->setFormat('text/html');
+
+        $resource = new GenericResource();
+        $resource
+            ->setResource($resourceData);
+
+        $resources[] = $resource;
+        $annotationList->setResources($resources);
+
+        return $annotationList;
+    }
+
+    /**
+     * @throws IIIFException
+     */
+    public function getCanvas(\Subugoe\IIIFModel\Model\Document $document, string $canvasId, int $physicalStructureId = -1): Canvas
+    {
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
+
+        $images = $this->getImages($document, $canvasId);
+
+        if (-1 !== $physicalStructureId) {
+            $label = $document->getPhysicalStructure($physicalStructureId)->getLabel();
+        } else {
+            $label = $this->getLabelForCanvas($document, $canvasId);
+        }
+
+        $canvas = new Canvas();
+        $canvas
+            ->setId($this->router->generate('subugoe_iiif_canvas', [
+                'id' => $document->getId(),
+                'canvas' => $canvasId,
+            ],
+                UrlGeneratorInterface::ABSOLUTE_URL))
+            ->setLabel($label)
+            ->setHeight(400)
+            ->setWidth(300)
+            ->setImages($images);
+
+        if (!empty($document->getPhysicalStructure($physicalStructureId)->getAnnotation())) {
+            $annotationList = new AnnotationList();
+            $annotationList
+                ->setId($this->router->generate('subugoe_iiif_annotation-list', ['id' => $document->getId(), 'name' => $canvasId], UrlGeneratorInterface::ABSOLUTE_URL))
+                ->setType('sc:AnnotationList');
+
+            $canvas->setOtherContent([$annotationList]);
+        }
+
+        return $canvas;
+    }
+
+    public function getCollection(Collection $collection): Collection
+    {
+        return $collection;
+    }
+
+    public function getCollections(Collections $collections): Collections
+    {
+        return $collections;
+    }
+
+    /**
+     * @throws IIIFException
+     */
+    public function getImage(\Subugoe\IIIFModel\Model\Document $document, string $imageId): GenericResource
+    {
+        $imageParameters = [
+            'identifier' => $imageId,
+            'region' => 'full',
+            'size' => 'full',
+            'rotation' => 0,
+            'quality' => 'default',
+            'format' => $document->getImageFormat(),
+        ];
+
+        $image = new GenericResource();
+        $resource = new ResourceData();
+        $mimes = new MimeTypes();
+
+        $format = $mimes->getMimeType($document->getImageFormat()) ?: '';
+
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_IMAGE));
+
+        $imageService = new Service();
+        $imageService
+            ->setId($this->router->generate(
+                'subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], UrlGeneratorInterface::ABSOLUTE_URL));
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
+
+        $resource
+            ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], UrlGeneratorInterface::ABSOLUTE_URL))
+            ->setFormat($format)
+            ->setWidth(300)
+            ->setHeight(400)
+            ->setService($imageService);
+
+        $image
+            ->setId($this->router->generate('subugoe_iiif_imagepresentation', ['id' => $document->getId(), 'name' => $imageId], UrlGeneratorInterface::ABSOLUTE_URL))
+            ->setResource($resource)
+            ->setOn($this->router->generate('subugoe_iiif_canvas', ['id' => $document->getId(), 'canvas' => $imageId], UrlGeneratorInterface::ABSOLUTE_URL));
+
+        return $image;
     }
 
     /**
@@ -106,46 +228,6 @@ class PresentationService implements PresentationServiceInterface
     /**
      * @throws IIIFException
      */
-    public function getAnnotationList(\Subugoe\IIIFModel\Model\Document $document, string $name): AnnotationList
-    {
-        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
-
-        $annotationList = new AnnotationList();
-        $annotationList->setId($this->router->generate('subugoe_iiif_annotation-list', [
-            'id' => $document->getId(),
-            'name' => $name,
-        ], UrlGeneratorInterface::ABSOLUTE_URL));
-
-        $resources = [];
-        $resourceData = new ResourceData();
-        $resourceData
-            ->setType('dctypes:Text')
-            ->setId($document->getPhysicalStructure($this->getPagePositionByIdentifier($document, $name))->getAnnotation())
-            ->setFormat('text/html');
-
-        $resource = new GenericResource();
-        $resource
-            ->setResource($resourceData);
-
-        $resources[] = $resource;
-        $annotationList->setResources($resources);
-
-        return $annotationList;
-    }
-
-    public function getCollection(Collection $collection): Collection
-    {
-        return $collection;
-    }
-
-    public function getCollections(Collections $collections): Collections
-    {
-        return $collections;
-    }
-
-    /**
-     * @throws IIIFException
-     */
     public function getRange(\Subugoe\IIIFModel\Model\Document $document, string $name): Range
     {
         $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
@@ -158,88 +240,6 @@ class PresentationService implements PresentationServiceInterface
             ->setMembers($this->getMembersForRange($document, $name));
 
         return $range;
-    }
-
-    /**
-     * @throws IIIFException
-     */
-    public function getCanvas(\Subugoe\IIIFModel\Model\Document $document, string $canvasId, int $physicalStructureId = -1): Canvas
-    {
-        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
-
-        $images = $this->getImages($document, $canvasId);
-
-        if (-1 !== $physicalStructureId) {
-            $label = $document->getPhysicalStructure($physicalStructureId)->getLabel();
-        } else {
-            $label = $this->getLabelForCanvas($document, $canvasId);
-        }
-
-        $canvas = new Canvas();
-        $canvas
-            ->setId($this->router->generate('subugoe_iiif_canvas', [
-                'id' => $document->getId(),
-                'canvas' => $canvasId,
-            ],
-                UrlGeneratorInterface::ABSOLUTE_URL))
-            ->setLabel($label)
-            ->setHeight(400)
-            ->setWidth(300)
-            ->setImages($images);
-
-        if (!empty($document->getPhysicalStructure($physicalStructureId)->getAnnotation())) {
-            $annotationList = new AnnotationList();
-            $annotationList
-                ->setId($this->router->generate('subugoe_iiif_annotation-list', ['id' => $document->getId(), 'name' => $canvasId], UrlGeneratorInterface::ABSOLUTE_URL))
-                ->setType('sc:AnnotationList');
-
-            $canvas->setOtherContent([$annotationList]);
-        }
-
-        return $canvas;
-    }
-
-    /**
-     * @throws IIIFException
-     */
-    public function getImage(\Subugoe\IIIFModel\Model\Document $document, string $imageId): GenericResource
-    {
-        $imageParameters = [
-            'identifier' => $imageId,
-            'region' => 'full',
-            'size' => 'full',
-            'rotation' => 0,
-            'quality' => 'default',
-            'format' => $document->getImageFormat(),
-        ];
-
-        $image = new GenericResource();
-        $resource = new ResourceData();
-        $mimes = new MimeTypes();
-
-        $format = $mimes->getMimeType($document->getImageFormat()) ?: '';
-
-        $this->router->setContext($this->setRoutingContext(self::CONTEXT_IMAGE));
-
-        $imageService = new Service();
-        $imageService
-            ->setId($this->router->generate(
-                'subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], UrlGeneratorInterface::ABSOLUTE_URL));
-        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
-
-        $resource
-            ->setId($this->router->generate('subugoe_iiif_image_base', ['identifier' => $imageParameters['identifier']], UrlGeneratorInterface::ABSOLUTE_URL))
-            ->setFormat($format)
-            ->setWidth(300)
-            ->setHeight(400)
-            ->setService($imageService);
-
-        $image
-            ->setId($this->router->generate('subugoe_iiif_imagepresentation', ['id' => $document->getId(), 'name' => $imageId], UrlGeneratorInterface::ABSOLUTE_URL))
-            ->setResource($resource)
-            ->setOn($this->router->generate('subugoe_iiif_canvas', ['id' => $document->getId(), 'canvas' => $imageId], UrlGeneratorInterface::ABSOLUTE_URL));
-
-        return $image;
     }
 
     /**
@@ -268,63 +268,80 @@ class PresentationService implements PresentationServiceInterface
         return $sequence;
     }
 
+    private function getAttribution(\Subugoe\IIIFModel\Model\Document $document): string
+    {
+        if (array_key_exists('0', $document->getRightsOwner())) {
+            return $document->getRightsOwner()[0];
+        }
+
+        return '';
+    }
+
+    private function getCanvases(\Subugoe\IIIFModel\Model\Document $document): array
+    {
+        $canvases = [];
+        $numberOfPages = count($document->getPhysicalStructures());
+
+        $count = 0;
+
+        while ($count < $numberOfPages) {
+            $canvas = $this->getCanvas($document, $document->getPhysicalStructure($count)->getIdentifier(), $count);
+            // Embedded canvases do not have a context field
+            $canvas->setContext('');
+            $canvases[] = $canvas;
+            ++$count;
+        }
+
+        return $canvases;
+    }
+
     /**
      * @throws IIIFException
      */
-    private function setRoutingContext(string $type): RequestContext
+    private function getImages(\Subugoe\IIIFModel\Model\Document $document, string $canvasId): array
     {
-        if ($type !== static::CONTEXT_MANIFESTS && $type !== static::CONTEXT_IMAGE) {
-            throw new IIIFException(sprintf('Request type %s not defined', $type), 1_497_438_291);
-        }
-
-        if (array_key_exists('host', $this->imageConfiguration['http']) && $type === static::CONTEXT_IMAGE) {
-            $context = new RequestContext();
-
-            $url = sprintf('%s://%s', $this->imageConfiguration['http']['scheme'], $this->imageConfiguration['http']['host']);
-            $urlParts = parse_url($url);
-
-            if (isset($urlParts['port'])) {
-                $context->setHttpPort($urlParts['port']);
-            }
-
-            $context
-                ->setHost($urlParts['host'])
-                ->setScheme($urlParts['scheme']);
-
-            return $context;
-        }
-
-        if (array_key_exists('host', $this->presentationConfiguration['http']) && $type === static::CONTEXT_MANIFESTS) {
-            $context = new RequestContext();
-
-            $url = sprintf('%s://%s', $this->presentationConfiguration['http']['scheme'], $this->presentationConfiguration['http']['host']);
-            $urlParts = parse_url($url);
-
-            if (isset($urlParts['port'])) {
-                $context->setHttpPort($urlParts['port']);
-            }
-
-            $context->setHost($urlParts['host']);
-            $context->setScheme($urlParts['scheme']);
-
-            return $context;
-        }
-
-        return $this->router->getContext();
+        return [$this->getImage($document, $canvasId)];
     }
 
-    private function getPagePositionByIdentifier(\Subugoe\IIIFModel\Model\Document $document, string $identifier): int
+    private function getLabelForCanvas(\Subugoe\IIIFModel\Model\Document $document, string $canvasId): string
     {
-        $position = 0;
+        $physicalStructures = $document->getPhysicalStructures();
+
         /** @var PhysicalStructure $physicalStructure */
-        foreach ($document->getPhysicalStructures() as $physicalStructure) {
-            if ($physicalStructure->getIdentifier() === $identifier) {
-                return $position;
+        foreach ($physicalStructures as $physicalStructure) {
+            if ($physicalStructure->getIdentifier() === $canvasId) {
+                return $physicalStructure->getLabel();
             }
-            ++$position;
         }
 
-        throw new InvalidArgumentException(sprintf('Page with label %s not found in document %s', $identifier, $document->getId()), 1_490_689_215);
+        return '';
+    }
+
+    private function getLabelForRange(\Subugoe\IIIFModel\Model\Document $document, string $rangeId): string
+    {
+        $logicalStructures = $document->getLogicalStructures();
+
+        /** @var LogicalStructure $logicalStructure */
+        foreach ($logicalStructures as $logicalStructure) {
+            if ($logicalStructure->getId() === $rangeId) {
+                return $logicalStructure->getLabel();
+            }
+        }
+
+        return '';
+    }
+
+    private function getLogo(): Image
+    {
+        $logo = new Image();
+        $logoService = new Service();
+
+        $logoService->setId($this->presentationConfiguration['service_id']);
+        $logo->setId($this->presentationConfiguration['logo']);
+
+        $logo->setService($logoService);
+
+        return $logo;
     }
 
     /**
@@ -350,64 +367,26 @@ class PresentationService implements PresentationServiceInterface
     }
 
     /**
-     * @return \DateTime|\DateTimeImmutable
-     */
-    private function getNavDate(\Subugoe\IIIFModel\Model\Document $document): \DateTimeInterface
-    {
-        return DateTime::createFromFormat('Y-m-d H:i:s', vsprintf('%d-%s-%s %s:%s:%s',
-            [
-                $document->getPublishingYear(),
-                '01',
-                '01',
-                '00',
-                '00',
-                '00',
-            ]
-        ));
-    }
-
-    /**
      * @throws IIIFException
      */
-    private function getThumbnail(\Subugoe\IIIFModel\Model\Document $document): Image
+    private function getMembersOfLogicalStructure(\Subugoe\IIIFModel\Model\Document $document, LogicalStructure $logicalStructure): array
     {
-        $this->router->setContext($this->setRoutingContext(self::CONTEXT_IMAGE));
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
 
-        $thumbnail = new Image();
-        $thumbnailService = new Service();
-        $thumbnailService->setId($this->router->generate('subugoe_iiif_manifest', ['id' => $document->getId()], UrlGeneratorInterface::ABSOLUTE_URL));
+        $structureStart = $this->getPositionOfPhysicalPage($document, $logicalStructure->getStartPage());
+        $structureEnd = $this->getPositionOfPhysicalPage($document, $logicalStructure->getEndPage());
+        $numberOfElements = ($structureEnd - $structureStart + 1);
 
-        $thumbnailParameters = [
-            'identifier' => $document->getPhysicalStructure(0)->getIdentifier(),
-            'region' => 'full',
-            'size' => $this->imageConfiguration['thumbnail_size'],
-            'rotation' => 0,
-            'quality' => 'default',
-            'format' => 'jpg',
-        ];
+        $canvases = [];
 
-        $thumbnail->setId($this->router->generate(
-            'subugoe_iiif_image',
-            $thumbnailParameters,
-            UrlGeneratorInterface::ABSOLUTE_URL
-            )
-        );
-        $thumbnail->setService($thumbnailService);
+        for ($i = 0; $i < $numberOfElements; ++$i) {
+            $canvases[] = $this->router->generate('subugoe_iiif_canvas', [
+                'id' => $document->getId(),
+                'canvas' => $document->getPhysicalStructure($structureStart + $i)->getIdentifier(),
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
+        }
 
-        return $thumbnail;
-    }
-
-    private function getLogo(): Image
-    {
-        $logo = new Image();
-        $logoService = new Service();
-
-        $logoService->setId($this->presentationConfiguration['service_id']);
-        $logo->setId($this->presentationConfiguration['logo']);
-
-        $logo->setService($logoService);
-
-        return $logo;
+        return $canvases;
     }
 
     private function getMetadata(\Subugoe\IIIFModel\Model\Document $document): array
@@ -426,6 +405,98 @@ class PresentationService implements PresentationServiceInterface
         return $metadata;
     }
 
+    /**
+     * @return \DateTime|\DateTimeImmutable
+     */
+    private function getNavDate(\Subugoe\IIIFModel\Model\Document $document): \DateTimeInterface
+    {
+        return DateTime::createFromFormat('Y-m-d H:i:s', vsprintf('%d-%s-%s %s:%s:%s',
+            [
+                $document->getPublishingYear(),
+                '01',
+                '01',
+                '00',
+                '00',
+                '00',
+            ]
+        ));
+    }
+
+    private function getPagePositionByIdentifier(\Subugoe\IIIFModel\Model\Document $document, string $identifier): int
+    {
+        $position = 0;
+        /** @var PhysicalStructure $physicalStructure */
+        foreach ($document->getPhysicalStructures() as $physicalStructure) {
+            if ($physicalStructure->getIdentifier() === $identifier) {
+                return $position;
+            }
+            ++$position;
+        }
+
+        throw new InvalidArgumentException(sprintf('Page with label %s not found in document %s', $identifier, $document->getId()), 1_490_689_215);
+    }
+
+    /**
+     * @throws MalformedDocumentException
+     */
+    private function getPositionOfPhysicalPage(\Subugoe\IIIFModel\Model\Document $document, int $page): int
+    {
+        $i = 0;
+        /** @var PhysicalStructure $structure */
+        foreach ($document->getPhysicalStructures() as $structure) {
+            if ($structure->getOrder() === $page) {
+                return $i;
+            }
+            ++$i;
+        }
+        // PPN617021074
+        throw new MalformedDocumentException(vsprintf('Document %s may contain an invalid or inconsistent structure. Page %d not found in %d iterations.', [$document->getId(), $page, $i]));
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getPreviousHierarchyStructure(\Subugoe\IIIFModel\Model\Document $document, LogicalStructure $structure, int $position): LogicalStructure
+    {
+        $level = $structure->getLevel();
+        $parentLevel = $level - 1;
+
+        for ($i = $position; $i >= 0; --$i) {
+            if ($document->getLogicalStructure($i)->getLevel() === $parentLevel) {
+                return $document->getLogicalStructure($i);
+            }
+        }
+
+        throw new DataException(vsprintf('Parent structure at position %d with level %d and parent level %d not defined', [$position, $level, $parentLevel]), 1_494_506_264);
+    }
+
+    /**
+     * @throws IIIFException
+     */
+    private function getSequences(\Subugoe\IIIFModel\Model\Document $document): Sequence
+    {
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
+
+        $canvases = $this->getCanvases($document);
+
+        $sequences = new Sequence();
+        $sequences
+            ->setId($this->router->generate('subugoe_iiif_sequence', [
+                'id' => $document->getId(),
+                'name' => 'normal',
+            ],
+                UrlGeneratorInterface::ABSOLUTE_URL))
+            ->setContext('')
+            ->setCanvases($canvases)
+            ->setStartCanvas($this->router->generate('subugoe_iiif_canvas', [
+                'id' => $document->getId(),
+                'canvas' => $document->getPhysicalStructure(0)->getIdentifier(),
+            ],
+                UrlGeneratorInterface::ABSOLUTE_URL));
+
+        return $sequences;
+    }
+
     private function getStructureMetadata(LogicalStructure $structure): array
     {
         $metadata = [];
@@ -440,15 +511,6 @@ class PresentationService implements PresentationServiceInterface
         }
 
         return $metadata;
-    }
-
-    private function getAttribution(\Subugoe\IIIFModel\Model\Document $document): string
-    {
-        if (array_key_exists('0', $document->getRightsOwner())) {
-            return $document->getRightsOwner()[0];
-        }
-
-        return '';
     }
 
     /**
@@ -501,140 +563,78 @@ class PresentationService implements PresentationServiceInterface
     }
 
     /**
-     * @throws Exception
+     * @throws IIIFException
      */
-    private function getPreviousHierarchyStructure(\Subugoe\IIIFModel\Model\Document $document, LogicalStructure $structure, int $position): LogicalStructure
+    private function getThumbnail(\Subugoe\IIIFModel\Model\Document $document): Image
     {
-        $level = $structure->getLevel();
-        $parentLevel = $level - 1;
+        $this->router->setContext($this->setRoutingContext(self::CONTEXT_IMAGE));
 
-        for ($i = $position; $i >= 0; --$i) {
-            if ($document->getLogicalStructure($i)->getLevel() === $parentLevel) {
-                return $document->getLogicalStructure($i);
-            }
-        }
+        $thumbnail = new Image();
+        $thumbnailService = new Service();
+        $thumbnailService->setId($this->router->generate('subugoe_iiif_manifest', ['id' => $document->getId()], UrlGeneratorInterface::ABSOLUTE_URL));
 
-        throw new DataException(vsprintf('Parent structure at position %d with level %d and parent level %d not defined', [$position, $level, $parentLevel]), 1_494_506_264);
+        $thumbnailParameters = [
+            'identifier' => $document->getPhysicalStructure(0)->getIdentifier(),
+            'region' => 'full',
+            'size' => $this->imageConfiguration['thumbnail_size'],
+            'rotation' => 0,
+            'quality' => 'default',
+            'format' => 'jpg',
+        ];
+
+        $thumbnail->setId($this->router->generate(
+            'subugoe_iiif_image',
+            $thumbnailParameters,
+            UrlGeneratorInterface::ABSOLUTE_URL
+            )
+        );
+        $thumbnail->setService($thumbnailService);
+
+        return $thumbnail;
     }
 
     /**
      * @throws IIIFException
      */
-    private function getMembersOfLogicalStructure(\Subugoe\IIIFModel\Model\Document $document, LogicalStructure $logicalStructure): array
+    private function setRoutingContext(string $type): RequestContext
     {
-        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
-
-        $structureStart = $this->getPositionOfPhysicalPage($document, $logicalStructure->getStartPage());
-        $structureEnd = $this->getPositionOfPhysicalPage($document, $logicalStructure->getEndPage());
-        $numberOfElements = ($structureEnd - $structureStart + 1);
-
-        $canvases = [];
-
-        for ($i = 0; $i < $numberOfElements; ++$i) {
-            $canvases[] = $this->router->generate('subugoe_iiif_canvas', [
-                'id' => $document->getId(),
-                'canvas' => $document->getPhysicalStructure($structureStart + $i)->getIdentifier(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL);
+        if ($type !== static::CONTEXT_MANIFESTS && $type !== static::CONTEXT_IMAGE) {
+            throw new IIIFException(sprintf('Request type %s not defined', $type), 1_497_438_291);
         }
 
-        return $canvases;
-    }
+        if (array_key_exists('host', $this->imageConfiguration['http']) && $type === static::CONTEXT_IMAGE) {
+            $context = new RequestContext();
 
-    /**
-     * @throws MalformedDocumentException
-     */
-    private function getPositionOfPhysicalPage(\Subugoe\IIIFModel\Model\Document $document, int $page): int
-    {
-        $i = 0;
-        /** @var PhysicalStructure $structure */
-        foreach ($document->getPhysicalStructures() as $structure) {
-            if ($structure->getOrder() === $page) {
-                return $i;
+            $url = sprintf('%s://%s', $this->imageConfiguration['http']['scheme'], $this->imageConfiguration['http']['host']);
+            $urlParts = parse_url($url);
+
+            if (isset($urlParts['port'])) {
+                $context->setHttpPort($urlParts['port']);
             }
-            ++$i;
+
+            $context
+                ->setHost($urlParts['host'])
+                ->setScheme($urlParts['scheme']);
+
+            return $context;
         }
-        // PPN617021074
-        throw new MalformedDocumentException(vsprintf('Document %s may contain an invalid or inconsistent structure. Page %d not found in %d iterations.', [$document->getId(), $page, $i]));
-    }
 
-    /**
-     * @throws IIIFException
-     */
-    private function getSequences(\Subugoe\IIIFModel\Model\Document $document): Sequence
-    {
-        $this->router->setContext($this->setRoutingContext(self::CONTEXT_MANIFESTS));
+        if (array_key_exists('host', $this->presentationConfiguration['http']) && $type === static::CONTEXT_MANIFESTS) {
+            $context = new RequestContext();
 
-        $canvases = $this->getCanvases($document);
+            $url = sprintf('%s://%s', $this->presentationConfiguration['http']['scheme'], $this->presentationConfiguration['http']['host']);
+            $urlParts = parse_url($url);
 
-        $sequences = new Sequence();
-        $sequences
-            ->setId($this->router->generate('subugoe_iiif_sequence', [
-                'id' => $document->getId(),
-                'name' => 'normal',
-            ],
-                UrlGeneratorInterface::ABSOLUTE_URL))
-            ->setContext('')
-            ->setCanvases($canvases)
-            ->setStartCanvas($this->router->generate('subugoe_iiif_canvas', [
-                'id' => $document->getId(),
-                'canvas' => $document->getPhysicalStructure(0)->getIdentifier(),
-            ],
-                UrlGeneratorInterface::ABSOLUTE_URL));
-
-        return $sequences;
-    }
-
-    private function getLabelForCanvas(\Subugoe\IIIFModel\Model\Document $document, string $canvasId): string
-    {
-        $physicalStructures = $document->getPhysicalStructures();
-
-        /** @var PhysicalStructure $physicalStructure */
-        foreach ($physicalStructures as $physicalStructure) {
-            if ($physicalStructure->getIdentifier() === $canvasId) {
-                return $physicalStructure->getLabel();
+            if (isset($urlParts['port'])) {
+                $context->setHttpPort($urlParts['port']);
             }
+
+            $context->setHost($urlParts['host']);
+            $context->setScheme($urlParts['scheme']);
+
+            return $context;
         }
 
-        return '';
-    }
-
-    private function getLabelForRange(\Subugoe\IIIFModel\Model\Document $document, string $rangeId): string
-    {
-        $logicalStructures = $document->getLogicalStructures();
-
-        /** @var LogicalStructure $logicalStructure */
-        foreach ($logicalStructures as $logicalStructure) {
-            if ($logicalStructure->getId() === $rangeId) {
-                return $logicalStructure->getLabel();
-            }
-        }
-
-        return '';
-    }
-
-    /**
-     * @throws IIIFException
-     */
-    private function getImages(\Subugoe\IIIFModel\Model\Document $document, string $canvasId): array
-    {
-        return [$this->getImage($document, $canvasId)];
-    }
-
-    private function getCanvases(\Subugoe\IIIFModel\Model\Document $document): array
-    {
-        $canvases = [];
-        $numberOfPages = count($document->getPhysicalStructures());
-
-        $count = 0;
-
-        while ($count < $numberOfPages) {
-            $canvas = $this->getCanvas($document, $document->getPhysicalStructure($count)->getIdentifier(), $count);
-            // Embedded canvases do not have a context field
-            $canvas->setContext('');
-            $canvases[] = $canvas;
-            ++$count;
-        }
-
-        return $canvases;
+        return $this->router->getContext();
     }
 }

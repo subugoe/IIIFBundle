@@ -9,11 +9,11 @@ use Subugoe\IIIFModel\Model\Presentation\Collection;
 
 interface TranslatorInterface
 {
-    public function getDocumentById(string $id): DocumentInterface;
+    public function getCollectionById(string $collectionId): Collection;
 
     public function getDocumentBy(string $field, string $value, array $fields = []): DocumentInterface;
 
-    public function getDocumentByImageId(string $imageId): DocumentInterface;
+    public function getDocumentById(string $id): DocumentInterface;
 
-    public function getCollectionById(string $collectionId): Collection;
+    public function getDocumentByImageId(string $imageId): DocumentInterface;
 }
