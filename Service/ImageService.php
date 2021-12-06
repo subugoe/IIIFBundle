@@ -33,6 +33,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
     protected Imagine $imagine;
     protected RouterInterface $router;
     protected TranslatorInterface $translator;
+    public const IMAGE_COMPLIANCE_LEVEL = 'https://iiif.io/api/image/2/level2.json';
 
     /**
      * ImageService constructor.
@@ -119,6 +120,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
             ->setWidth($originalSize->getWidth())
             ->setHeight($originalSize->getHeight())
             ->setSizes($sizes)
+            ->setProfile(self::IMAGE_COMPLIANCE_LEVEL)
             ->setTiles($tiles);
 
         return $imageInformation;
