@@ -1,4 +1,9 @@
 services:
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    public: false
+
   Subugoe\IIIFBundle\Service\ImageService:
     arguments:  ["@liip_imagine", "@router", "@subugoe_iiif.translator",'@Subugoe\IIIFBundle\Service\FileService']
     calls:
@@ -7,7 +12,6 @@ services:
           - '%image%'
 
   Subugoe\IIIFBundle\Service\FileService:
-    arguments:  ["@cache_filesystem", "@source_filesystem"]
 
   Subugoe\IIIFBundle\Service\PresentationService:
     arguments:  ["@router", "%image%", "%presentation%"]
