@@ -345,18 +345,18 @@ class SubugoeTranslator implements TranslatorInterface
     {
         $seeAlsos = [];
         $formats = [
-              'bib' => [
-                  'mimeType' => 'application/x-bibtex',
-                  'profile' => 'http://www.bibtex.org/Format/',
-              ],
-              'ris' => [
-                  'mimeType' => 'application/x-research-info-systems',
-                  'profile' => 'http://referencemanager.com/sites/rm/files/m/direct_export_ris.pdf', ],
-              'enw' => [
-                  'mimeType' => 'application/x-endnote-refer',
-                  'profile' => 'http://endnote.com/',
-              ],
-          ];
+            'bib' => [
+                'mimeType' => 'application/x-bibtex',
+                'profile' => 'http://www.bibtex.org/Format/',
+            ],
+            'ris' => [
+                'mimeType' => 'application/x-research-info-systems',
+                'profile' => 'http://referencemanager.com/sites/rm/files/m/direct_export_ris.pdf', ],
+            'enw' => [
+                'mimeType' => 'application/x-endnote-refer',
+                'profile' => 'http://endnote.com/',
+            ],
+        ];
 
         foreach ($formats as $extension => $data) {
             $seeAlso = new SeeAlso();

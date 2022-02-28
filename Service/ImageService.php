@@ -28,12 +28,12 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
 {
+    public const IMAGE_COMPLIANCE_LEVEL = 'https://iiif.io/api/image/2/level2.json';
     protected FileService $fileService;
     protected array $imageConfiguration = [];
     protected Imagine $imagine;
     protected RouterInterface $router;
     protected TranslatorInterface $translator;
-    public const IMAGE_COMPLIANCE_LEVEL = 'https://iiif.io/api/image/2/level2.json';
 
     /**
      * ImageService constructor.
