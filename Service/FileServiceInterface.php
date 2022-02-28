@@ -2,14 +2,14 @@
 
 namespace Subugoe\IIIFBundle\Service;
 
-use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemOperator;
 
 /**
  * Wrapper around cache and source filesystems.
  */
 interface FileServiceInterface
 {
-    public function getCacheFilesystem(): Filesystem;
+    public function getCacheFilesystem(): FilesystemOperator;
 
-    public function getSourceFilesystem(): Filesystem;
+    public function getSourceFilesystem(): FilesystemOperator;
 }

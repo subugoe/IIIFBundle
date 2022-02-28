@@ -23,9 +23,9 @@
         "ext-gd": "*",
         "ext-imagick": "*",
         "jms/serializer-bundle": "^4.0",
+        "league/flysystem": "^2.4 || ^3.0",
         "liip/imagine-bundle": "^2.0",
         "xantios/mimey": "^2.0",
-        "oneup/flysystem-bundle": "^4.0",
         "subugoe/iiif-model": "^0.2",
         "myclabs/php-enum": "^1.7"
     },

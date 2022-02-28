@@ -36,32 +36,9 @@ see the SubugoeTranslator class.
 ## File systems
 
 This bundle uses [Flysystem](http://flysystem.thephpleague.com/), for retrieving and storing (a.k.a. caching) the tiles and thumbnails.
-If caching should not be enabled the `Null Adapter` should be used. The [FlysystemBundle](https://github.com/1up-lab/OneupFlysystemBundle) is already required in the composer manifest.
+If caching should not be enabled the `Null Adapter` should be used. 
 Please have a look at the FlysystemBundle documentation for the configuration options and available bundles.
 The adapter that fits to your needs has to be required in the main composer manifest of your application.
 
-For caching, a flysystem configuration has to be enabled like that:
-
-```
-oneup_flysystem:
-    adapters:
-        cache_adapter:
-            awss3v3:
-                client: foo.s3_client
-                bucket: 'foo'
-                prefix: 'cache'
-        source_adapter:
-            custom:
-                service: httpfilesystem_service
-
-    filesystems:
-        subugoe_iiif_cache:
-            adapter: cache_adapter
-            alias: cache_filesystem
-        subugoe_iiif_source:
-            adapter: source_adapter
-            alias: source_filesystem
-
-```
-
-Please note, that it has to be named `cache_filesystem` to be used. The source filesystem (where the original scans reside) has to be aliased or named `source_filesystem`.
+Please note, that two flysystem services need to exist and one has to be named `cache_filesystem` to be used as cache filesystem.
+The source filesystem (where the original scans reside) has to be aliased or named `source_filesystem`.

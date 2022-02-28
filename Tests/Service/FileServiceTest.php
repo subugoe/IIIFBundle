@@ -3,6 +3,7 @@
 namespace Subugoe\IIIFBundle\Tests\Service;
 
 use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemOperator;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\TestCase;
 use Subugoe\IIIFBundle\Service\FileService;
@@ -21,7 +22,7 @@ class FileServiceTest extends TestCase
 
     public function testRetrievalOfCacheFilesystemReturnsFilesystem(): void
     {
-        $this->assertInstanceOf(Filesystem::class, $this->fileService->getCacheFilesystem());
-        $this->assertInstanceOf(Filesystem::class, $this->fileService->getSourceFilesystem());
+        $this->assertInstanceOf(FilesystemOperator::class, $this->fileService->getCacheFilesystem());
+        $this->assertInstanceOf(FilesystemOperator::class, $this->fileService->getSourceFilesystem());
     }
 }
