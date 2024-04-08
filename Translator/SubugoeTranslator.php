@@ -20,25 +20,17 @@ use Symfony\Component\Routing\RouterInterface;
 
 class SubugoeTranslator implements TranslatorInterface
 {
-    private array $collections;
-
-    private string $rootDirectory;
-
-    private \Symfony\Component\Routing\RouterInterface $router;
-    private SearchService $searchService;
+    private readonly SearchService $searchService;
 
     /**
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
     private $translator;
 
-    public function __construct(SearchService $searchService, RouterInterface $router, \Symfony\Component\Translation\TranslatorInterface $translator, string $rootDirectory, array $collections)
+    public function __construct(SearchService $searchService, private readonly \Symfony\Component\Routing\RouterInterface $router, \Symfony\Component\Translation\TranslatorInterface $translator, private readonly string $rootDirectory, private readonly array $collections)
     {
         $this->searchService = $searchService;
-        $this->router = $router;
         $this->translator = $translator;
-        $this->rootDirectory = $rootDirectory;
-        $this->collections = $collections;
     }
 
     public function getCollectionById(string $collectionId): Collection
@@ -104,7 +96,7 @@ class SubugoeTranslator implements TranslatorInterface
         for ($i = 0; $i < $numberOfLogicalStructures; ++$i) {
             $structure = new LogicalStructure();
 
-            $label = (empty(trim($solrDocument['log_label'][$i]))) ? $this->translator->trans($solrDocument['log_type'][$i]) : $solrDocument['log_label'][$i];
+            $label = (empty(trim((string) $solrDocument['log_label'][$i]))) ? $this->translator->trans($solrDocument['log_type'][$i]) : $solrDocument['log_label'][$i];
 
             $structure
                 ->setId($solrDocument['log_id'][$i])
@@ -118,8 +110,8 @@ class SubugoeTranslator implements TranslatorInterface
         }
 
         for ($i = 0; $i < $numberOfPhysicalStructures; ++$i) {
-            $label = isset($solrDocument['phys_orderlabel'][$i]) ? $solrDocument['phys_orderlabel'][$i] : '';
-            $physicalOrder = isset($solrDocument['phys_order'][$i]) ? $solrDocument['phys_order'][$i] : 0;
+            $label = $solrDocument['phys_orderlabel'][$i] ?? '';
+            $physicalOrder = $solrDocument['phys_order'][$i] ?? 0;
 
             $structure = new PhysicalStructure();
             $structure
@@ -173,7 +165,7 @@ class SubugoeTranslator implements TranslatorInterface
     {
         $ids = [];
         foreach ($solrDocument['identifier'] as $identifier) {
-            $parts = explode(' ', $identifier);
+            $parts = explode(' ', (string) $identifier);
 
             $id = [];
             $id[$parts[0]] = $parts[1];
@@ -202,7 +194,7 @@ class SubugoeTranslator implements TranslatorInterface
         if (is_array($metadata) && [] !== $metadata) {
             foreach ($metadata as $key => $value) {
                 if (!empty($value) && !empty($facet) && $link) {
-                    $url = $this->router->generate('_homepage', ["filter[${key}][${facet}]" => $value], RouterInterface::ABSOLUTE_URL);
+                    $url = $this->router->generate('_homepage', ["filter[{$key}][{$facet}]" => $value], RouterInterface::ABSOLUTE_URL);
                     $href = sprintf('<a href="%s">%s</a>', $url, $value);
                     $metadataArr[] = $href;
                 } elseif (!empty($value)) {
@@ -299,7 +291,7 @@ class SubugoeTranslator implements TranslatorInterface
         $relatedArr = [];
         if (is_array($catalogue) && [] !== $catalogue) {
             foreach ($catalogue as $value) {
-                $catalogueArr = explode(' ', trim($value));
+                $catalogueArr = explode(' ', trim((string) $value));
                 $related = new Related();
                 $id = $catalogueArr[1];
                 $label = $catalogueArr[0];

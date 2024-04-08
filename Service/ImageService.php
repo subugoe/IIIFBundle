@@ -29,25 +29,13 @@ use Symfony\Component\Routing\RouterInterface;
 class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
 {
     public const IMAGE_COMPLIANCE_LEVEL = 'https://iiif.io/api/image/2/level2.json';
-    protected FileService $fileService;
     protected array $imageConfiguration = [];
-    protected Imagine $imagine;
-    protected RouterInterface $router;
-    protected TranslatorInterface $translator;
 
     /**
      * ImageService constructor.
      */
-    public function __construct(
-        Imagine $imagine,
-        RouterInterface $router,
-        TranslatorInterface $translator,
-        FileService $fileService
-    ) {
-        $this->imagine = $imagine;
-        $this->router = $router;
-        $this->translator = $translator;
-        $this->fileService = $fileService;
+    public function __construct(protected Imagine $imagine, protected RouterInterface $router, protected TranslatorInterface $translator, protected FileService $fileService)
+    {
     }
 
     public function getCachedFileIdentifier(Image $image): string
@@ -86,7 +74,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
 
         try {
             $image = $this->imagine->load($originalImage);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             throw new NotFoundHttpException(sprintf('Image with identifier %s not found', $imageEntity->getIdentifier()));
         }
 
@@ -269,7 +257,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
 
         if ('square' === $region) {
             $regionSort = 'squareBased';
-        } elseif (false !== strpos($region, 'pct')) {
+        } elseif (str_contains($region, 'pct')) {
             $regionSort = 'percentageBased';
         } else {
             $regionSort = 'pixelBased';
@@ -343,7 +331,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
         if (!empty($rotation)) {
             $rotationDegree = str_replace('!', '', $rotation);
             if ((int) $rotationDegree <= 360) {
-                if (false !== strpos($rotation, '!')) {
+                if (str_contains($rotation, '!')) {
                     $image->flipVertically();
                 }
                 $image->rotate(str_replace('!', '', $rotation));
@@ -379,19 +367,19 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
         }
 
         $rawSize = $size;
-        if (false !== strpos($size, '!')) {
+        if (str_contains($size, '!')) {
             $size = str_replace('!', '', $size);
         }
         $regionWidth = $image->getSize()->getWidth();
         $regionHeight = $image->getSize()->getHeight();
-        if (false === strpos($size, 'pct')) {
+        if (!str_contains($size, 'pct')) {
             $requestedSize = explode(',', $size);
             if (2 != count($requestedSize)) {
                 throw new BadRequestHttpException(sprintf('Bad Request: Size syntax %s is not valid.', $size));
             }
             $width = $requestedSize[0];
             $height = $requestedSize[1];
-            if (false !== strpos($rawSize, '!')) {
+            if (str_contains($rawSize, '!')) {
                 $w = (($regionWidth / $regionHeight) * $height);
                 $h = (($regionHeight / $regionWidth) * $width);
             } else {
@@ -399,7 +387,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
                 $h = empty($height) ? ($regionHeight / $regionWidth) * $width : $height;
             }
             $image->resize(new Box($w, $h));
-        } elseif (false !== strpos($size, 'pct')) {
+        } elseif (str_contains($size, 'pct')) {
             $requestedPercentage = explode(':', $size)[1];
             if (is_numeric($requestedPercentage)) {
                 $w = (($regionWidth * $requestedPercentage) / 100);

@@ -61,7 +61,7 @@ class ImageTest extends TestCase
     /**
      * @dataProvider identifierProvider
      */
-    public function testIdentifierHandlesAllUsedVariations($identifier, $expected)
+    public function testIdentifierHandlesAllUsedVariations($identifier, $expected): void
     {
         $this->fixture->setIdentifier($identifier);
         $result = $this->fixture->getIdentifier();
@@ -72,7 +72,7 @@ class ImageTest extends TestCase
     /**
      * @dataProvider rotationProvider
      */
-    public function testSettingRotationWillReturnCorrectRotation($rotation, $expected)
+    public function testSettingRotationWillReturnCorrectRotation($rotation, $expected): void
     {
         $this->fixture->setRotation($rotation);
         $result = $this->fixture->getRotation();
@@ -80,7 +80,7 @@ class ImageTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function testSettingTheRegionWillReturnTheCorrectRegion()
+    public function testSettingTheRegionWillReturnTheCorrectRegion(): void
     {
         $label = 'Titel';
         $this->fixture->setRegion($label);

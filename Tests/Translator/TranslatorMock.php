@@ -8213,12 +8213,12 @@ class TranslatorMock implements TranslatorInterface
             ->setMetadata($this->getMetadata())
             ->setRightsOwner($solrDocument['rights_owner'] ?: [])
             ->setTitle($solrDocument['title'])
-            ->setAuthors(isset($solrDocument['creator']) ? $solrDocument['creator'] : [])
-            ->setPublishingPlaces(isset($solrDocument['place_publish']) ? $solrDocument['place_publish'] : [])
+            ->setAuthors($solrDocument['creator'] ?? [])
+            ->setPublishingPlaces($solrDocument['place_publish'] ?? [])
             ->setClassification($solrDocument['dc'])
             ->setPublishingYear((int) $solrDocument['year_publish'] ?: 0)
-            ->setPublisher(isset($solrDocument['publisher']) ? $solrDocument['publisher'] : [])
-            ->setLanguage(isset($solrDocument['lang']) ? $solrDocument['lang'] : [])
+            ->setPublisher($solrDocument['publisher'] ?? [])
+            ->setLanguage($solrDocument['lang'] ?? [])
             ->setImageFormat($solrDocument['image_format'])
             ->setDescription('');
 
@@ -8243,7 +8243,7 @@ class TranslatorMock implements TranslatorInterface
                 ->setLabel($solrDocument['phys_orderlabel'][$i])
                 ->setOrder($solrDocument['phys_order'][$i])
                 ->setPage($solrDocument['page'][$i])
-                ->setAnnotation(isset($solrDocument['fulltext_ref'][$i]) ? $solrDocument['fulltext_ref'][$i] : '')
+                ->setAnnotation($solrDocument['fulltext_ref'][$i] ?? '')
                 ->setFilename(vsprintf(
                     '%s/%s.%s', [
                         $solrDocument['id'],

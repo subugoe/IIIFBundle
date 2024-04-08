@@ -24,7 +24,8 @@ subugoe_iiif:
 ## Format translator
 
 It is also necessary to define a so-called translator-service with the name ```subugoe_iiif.translator```, i.e.:
-```
+
+```yaml
   Subugoe\IIIFBundle\Translator\TranslatorInterface:
     class:      Subugoe\IIIFBundle\Translator\SubugoeTranslator
     arguments:  ["@subugoe_find.search_service"]
@@ -36,7 +37,7 @@ see the SubugoeTranslator class.
 ## File systems
 
 This bundle uses [Flysystem](http://flysystem.thephpleague.com/), for retrieving and storing (a.k.a. caching) the tiles and thumbnails.
-If caching should not be enabled the `Null Adapter` should be used. 
+If caching should not be enabled the `Null Adapter` should be used.
 Please have a look at the FlysystemBundle documentation for the configuration options and available bundles.
 The adapter that fits to your needs has to be required in the main composer manifest of your application.
 

@@ -36,20 +36,11 @@ class PresentationService implements PresentationServiceInterface
     public const CONTEXT_IMAGE = 'images';
     public const CONTEXT_MANIFESTS = 'manifests';
 
-    private array $imageConfiguration;
-
-    private array $presentationConfiguration;
-
-    private RouterInterface $router;
-
     /**
      * PresentationService constructor.
      */
-    public function __construct(RouterInterface $router, array $imageConfiguration, array $presentationConfiguration)
+    public function __construct(private readonly RouterInterface $router, private array $imageConfiguration, private array $presentationConfiguration)
     {
-        $this->router = $router;
-        $this->imageConfiguration = $imageConfiguration;
-        $this->presentationConfiguration = $presentationConfiguration;
     }
 
     /**

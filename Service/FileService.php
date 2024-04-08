@@ -9,14 +9,8 @@ use League\Flysystem\FilesystemOperator;
  */
 class FileService implements FileServiceInterface
 {
-    private FilesystemOperator $cacheFilesystem;
-
-    private FilesystemOperator $sourceFilesystem;
-
-    public function __construct(FilesystemOperator $cacheFilesystem, FilesystemOperator $sourceFilesystem)
+    public function __construct(private readonly FilesystemOperator $cacheFilesystem, private readonly FilesystemOperator $sourceFilesystem)
     {
-        $this->cacheFilesystem = $cacheFilesystem;
-        $this->sourceFilesystem = $sourceFilesystem;
     }
 
     public function getCacheFilesystem(): FilesystemOperator
