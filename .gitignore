@@ -17,3 +17,4 @@
 /.php-cs-fixer.cache
 composer.lock
 .phpunit.result.cache
+.phpactor.json

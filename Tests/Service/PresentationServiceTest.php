@@ -10,9 +10,9 @@ use Symfony\Component\Routing\Router;
 
 class PresentationServiceTest extends TestCase
 {
-    private \Subugoe\IIIFBundle\Service\PresentationService $presentationService;
+    private PresentationService $presentationService;
 
-    private \Subugoe\IIIFBundle\Tests\Translator\TranslatorMock $translator;
+    private TranslatorMock $translator;
 
     protected function setUp(): void
     {
@@ -80,7 +80,7 @@ class PresentationServiceTest extends TestCase
     public function testAnnotationExistance($id, $expected): void
     {
         $document = $this->translator->getDocumentById($id);
-        $this->assertSame(!empty($document->getPhysicalStructure(0)->getAnnotation()), $expected);
+        $this->assertSame(!in_array($document->getPhysicalStructure(0)->getAnnotation(), [null, '', '0'], true), $expected);
     }
 
     /**

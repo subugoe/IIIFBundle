@@ -27,7 +27,7 @@ class SubugoeTranslator implements TranslatorInterface
      */
     private $translator;
 
-    public function __construct(SearchService $searchService, private readonly \Symfony\Component\Routing\RouterInterface $router, \Symfony\Component\Translation\TranslatorInterface $translator, private readonly string $rootDirectory, private readonly array $collections)
+    public function __construct(SearchService $searchService, private readonly RouterInterface $router, \Symfony\Component\Translation\TranslatorInterface $translator, private readonly string $rootDirectory, private readonly array $collections)
     {
         $this->searchService = $searchService;
         $this->translator = $translator;
@@ -96,7 +96,7 @@ class SubugoeTranslator implements TranslatorInterface
         for ($i = 0; $i < $numberOfLogicalStructures; ++$i) {
             $structure = new LogicalStructure();
 
-            $label = (empty(trim((string) $solrDocument['log_label'][$i]))) ? $this->translator->trans($solrDocument['log_type'][$i]) : $solrDocument['log_label'][$i];
+            $label = (in_array(trim((string) $solrDocument['log_label'][$i]), ['', '0'], true)) ? $this->translator->trans($solrDocument['log_type'][$i]) : $solrDocument['log_label'][$i];
 
             $structure
                 ->setId($solrDocument['log_id'][$i])
@@ -193,7 +193,7 @@ class SubugoeTranslator implements TranslatorInterface
 
         if (is_array($metadata) && [] !== $metadata) {
             foreach ($metadata as $key => $value) {
-                if (!empty($value) && !empty($facet) && $link) {
+                if (!empty($value) && ('' !== $facet && '0' !== $facet) && $link) {
                     $url = $this->router->generate('_homepage', ["filter[{$key}][{$facet}]" => $value], RouterInterface::ABSOLUTE_URL);
                     $href = sprintf('<a href="%s">%s</a>', $url, $value);
                     $metadataArr[] = $href;
@@ -295,7 +295,7 @@ class SubugoeTranslator implements TranslatorInterface
                 $related = new Related();
                 $id = $catalogueArr[1];
                 $label = $catalogueArr[0];
-                if (!empty($id) && !empty($label)) {
+                if ('' !== $id && '0' !== $id && ('' !== $label && '0' !== $label)) {
                     $related->setId($id);
                     $related->setLabel($label);
                     $related->setFormat('text/html');

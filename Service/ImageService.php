@@ -266,7 +266,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
         switch ($regionSort) {
             case 'squareBased':
                 $calculateShorterDimension = $sourceImageWidth < $sourceImageHeight ? $sourceImageWidth : $sourceImageHeight;
-                $calculateLongerDimension = $sourceImageWidth < $sourceImageHeight ? $sourceImageHeight : $sourceImageWidth;
+                $calculateLongerDimension = max($sourceImageHeight, $sourceImageWidth);
                 $imageLeftRightMargin = (($calculateLongerDimension - $calculateShorterDimension) / 2);
                 $x = 0;
                 $y = $imageLeftRightMargin;
@@ -288,8 +288,8 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
                 if (count($imageCoordinates) < 4) {
                     throw new BadRequestHttpException('Bad Request: Exactly (4) coordinates must be supplied.');
                 }
-                if ((isset($imageCoordinates[0]) && $imageCoordinates[0] >= 100) ||
-                        (isset($imageCoordinates[1]) && $imageCoordinates[1] >= 100)) {
+                if ((isset($imageCoordinates[0]) && $imageCoordinates[0] >= 100)
+                        || (isset($imageCoordinates[1]) && $imageCoordinates[1] >= 100)) {
                     throw new BadRequestHttpException('Bad Request: Crop coordinates are out of bound.');
                 }
                 $x = ceil(($imageCoordinates[0] / 100) * $sourceImageWidth);
@@ -328,7 +328,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
             return;
         }
 
-        if (!empty($rotation)) {
+        if ('' !== $rotation && '0' !== $rotation) {
             $rotationDegree = str_replace('!', '', $rotation);
             if ((int) $rotationDegree <= 360) {
                 if (str_contains($rotation, '!')) {
@@ -383,8 +383,8 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
                 $w = (($regionWidth / $regionHeight) * $height);
                 $h = (($regionHeight / $regionWidth) * $width);
             } else {
-                $w = empty($width) ? ($regionWidth / $regionHeight) * $height : $width;
-                $h = empty($height) ? ($regionHeight / $regionWidth) * $width : $height;
+                $w = '' === $width || '0' === $width ? ($regionWidth / $regionHeight) * $height : $width;
+                $h = '' === $height || '0' === $height ? ($regionHeight / $regionWidth) * $width : $height;
             }
             $image->resize(new Box($w, $h));
         } elseif (str_contains($size, 'pct')) {

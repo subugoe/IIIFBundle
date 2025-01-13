@@ -9,7 +9,7 @@ use Subugoe\IIIFModel\Model\Image\Image;
 
 class ImageTest extends TestCase
 {
-    protected \Subugoe\IIIFModel\Model\Image\Image $fixture;
+    protected Image $fixture;
 
     protected function setUp(): void
     {

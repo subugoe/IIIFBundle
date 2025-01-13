@@ -8298,9 +8298,6 @@ class TranslatorMock implements TranslatorInterface
 
     private function getMetadata(): array
     {
-        $metadata = [];
-        $metadata['author'] = 'foo';
-
-        return $metadata;
+        return ['author' => 'foo'];
     }
 }

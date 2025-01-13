@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Subugoe\IIIFBundle\Service;
 
-use DateTime;
-use Exception;
-use InvalidArgumentException;
 use Mimey\MimeTypes;
 use Subugoe\IIIFBundle\Exception\DataException;
 use Subugoe\IIIFBundle\Exception\IIIFException;
@@ -100,7 +97,7 @@ class PresentationService implements PresentationServiceInterface
             ->setWidth(300)
             ->setImages($images);
 
-        if (!empty($document->getPhysicalStructure($physicalStructureId)->getAnnotation())) {
+        if (!in_array($document->getPhysicalStructure($physicalStructureId)->getAnnotation(), [null, '', '0'], true)) {
             $annotationList = new AnnotationList();
             $annotationList
                 ->setId($this->router->generate('subugoe_iiif_annotation-list', ['id' => $document->getId(), 'name' => $canvasId], UrlGeneratorInterface::ABSOLUTE_URL))
@@ -201,11 +198,11 @@ class PresentationService implements PresentationServiceInterface
             ->setRelated($document->getRelated())
         ;
 
-        if (!empty($document->getLicense())) {
+        if (!in_array($document->getLicense(), ['', '0'], true)) {
             $manifest->setLicense($document->getLicense());
         }
 
-        if (!empty($document->getDescription())) {
+        if (!in_array($document->getDescription(), ['', '0'], true)) {
             $manifest->setDescription($document->getDescription());
         }
         /** @var Document $parent */
@@ -401,7 +398,7 @@ class PresentationService implements PresentationServiceInterface
      */
     private function getNavDate(\Subugoe\IIIFModel\Model\Document $document): \DateTimeInterface
     {
-        return DateTime::createFromFormat('Y-m-d H:i:s', vsprintf('%d-%s-%s %s:%s:%s',
+        return \DateTime::createFromFormat('Y-m-d H:i:s', vsprintf('%d-%s-%s %s:%s:%s',
             [
                 $document->getPublishingYear(),
                 '01',
@@ -424,7 +421,7 @@ class PresentationService implements PresentationServiceInterface
             ++$position;
         }
 
-        throw new InvalidArgumentException(sprintf('Page with label %s not found in document %s', $identifier, $document->getId()), 1_490_689_215);
+        throw new \InvalidArgumentException(sprintf('Page with label %s not found in document %s', $identifier, $document->getId()), 1_490_689_215);
     }
 
     /**
@@ -445,7 +442,7 @@ class PresentationService implements PresentationServiceInterface
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function getPreviousHierarchyStructure(\Subugoe\IIIFModel\Model\Document $document, LogicalStructure $structure, int $position): LogicalStructure
     {
@@ -506,7 +503,7 @@ class PresentationService implements PresentationServiceInterface
 
     /**
      * @throws IIIFException
-     * @throws Exception
+     * @throws \Exception
      */
     private function getStructures(\Subugoe\IIIFModel\Model\Document $document): array
     {
@@ -577,7 +574,7 @@ class PresentationService implements PresentationServiceInterface
             'subugoe_iiif_image',
             $thumbnailParameters,
             UrlGeneratorInterface::ABSOLUTE_URL
-            )
+        )
         );
         $thumbnail->setService($thumbnailService);
 
