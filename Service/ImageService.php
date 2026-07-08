@@ -374,7 +374,7 @@ class ImageService implements \Subugoe\IIIFModel\Service\ImageServiceInterface
         $regionHeight = $image->getSize()->getHeight();
         if (!str_contains($size, 'pct')) {
             $requestedSize = explode(',', $size);
-            if (2 != count($requestedSize)) {
+            if (2 !== count($requestedSize)) {
                 throw new BadRequestHttpException(sprintf('Bad Request: Size syntax %s is not valid.', $size));
             }
             $width = $requestedSize[0];

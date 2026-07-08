@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Subugoe\IIIFBundle\Service;
 
 use League\Flysystem\FilesystemOperator;
