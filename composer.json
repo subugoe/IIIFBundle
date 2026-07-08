@@ -26,8 +26,7 @@
         "league/flysystem": "^2.4 || ^3.0",
         "liip/imagine-bundle": "^2.0",
         "xantios/mimey": "^2.0",
-        "subugoe/iiif-model": "dev-master",
-        "myclabs/php-enum": "^1.7"
+        "subugoe/iiif-model": "^0.3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "*",
