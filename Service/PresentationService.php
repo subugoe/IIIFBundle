@@ -384,7 +384,8 @@ class PresentationService implements PresentationServiceInterface
     {
         $metadata = [];
         foreach ($document->getMetadata() as $key => $value) {
-            if ($key == "Jahr" && (!is_int($value) || 0 === $value || -1 === $value)) {
+
+            if (empty($value) || ($key == "Jahr" && (!is_int($value) || 0 === $value || -1 === $value))) {
                 continue;
             }
 
