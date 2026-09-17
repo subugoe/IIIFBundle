@@ -186,7 +186,6 @@ class PresentationService implements PresentationServiceInterface
                 UrlGeneratorInterface::ABSOLUTE_URL)
             )
             ->setLabel($document->getTitle()[0])
-            ->setNavDate($this->getNavDate($document))
             ->setThumbnail($thumbnail)
             ->setMetadata($metadata)
             ->setAttribution($attribution)
@@ -197,6 +196,10 @@ class PresentationService implements PresentationServiceInterface
             ->setRendering($document->getRenderings())
             ->setRelated($document->getRelated())
         ;
+
+        if ($document->getPublishingYear() > 0) {
+            $manifest->setNavDate($this->getNavDate($document));
+        }
 
         if (!in_array($document->getLicense(), ['', '0'], true)) {
             $manifest->setLicense($document->getLicense());
@@ -381,13 +384,15 @@ class PresentationService implements PresentationServiceInterface
     {
         $metadata = [];
         foreach ($document->getMetadata() as $key => $value) {
-            if (!empty($value)) {
-                $data = new Metadata();
-                $data
-                    ->setLabel((string) $key)
-                    ->setValue($value);
-                $metadata[] = $data;
+            if ($key == "Jahr" && (!is_int($value) || 0 === $value || -1 === $value)) {
+                continue;
             }
+
+            $data = new Metadata();
+            $data
+                ->setLabel((string) $key)
+                ->setValue($value);
+            $metadata[] = $data;
         }
 
         return $metadata;
