@@ -263,7 +263,7 @@ class PresentationService implements PresentationServiceInterface
     private function getAttribution(\Subugoe\IIIFModel\Model\Document $document): string
     {
         if (array_key_exists('0', $document->getRightsOwner())) {
-            return $document->getRightsOwner()[0];
+            return "Bereitgestellt von: " . $document->getRightsOwner()[0];
         }
 
         return '';
