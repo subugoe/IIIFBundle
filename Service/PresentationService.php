@@ -386,8 +386,11 @@ class PresentationService implements PresentationServiceInterface
         $metadata = [];
         foreach ($document->getMetadata() as $key => $value) {
 
-            if (empty($value) || ($key == "Jahr" && (!is_int($value) || 0 === $value || -1 === $value))) {
+            if (empty($value) || ($key == "Jahr" &&  (0 === $value || -1 === $value))) {
                 continue;
+            }
+            if ($key == "PURL") {
+                $value = "<a href=\"$value\" target=\"_blank\">$value</a>";
             }
 
             $data = new Metadata();
@@ -496,13 +499,14 @@ class PresentationService implements PresentationServiceInterface
     {
         $metadata = [];
         foreach ($structure->getMetadata() as $key => $value) {
-            if (!empty($value)) {
-                $data = new Metadata();
-                $data
+            if (empty($value) || ($key == "Jahr" &&  "0" === $value || "-1" === $value) || ($key == "PURL")) {
+                continue;
+            }
+            $data = new Metadata();
+            $data
                     ->setLabel($key)
                     ->setValue($value);
-                $metadata[] = $data;
-            }
+            $metadata[] = $data;
         }
 
         return $metadata;
