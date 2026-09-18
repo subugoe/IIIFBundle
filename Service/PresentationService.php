@@ -197,9 +197,10 @@ class PresentationService implements PresentationServiceInterface
             ->setRelated($document->getRelated())
         ;
 
-        if ($document->getPublishingYear() > 0) {
-            $manifest->setNavDate($this->getNavDate($document));
-        }
+        # Commented out, as even dates consisting solely of the year are mapped to “01.01.YYYY”, which does not meet the requirements.
+        // if ($document->getPublishingYear() > 0 && null !== ($navDate = $this->getNavDate($document))) {
+        //     $manifest->setNavDate($navDate);
+        // }
 
         if (!in_array($document->getLicense(), ['', '0'], true)) {
             $manifest->setLicense($document->getLicense());
