@@ -540,9 +540,11 @@ class PresentationService implements PresentationServiceInterface
                     ], UrlGeneratorInterface::ABSOLUTE_URL)
                     )
                     ->setLabel($logicalStructure->getLabel())
-                    ->setType('sc:Canvas')
+                    ->setType('sc:Range')
+                    #->setType('sc:Canvas')
                     ->setRendering($logicalStructure->getRenderings())
-                    ->setCanvases($canvases)
+                    ->setRanges($canvases)
+                    #->setCanvases($canvases)
                     ->setMetadata($this->getStructureMetadata($logicalStructure));
 
                 if ($firstLevel !== $logicalStructure->getLevel()) {
