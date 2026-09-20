@@ -611,7 +611,16 @@ class PresentationService implements PresentationServiceInterface
         if (array_key_exists('host', $this->imageConfiguration['http']) && $type === static::CONTEXT_IMAGE) {
             $context = new RequestContext();
 
-            $url = sprintf('%s://%s', $this->imageConfiguration['http']['scheme'], $this->imageConfiguration['http']['host']);
+            $scheme = $this->imageConfiguration['http']['scheme'];
+            if (
+                'http' === $scheme
+                && !str_contains($this->imageConfiguration['http']['host'], 'localhost')
+                && !str_contains($this->imageConfiguration['http']['host'], 'ddev.site')
+            ) {
+                $scheme = 'https';
+            }
+
+            $url = sprintf('%s://%s', $scheme, $this->imageConfiguration['http']['host']);
             $urlParts = parse_url($url);
 
             if (isset($urlParts['port'])) {
@@ -628,7 +637,16 @@ class PresentationService implements PresentationServiceInterface
         if (array_key_exists('host', $this->presentationConfiguration['http']) && $type === static::CONTEXT_MANIFESTS) {
             $context = new RequestContext();
 
-            $url = sprintf('%s://%s', $this->presentationConfiguration['http']['scheme'], $this->presentationConfiguration['http']['host']);
+            $scheme = $this->presentationConfiguration['http']['scheme'];
+            if (
+                'http' === $scheme
+                && !str_contains($this->presentationConfiguration['http']['host'], 'localhost')
+                && !str_contains($this->presentationConfiguration['http']['host'], 'ddev.site')
+            ) {
+                $scheme = 'https';
+            }
+
+            $url = sprintf('%s://%s', $scheme, $this->presentationConfiguration['http']['host']);
             $urlParts = parse_url($url);
 
             if (isset($urlParts['port'])) {
