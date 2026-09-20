@@ -203,7 +203,12 @@ class PresentationService implements PresentationServiceInterface
         // }
 
         if (!in_array($document->getLicense(), ['', '0'], true)) {
-            $manifest->setLicense($document->getLicense());
+            $license = (string) $document->getLicense();
+            if (str_starts_with($license, 'http://')) {
+                $license = 'https://' . substr($license, 7);
+            }
+
+            $manifest->setLicense($license);
         }
 
         if (!in_array($document->getDescription(), ['', '0'], true)) {
