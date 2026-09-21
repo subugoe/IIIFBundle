@@ -395,7 +395,7 @@ class PresentationService implements PresentationServiceInterface
                 continue;
             }
             if ($key == "PURL") {
-                $value = "<a href=\"$value\" target=\"_blank\">$value</a>";
+                $value = "<a href=\"$value\">$value</a>";
             }
 
             $data = new Metadata();
