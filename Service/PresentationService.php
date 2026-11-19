@@ -610,6 +610,7 @@ class PresentationService implements PresentationServiceInterface
 
         if (array_key_exists('host', $this->imageConfiguration['http']) && $type === static::CONTEXT_IMAGE) {
             $context = new RequestContext();
+            $context->setParameters($this->router->getContext()->getParameters());
 
             $scheme = $this->imageConfiguration['http']['scheme'];
             if (
@@ -636,6 +637,7 @@ class PresentationService implements PresentationServiceInterface
 
         if (array_key_exists('host', $this->presentationConfiguration['http']) && $type === static::CONTEXT_MANIFESTS) {
             $context = new RequestContext();
+            $context->setParameters($this->router->getContext()->getParameters());
 
             $scheme = $this->presentationConfiguration['http']['scheme'];
             if (
