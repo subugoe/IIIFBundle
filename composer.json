@@ -26,12 +26,14 @@
         "league/flysystem": "^2.4 || ^3.0",
         "liip/imagine-bundle": "^2.0",
         "xantios/mimey": "^2.0",
-        "subugoe/iiif-model": "^0.3.0"
+        "subugoe/iiif-model": "^0.3.0",
+        "symfony/translation-contracts": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "*",
         "league/flysystem-memory": "*",
         "friendsofphp/php-cs-fixer": "^3.95.12",
-        "rector/rector": "^2.5.4"
+        "rector/rector": "^2.5.4",
+        "symfony/translation": "^6.4 || ^7.0 || ^8.0"
     }
 }

@@ -27,6 +27,7 @@ use Subugoe\IIIFModel\Service\PresentationServiceInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PresentationService implements PresentationServiceInterface
 {
@@ -36,7 +37,7 @@ class PresentationService implements PresentationServiceInterface
     /**
      * PresentationService constructor.
      */
-    public function __construct(private readonly RouterInterface $router, private array $imageConfiguration, private array $presentationConfiguration)
+    public function __construct(private readonly RouterInterface $router, private array $imageConfiguration, private array $presentationConfiguration, private readonly ?TranslatorInterface $translator = null)
     {
     }
 
@@ -179,7 +180,7 @@ class PresentationService implements PresentationServiceInterface
         $attribution = $this->getAttribution($document);
         $manifest
             ->setId($this->router->generate(
-                '_detail',
+                'subugoe_iiif_manifest',
                 [
                     'id' => $document->getId(),
                 ],
@@ -268,7 +269,8 @@ class PresentationService implements PresentationServiceInterface
     private function getAttribution(\Subugoe\IIIFModel\Model\Document $document): string
     {
         if (array_key_exists('0', $document->getRightsOwner())) {
-            return "Bereitgestellt von: " . $document->getRightsOwner()[0];
+            return $this->translator?->trans('provided_by', ['%rights_owner%' => $document->getRightsOwner()[0]], 'iiif')
+                ?? 'Bereitgestellt von: '.$document->getRightsOwner()[0];
         }
 
         return '';
